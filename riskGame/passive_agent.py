@@ -11,13 +11,13 @@ class Passive(Agent):
 
         fewest_army = None
         max_arms = maxsize
-        for region in self._captured:
+        for region in self.get_hold_nodes:
             if region.get_army() < max_arms:
                 fewest_army = region
                 max_arms = region.get_army()
 
         if fewest_army:
-            fewest_army.set_army(max_arms + self._bonus)
+            fewest_army.set_army(max_arms + self.get_bonus)
 
         return state
 

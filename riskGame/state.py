@@ -2,31 +2,37 @@
 
 class State:
 
-    def __init__(self, nodes, edges):
-        self.__construct_graph(nodes, edges)
+    def __init__(self, number_nodes, partitions, players):
+        self.__number_nodes = number_nodes
+        self.__partitions = partitions
+        self.__players = players
 
     @property
-    def get_nodes(self):
-        return self.__nodes
+    def set_players(self, players):
+        self.__players = players
 
     @property
-    def get_edges(self):
-        return self.__edges
+    def set_number_nodes(self, number_nodes):
+        self.__number_nodes = number_nodes
 
     @property
-    def set_nodes(self, nodes):
-        self.__nodes = nodes
+    def set_partitions(self, partitions):
+        self.__partitions = partitions
 
     @property
-    def set_edges(self, edges):
-        self.__edges = edges
+    def get_players(self):
+        return self.__players
 
+    @property
+    def get_number_nodes(self):
+        return self.__number_nodes
 
-def __construct_graph(self, nodes, edges):
-        self.__nodes = nodes
-        self.__edges = edges
-        """
-        Do we need further impelementation of the way a graph will look like 
-        (edge list, adj matrix, ...) or every one will implement it as he needs.
-        """
+    @property
+    def get_partitions(self):
+        return self.__partitions
 
+    def get_winner(self):
+        for player in self.__players:
+            if len(player.get_hold_nodes()) == self.__number_nodes:
+                return player
+        return None
