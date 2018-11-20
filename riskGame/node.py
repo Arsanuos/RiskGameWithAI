@@ -4,6 +4,7 @@ class Node:
     def __int__(self, player, army):
         self.__player = player
         self.__army = army
+        self.__neighbors = []
 
     @property
     def set_player(self, player):
@@ -20,6 +21,9 @@ class Node:
     @property
     def get_army(self):
         return self.__army
+
+    def add_neighbor(self, node):
+        self.__neighbors.append(node)
 
 
     
