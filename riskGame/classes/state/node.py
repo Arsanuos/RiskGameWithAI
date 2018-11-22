@@ -87,3 +87,10 @@ class Node:
         bonus = self.__hold_player.get_bonus()
         self.__army += bonus
         self.__hold_player.set_last_attack_bonus(0)
+
+    def get_possible_attacked_nodes(self):
+        possible_attacked_nodes = []
+        for node in self.__neighbours:
+            if self.can_attack(node):
+                possible_attacked_nodes.append(node)
+        return possible_attacked_nodes
