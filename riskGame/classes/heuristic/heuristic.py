@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-class Heuristic(ABC):
 
+class Heuristic(ABC):
 
     @abstractmethod
     def make_decision(self, state):
