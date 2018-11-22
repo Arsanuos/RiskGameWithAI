@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 class State:
 
     def __init__(self, number_nodes, partitions, players, player_turn_number):
@@ -47,3 +49,22 @@ class State:
                 return player
         return None
 
+    def expand_bonus(self):
+
+        curr_player = self.get_current_player()
+
+        #get bonus
+        curr_bonus = curr_player.get_bonus()
+
+        #get border nodes
+        border_nodes = curr_player.get_border_nodes()
+
+        ret_states = []
+
+        for node in border_nodes:
+            node.move_bonus_to_mine()
+            curr_copy = deepcopy(self)
+            ret_states.append(curr_copy)
+            node.set_army(node.get_army - curr_bonus)
+
+        return ret_states
