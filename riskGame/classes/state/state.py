@@ -47,3 +47,4 @@ class State:
                 return player
         return None
 
+    def expand_bonus(self):
