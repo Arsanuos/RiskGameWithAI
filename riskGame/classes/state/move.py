@@ -71,8 +71,8 @@ class Move:
         if self.__bonus_hold_node:
             self.__bonus_hold_node.move_bonus_to_mine()
         # apply move armies
-        if self.__move_from_node:
+        if self.__move_from_node and self.__move_to_node and self.__moved_armies > 0:
             self.__move_from_node.move_army_to_another_node(self.__moved_armies, self.__move_to_node)
         # apply attack
-        if self.__attacker_node:
+        if self.__attacker_node and self.__attacked_node and self.__attacked_node_armies > 0:
             self.__attacker_node.attack(self.__attacked_node, self.__attacked_node_armies)

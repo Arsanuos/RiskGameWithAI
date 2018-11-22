@@ -94,3 +94,10 @@ class Node:
             if self.can_attack(node):
                 possible_attacked_nodes.append(node)
         return possible_attacked_nodes
+
+    def get_possible_attacked_node_by_name(self, node_number):
+        nodes = self.get_possible_attacked_nodes()
+        for node in nodes:
+            if node.get_node_name() == node_number:
+                return node
+        return None
