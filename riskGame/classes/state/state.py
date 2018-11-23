@@ -52,7 +52,7 @@ class State:
                 return player
         return None
 
-    def expand_bonus(self):
+    def expand_bonus(self, limit):
         curr_player = self.get_current_player()
 
         #get bonus
@@ -79,24 +79,28 @@ class State:
             else:
                 node.move_bonus_to_mine()
                 if node.can_attack():
-                    curr_copy = deepcopy(self)
-                    ret_states.append(curr_copy)
+                    if limit > 0:
+                        curr_copy = deepcopy(self)
+                        ret_states.append(curr_copy)
+                        limit -= 1
                 else:
                     # can't attack although we added bonus
                     max_loss = node.max_loss_attack()
-                    if maxsize > case2_diff:
-                        case2_diff = maxsize
+                    if max_loss > case2_diff:
+                        case2_diff = max_loss
                         case2 = node
                 node.set_army(node.get_army - curr_bonus)
 
         # add case1
-        case1.move_bonus_to_mine()
-        ret_states.append(deepcopy(self))
-        case1.set_army(case1.get_army - curr_bonus)
+        if case1:
+            case1.move_bonus_to_mine()
+            ret_states.append(deepcopy(self))
+            case1.set_army(case1.get_army - curr_bonus)
 
-        # add case2
-        case2.move_bonus_to_mine()
-        ret_states.append(deepcopy(self))
-        case2.set_army(case1.get_army - curr_bonus)
+        if case2:
+            # add case2
+            case2.move_bonus_to_mine()
+            ret_states.append(deepcopy(self))
+            case2.set_army(case1.get_army - curr_bonus)
 
         return ret_states
