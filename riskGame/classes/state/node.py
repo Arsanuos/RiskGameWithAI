@@ -1,3 +1,6 @@
+from sys import maxsize
+
+
 class Node:
 
     def __int__(self, node_name, hold_player, army, neighbours, partition):
@@ -47,6 +50,27 @@ class Node:
     def get_node_name(self):
         return self.__node_name
 
+    def can_attack(self):
+        for node in self.__neighbours:
+            if self.can_attack(node):
+                return True
+        return False
+
+    def max_loss_attack(self):
+        max_loss = -1 * maxsize
+        for node in self.__neighbours:
+            if self.__hold_player != node.get_hold_player():
+                max_loss = max(max_loss, self.__army - node.get_army)
+        return max_loss
+
+    def min_loss_attack(self):
+        min_loss = maxsize
+        for node in self.__neighbours:
+            if self.__hold_player != node.get_hold_player():
+                min_loss = min(min_loss, self.__army - node.get_army)
+        return min_loss
+
+
     # check if we can attach the node from current node
     def can_attack(self, node):
         if (node in self.__neighbours) and (self.__hold_player != node.get_hold_player()) \
@@ -62,7 +86,9 @@ class Node:
             node.get_hold_player().remove_node(node)
             self.set_army(max(self.__army - node.get_army() - moved_army, 1))
             node.set_army(moved_army)
-            self.get_hold_player().add_node(node)
+            self.__hold_player.add_node(node)
+            # player successfully attacked so he will get 2 bonus on the next turn
+            self.__hold_player.set_last_attack_bonus(2)
             return True
         else:
             return False
@@ -81,6 +107,27 @@ class Node:
         else:
             return False
 
+
+    def undo_move_bonus_to_mine(self):
+        self.__hold_player.set_last_attack_bonus(2)
+        self.__army -= self.__hold_player.get_bonus()
+
+
     def move_bonus_to_mine(self):
         bonus = self.__hold_player.get_bonus()
         self.__army += bonus
+        self.__hold_player.set_last_attack_bonus(0)
+
+    def get_possible_attacked_nodes(self):
+        possible_attacked_nodes = []
+        for node in self.__neighbours:
+            if self.can_attack(node):
+                possible_attacked_nodes.append(node)
+        return possible_attacked_nodes
+
+    def get_possible_attacked_node_by_name(self, node_number):
+        nodes = self.get_possible_attacked_nodes()
+        for node in nodes:
+            if node.get_node_name() == node_number:
+                return node
+        return None

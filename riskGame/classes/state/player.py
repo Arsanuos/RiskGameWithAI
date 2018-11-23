@@ -61,3 +61,18 @@ class Player:
 
     def get_bonus(self):
         return self.calculate_partition_bonus() + self.__last_attack_bonus
+
+    def get_node_by_name(self, node_number):
+        for node in self.__hold_nodes:
+            if node.get_node_name() == node_number:
+                return node
+        return None
+
+    def get_border_nodes(self):
+        border_nodes = []
+        for node in self.__hold_nodes:
+            for neighbor in node.get_neighbours:
+                if neighbor not in self.__hold_nodes:
+                    border_nodes.append(node)
+                    break
+        return border_nodes
