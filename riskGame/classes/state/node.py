@@ -1,3 +1,6 @@
+from sys import maxsize
+
+
 class Node:
 
     def __int__(self, node_name, hold_player, army, neighbours, partition):
@@ -46,6 +49,27 @@ class Node:
     @property
     def get_node_name(self):
         return self.__node_name
+
+    def can_attack(self):
+        for node in self.__neighbours:
+            if self.can_attack(node):
+                return True
+        return False
+
+    def max_loss_attack(self):
+        max_loss = -1 * maxsize
+        for node in self.__neighbours:
+            if self.__hold_player != node.get_hold_player():
+                max_loss = max(max_loss, self.__army - node.get_army)
+        return max_loss
+
+    def min_loss_attack(self):
+        min_loss = maxsize
+        for node in self.__neighbours:
+            if self.__hold_player != node.get_hold_player():
+                min_loss = min(min_loss, self.__army - node.get_army)
+        return min_loss
+
 
     # check if we can attach the node from current node
     def can_attack(self, node):

@@ -1,4 +1,6 @@
 from copy import deepcopy
+from sys import maxsize
+
 
 class State:
 
@@ -61,10 +63,40 @@ class State:
 
         ret_states = []
 
+        case1 = None
+        case2 = None
+        case1_diff = maxsize
+        case2_diff = -maxsize
+
         for node in border_nodes:
-            node.move_bonus_to_mine()
-            curr_copy = deepcopy(self)
-            ret_states.append(curr_copy)
-            node.set_army(node.get_army - curr_bonus)
+
+            if node.can_attack():
+                # already has more troops
+                min_loss = node.min_loss_attack()
+                if min_loss < case1_diff:
+                    case1_diff = min_loss
+                    case1 = node
+            else:
+                node.move_bonus_to_mine()
+                if node.can_attack():
+                    curr_copy = deepcopy(self)
+                    ret_states.append(curr_copy)
+                else:
+                    # can't attack although we added bonus
+                    max_loss = node.max_loss_attack()
+                    if maxsize > case2_diff:
+                        case2_diff = maxsize
+                        case2 = node
+                node.set_army(node.get_army - curr_bonus)
+
+        # add case1
+        case1.move_bonus_to_mine()
+        ret_states.append(deepcopy(self))
+        case1.set_army(case1.get_army - curr_bonus)
+
+        # add case2
+        case2.move_bonus_to_mine()
+        ret_states.append(deepcopy(self))
+        case2.set_army(case1.get_army - curr_bonus)
 
         return ret_states
