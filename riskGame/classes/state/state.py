@@ -210,3 +210,59 @@ class State:
             move.apply_move()
             next_states.append(curr_state_copy)
         return next_states
+
+    def BFS(self, start_node, all_nodes, border_nodes, max_depth):
+        """
+            get start node, all nodes and border_nodes as the target
+            node must be on of the all_nodes and not one of the border_nodes and has army > 1.
+        :param start_node:
+        :param all_nodes:
+        :param border_nodes:
+        :param max_depth:
+        :return:
+        """
+        q = []
+        q.append((start_node, None))
+        vis = []
+        d = 0
+        while len(q):
+            s = len(q)
+            node, parent = q.pop(0)
+            d += 1
+            if d > max_depth:
+                return (None, None)
+            while s:
+                s -= 1
+                if node not in vis and node not in border_nodes:
+                    vis.add(node)
+                    if node in all_nodes and node not in border_nodes and node.get_army() > 1:
+                        return (node, parent)
+                    for child in node.get_neighbours():
+                        q.append((child, node))
+        # can be reached if all nodes is either border or has army less than or equal 1.
+        return (None, None)
+    def expand_move(self):
+        """
+        expand all possible moves (the most important ones). the most important nodes are defindes as follows:
+            - from the borders to the nearest non-border node that have an army > 1 consider that node to be source of
+                and the target will be the current bordering node.
+            - the case when target node (non-border) is the same for two or more border node then consider each cases.
+            - use BFS to get the nearest
+        :return: all possible moves to be bundled after that with attack and bonus moves.
+        """
+        next_states = []
+        cur_player = self.get_current_player()
+        border_nodes = cur_player.get_border_nodes()
+        all_nodes = cur_player.get_hold_nodes()
+        for node in border_nodes:
+            nearest_node, parent = self.BFS(node, all_nodes, border_nodes, len(all_nodes) + 1)
+            if nearest_node is not None and parent is not None:
+                new_state = deepcopy(self)
+                new_nearest_node = new_state.get_current_player().get_node_by_name(nearest_node.get_node_name())
+                new_parent = new_state.get_current_player().get_node_by_name(parent.get_node_name())
+                move = Move()
+                move.set_move_from_node(new_nearest_node)
+                move.set_move_to_node(new_parent)
+                move.apply_move()
+                next_states.append(new_state)
+        return new_state
