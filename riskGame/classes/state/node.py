@@ -107,6 +107,12 @@ class Node:
         else:
             return False
 
+
+    def undo_move_bonus_to_mine(self):
+        self.__hold_player.set_last_attack_bonus(2)
+        self.__army -= self.__hold_player.get_bonus()
+
+
     def move_bonus_to_mine(self):
         bonus = self.__hold_player.get_bonus()
         self.__army += bonus

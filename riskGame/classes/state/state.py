@@ -11,6 +11,15 @@ class State:
         self.__partitions = partitions
         self.__players = players
         self.__player_turn_number = player_turn_number
+        self.__curr_bonus_node = None
+
+    @property
+    def set_bonus_node(self, node):
+        self.__curr_bonus_node = node
+
+    @property
+    def get_bonus_node(self):
+        return self.__curr_bonus_node
 
     @property
     def set_players(self, players):
@@ -84,6 +93,8 @@ class State:
                 # TODO not use move_bonus unless you really move the bonus not just try to move bonus
                 # as move_bonus function reset last_attack_bonus in player
                 node.move_bonus_to_mine()
+                self.__curr_bonus_node = node
+
                 if node.can_attack():
                     if limit > 0:
                         curr_copy = deepcopy(self)
@@ -95,7 +106,8 @@ class State:
                     if max_loss > case2_diff:
                         case2_diff = max_loss
                         case2 = node
-                node.set_army(node.get_army - curr_bonus)
+                node.undo_move_bonus_to_mine()
+                self.__curr_bonus_node = None
 
         # add case1
         if case1:
