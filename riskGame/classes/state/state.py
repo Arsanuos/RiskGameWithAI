@@ -92,6 +92,9 @@ class State:
             else:
                 # TODO not use move_bonus unless you really move the bonus not just try to move bonus
                 # as move_bonus function reset last_attack_bonus in player
+                # ana b3mel move we ba3deha undo move k2ny m3mltesh 7aga, ana mesh fahem el TODO l2en el try
+                # zay in 2mel el action we 2raga3oh tany, we maynfa3sh 23mel try l2ni 3ayez 23raf el shakl el gedid
+                # 3shan 22dar 27kom 3leh fe el heuristic evaluator.
                 node.move_bonus_to_mine()
                 self.__curr_bonus_node = node
 

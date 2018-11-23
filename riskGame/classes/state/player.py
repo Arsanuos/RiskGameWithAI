@@ -4,6 +4,16 @@ class Player:
         self.__name = name
         self.__hold_nodes = hold_nodes
         self.__last_attack_bonus = 0
+        # ba3rf menaha 2za el player 3mal attack el mara ely fattet wala l2
+        self.__attacked_last_round = False
+
+    @property
+    def set_attacked_last_round(self, attacked):
+        self.__attacked_last_round = attacked
+
+    @property
+    def get_attacket_last_round(self):
+        return self.__attacked_last_round
 
     @property
     def set_name(self, name):
