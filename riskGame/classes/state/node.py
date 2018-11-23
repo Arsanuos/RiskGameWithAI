@@ -86,7 +86,9 @@ class Node:
             node.get_hold_player().remove_node(node)
             self.set_army(max(self.__army - node.get_army() - moved_army, 1))
             node.set_army(moved_army)
-            self.get_hold_player().add_node(node)
+            self.__hold_player.add_node(node)
+            # player successfully attacked so he will get 2 bonus on the next turn
+            self.__hold_player.set_last_attack_bonus(2)
             return True
         else:
             return False
@@ -108,3 +110,18 @@ class Node:
     def move_bonus_to_mine(self):
         bonus = self.__hold_player.get_bonus()
         self.__army += bonus
+        self.__hold_player.set_last_attack_bonus(0)
+
+    def get_possible_attacked_nodes(self):
+        possible_attacked_nodes = []
+        for node in self.__neighbours:
+            if self.can_attack(node):
+                possible_attacked_nodes.append(node)
+        return possible_attacked_nodes
+
+    def get_possible_attacked_node_by_name(self, node_number):
+        nodes = self.get_possible_attacked_nodes()
+        for node in nodes:
+            if node.get_node_name() == node_number:
+                return node
+        return None

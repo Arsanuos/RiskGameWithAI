@@ -1,4 +1,4 @@
-from riskGame.classes.agent import Agent
+from riskGame.classes.agent.agent import Agent
 from riskGame.classes.heuristic.bonus.place_bonus_passive import PlaceBonusPassive
 
 

@@ -2,9 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2ca25604-9fc5-4fae-b987-d303bafadd7c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/riskGame/classes/agent/aggressive_agent.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/riskGame/classes/agent/pacifist_agent.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/riskGame/classes/heuristic/attack/attack_aggressive.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/riskGame/classes/heuristic/attack/attack_pacifist.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/riskGame/classes/heuristic/bonus/place_bonus_aggressive.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/riskGame/classes/state/move.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/riskGame.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/riskGame.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/manage.py" beforeDir="false" afterPath="$PROJECT_DIR$/manage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/riskGame/classes/agent/agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/riskGame/classes/agent/agent.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/riskGame/classes/agent/human.py" beforeDir="false" afterPath="$PROJECT_DIR$/riskGame/classes/agent/human.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/riskGame/classes/agent/passive_agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/riskGame/classes/agent/passive_agent.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/riskGame/classes/heuristic/bonus/place_bonus_passive.py" beforeDir="false" afterPath="$PROJECT_DIR$/riskGame/classes/heuristic/bonus/place_bonus_passive.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/riskGame/classes/heuristic/heuristic.py" beforeDir="false" afterPath="$PROJECT_DIR$/riskGame/classes/heuristic/heuristic.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/riskGame/classes/state/node.py" beforeDir="false" afterPath="$PROJECT_DIR$/riskGame/classes/state/node.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/riskGame/classes/state/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/riskGame/classes/state/player.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/riskGame/classes/state/state.py" beforeDir="false" afterPath="$PROJECT_DIR$/riskGame/classes/state/state.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -15,7 +28,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/riskGame/classes/state/state.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="267">
@@ -27,11 +40,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/riskGame/classes/state/node.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="59" column="31" selection-start-line="59" selection-start-column="31" selection-end-line="59" selection-end-column="31" />
+            <state relative-caret-position="38">
+              <caret line="68" column="34" selection-start-line="68" selection-start-column="34" selection-end-line="68" selection-end-column="34" />
             </state>
           </provider>
         </entry>
@@ -48,8 +61,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/riskGame/classes/agent/human.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="8" column="4" selection-start-line="8" selection-end-line="8" selection-end-column="4" />
+            <state relative-caret-position="646">
+              <caret line="34" column="4" selection-start-line="34" selection-start-column="4" selection-end-line="34" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -198,7 +211,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/riskGame" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -260,11 +273,10 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5589000" />
+    <option name="totallyTimeSpent" value="5602000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="64" y="-11" width="1857" height="1092" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27086788" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -325,8 +337,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/riskGame/classes/agent/human.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="8" column="4" selection-start-line="8" selection-end-line="8" selection-end-column="4" />
+        <state relative-caret-position="646">
+          <caret line="34" column="4" selection-start-line="34" selection-start-column="4" selection-end-line="34" selection-end-column="4" />
         </state>
       </provider>
     </entry>
@@ -373,8 +385,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/riskGame/classes/state/node.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="59" column="31" selection-start-line="59" selection-start-column="31" selection-end-line="59" selection-end-column="31" />
+        <state relative-caret-position="38">
+          <caret line="68" column="34" selection-start-line="68" selection-start-column="34" selection-end-line="68" selection-end-column="34" />
         </state>
       </provider>
     </entry>

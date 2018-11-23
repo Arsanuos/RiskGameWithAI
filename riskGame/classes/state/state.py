@@ -2,6 +2,7 @@ from copy import deepcopy
 from sys import maxsize
 
 
+
 class State:
 
     def __init__(self, number_nodes, partitions, players, player_turn_number):
@@ -52,7 +53,6 @@ class State:
         return None
 
     def expand_bonus(self):
-
         curr_player = self.get_current_player()
 
         #get bonus
