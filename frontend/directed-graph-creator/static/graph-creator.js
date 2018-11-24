@@ -208,10 +208,13 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     function sendPost(data, type){
       $.ajax({
         type: "POST",
-        url: 'localhost:8000/'+type,
+        url: 'http://localhost:8000/'+type,
         data: {json:JSON.stringify(data)},
       }).fail(function(){
         alert("failed to send data.");
+      }).done(function(response){
+        //TODO:: see the response here.
+        console.log(response);
       });
     }
 
@@ -227,26 +230,28 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         if(source != "" && target != ""){
           var nodes = [];
           thisGraph.nodes.forEach(function(curr){
-            nodes.push({id:curr.id, title:curr.title.substring(curr.title.indexOf("(") , curr.title.length), player:curr.player});
+            nodes.push({id:curr.id, title:curr.title.substring(curr.title.indexOf("(") , curr.title.length), player:curr.player, x:curr.x, y:curr.y});
           });
-          data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges, action:{type:"attack" ,source:source, target:target}, player1:p1Algo, player2:p2Algo};
-          sendPost(data, type)
+          let data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges, 
+            action:{type:"attack" ,source:source, target:target}, player1:p1Algo, player2:p2Algo};
+          sendPost(data, "attack")
         }
       }else if(selected == "Move"){
         if(armies != "" && source != "" && target != ""){
           var nodes = [];
             thisGraph.nodes.forEach(function(curr){
-              nodes.push({id:curr.id, title:curr.title.substring(curr.title.indexOf("(") , curr.title.length), player:curr.player});
+              nodes.push({id:curr.id, title:curr.title.substring(curr.title.indexOf("(") , curr.title.length), player:curr.player, x:curr.x, y:curr.y});
             });
-            data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges, action:{type:"move" ,source:source, target:target, armies:armies}, player1:p1Algo, player2:p2Algo};
+            let data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges,
+               action:{type:"move" ,source:source, target:target, armies:armies}, player1:p1Algo, player2:p2Algo};
             sendPost(data, "move");
         }
       }else{
         var nodes = [];
         thisGraph.nodes.forEach(function(curr){
-          nodes.push({id:curr.id, title:curr.title.substring(curr.title.indexOf("(") , curr.title.length), player:curr.player});
+          nodes.push({id:curr.id, title:curr.title.substring(curr.title.indexOf("(") , curr.title.length), player:curr.player, x:curr.x, y:curr.y});
         });
-        data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges, player1:p1Algo, player2:p2Algo};
+        let data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges, player1:p1Algo, player2:p2Algo};
         sendPost(data, "AI");
       }
     });
