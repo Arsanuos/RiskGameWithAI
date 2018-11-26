@@ -26,8 +26,12 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       justScaleTransGraph: false,
       lastKeyDown: -1,
       shiftNodeDrag: false,
-      selectedText: null
+      selectedText: null,
+      currentPlayer: 0,
+      bonusVal: 10,
+      bonusNode: null,
     };
+
 
     // define arrow markers for graph links
     var defs = svg.append('svg:defs');
@@ -125,9 +129,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       });
       var tmp = []
       thisGraph.nodes.forEach(function(node){
-        if(node.title.indexOf("(") != -1){
-          tmp.push({id:node.id, title:node.title.substring(node.title.indexOf("(") + 1, node.title.length - 1), x:node.x, y:node.y, player:node.player});
-        }
+        tmp.push({id:node.id, title:node.title, x:node.x, y:node.y, player:node.player});
       });
       var blob = new Blob([window.JSON.stringify({"nodes": tmp, "edges": saveEdges, "partitions":thisGraph.partitions})], {type: "text/plain;charset=utf-8"});
       saveAs(blob, "mydag.json");
@@ -150,10 +152,10 @@ document.onload = (function(d3, saveAs, Blob, undefined){
             var jsonObj = JSON.parse(txtRes);
             thisGraph.deleteGraph(true);
             thisGraph.nodes = jsonObj.nodes;
-            thisGraph.nodes.forEach(function(node){
-              node.title = node.id + "(" + node.title + ")";
+            /*thisGraph.nodes.forEach(function(node){
+              node.title = node.title;
               return node;
-            });
+            });*/
             thisGraph.setIdCt(jsonObj.nodes.length + 1);
             var newEdges = jsonObj.edges;
             newEdges.forEach(function(e, i){
@@ -218,7 +220,12 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       });
     }
 
+    function nextPlayer(){
+      thisGraph.state.currentPlayer = (currentPlayer + 1) % 2;
+    }
+
     //handle doing actions.
+    var first_req = true;
     $("#doAction").click(function(){
       let selected = $("#selectAction :selected").text();
       let source = $("#source").val();
@@ -226,34 +233,60 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       let armies = $("#armies").val();
       let p1Algo = $("#p1Algo").val();
       let p2Algo = $("#p2Algo").val();
-      if(selected == "Attack"){ 
+      var algo = [p1Algo, p2Algo];
+      if(first_req){
+        //send all data.
+        //turn exists only for humans.
+        //response:
+        //human -> next turn of AI
+        //else all computation must be done in back-end as further request has nothing.
+        //TODO:: human vs human.
         if(source != "" && target != ""){
           var nodes = [];
           thisGraph.nodes.forEach(function(curr){
-            nodes.push({id:curr.id, title:curr.title.substring(curr.title.indexOf("(") , curr.title.length), player:curr.player, x:curr.x, y:curr.y});
+            nodes.push({id:curr.id, title:curr.title, player:curr.player});
           });
-          let data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges, 
-            action:{type:"attack" ,source:source, target:target}, player1:p1Algo, player2:p2Algo};
-          sendPost(data, "attack")
+          let data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges};
+          sendPost(data, "state")
         }
-      }else if(selected == "Move"){
-        if(armies != "" && source != "" && target != ""){
-          var nodes = [];
-            thisGraph.nodes.forEach(function(curr){
-              nodes.push({id:curr.id, title:curr.title.substring(curr.title.indexOf("(") , curr.title.length), player:curr.player, x:curr.x, y:curr.y});
-            });
-            let data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges,
-               action:{type:"move" ,source:source, target:target, armies:armies}, player1:p1Algo, player2:p2Algo};
-            sendPost(data, "move");
-        }
-      }else{
-        var nodes = [];
-        thisGraph.nodes.forEach(function(curr){
-          nodes.push({id:curr.id, title:curr.title.substring(curr.title.indexOf("(") , curr.title.length), player:curr.player, x:curr.x, y:curr.y});
-        });
-        let data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges, player1:p1Algo, player2:p2Algo};
-        sendPost(data, "AI");
+        first_req = true;
+      }else if(algo[currentPlayer] == "human"){
+        //turn only.
+        let turn = {bonusNode:thisGraph.bonusNode, 
+          attackerNode:thisGraph.attackerNode, attackedNode:thisGraph.attackedNode,
+           moveFromNode:thisGraph.attackedNode, moveToNode:thisGraph.moveToNode, movedArmies:thisGraph.movedArmies};
+           sendPost(turn, "turn");
+           nextPlayer();
+      }else {
+        //no humans all AI.
+        let data = {};
+        sendPost(data, "next");
       }
+    });
+
+    function getArmy(node){
+      return Number(node.title);
+    }
+
+    //some events to handle human agent inputs.
+    $("#addBonus").click(function(){
+      if(thisGraph.state.bonusNode != null ){
+        if(thisGraph.state.selectedNode.id == thisGraph.state.bonusNode.id){
+          return;
+        }
+      }
+      thisGraph.state.selectedNode.title = (thisGraph.state.bonusVal + getArmy(thisGraph.state.selectedNode)).toString();
+      thisGraph.nodes.forEach(function(node){
+        if(node.id == thisGraph.state.selectedNode.id){
+          node.title = thisGraph.state.selectedNode.title;
+        }
+        //remove bonus if wrongly given to a prev node.
+        if(thisGraph.state.bonusNode != null && node.id == thisGraph.state.bonusNode.id){
+          node.title = (getArmy(node) - thisGraph.state.bonusVal).toString();
+        }
+      });
+      thisGraph.state.bonusNode = thisGraph.state.selectedNode;
+      thisGraph.updateGraph();
     });
 
   
@@ -274,7 +307,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     BACKSPACE_KEY: 8,
     DELETE_KEY: 46,
     ENTER_KEY: 13,
-    nodeRadius: 50
+    nodeRadius: 50,
+    HELP:27,
   };
 
   /* PROTOTYPE FUNCTIONS */
@@ -428,7 +462,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           .append("xhtml:p")
           .attr("id", consts.activeEditId)
           .attr("contentEditable", "true")
-          .text(d.id + "" + (d.title.indexOf("(") != -1 ? d.title.substring(d.title.indexOf("("), d.title.length):  "(0)"))
+          .text(d.title)
           .on("mousedown", function(d){
             d3.event.stopPropagation();
           })
@@ -553,10 +587,9 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     state.lastKeyDown = d3.event.keyCode;
     var selectedNode = state.selectedNode,
         selectedEdge = state.selectedEdge;
-
     switch(d3.event.keyCode) {
     case consts.BACKSPACE_KEY:
-    //case consts.DELETE_KEY:
+    case consts.DELETE_KEY:
       d3.event.preventDefault();
       if (selectedNode){
         thisGraph.nodes.splice(thisGraph.nodes.indexOf(selectedNode), 1);
@@ -578,7 +611,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
 
   // call to propagate changes to graph
   GraphCreator.prototype.updateGraph = function(){
-
     var thisGraph = this,
         consts = thisGraph.consts,
         state = thisGraph.state;
@@ -649,11 +681,17 @@ document.onload = (function(d3, saveAs, Blob, undefined){
 
     // remove old nodes
     thisGraph.circles.exit().remove();
-    //thisGraph.circles.length = thisGraph.nodes.length;
+    //update colors and text.
     thisGraph.circles[0].parentNode.childNodes.forEach(function(g, i){
-      if(g !== undefined && thisGraph.nodes[i].player !== undefined){
-        //console.log(g[0])
-        $(g.childNodes[0]).css("fill", thisGraph.nodes[i].player == "Player 1" ? "green" : "red");
+      //if nodes exists.
+      if(g !== undefined){
+        //has color.
+        let node = thisGraph.nodes[i];
+        if(thisGraph.nodes[i].player !== undefined){
+          $(g.childNodes[0]).css("fill", node.player == "Player 1" ? "green" : "red");
+        }
+        $(g.childNodes[1]).text(node.title);
+        
       }
     });
 
@@ -673,10 +711,20 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     svg.attr("width", "100%").attr("height", y);
   };
 
-
-
-
   /**** MAIN ****/
+  var closed = true;
+  document.addEventListener('keydown', function(e){
+    //escape key on keyboard.
+    if(e.keyCode == 27){
+      if(closed){
+        $('#helpModal').modal("show");
+        closed = false;
+      }else{
+        $('#helpModal').modal("hide");
+        closed = true;
+      }
+    }
+  });
 
   // warn the user when leaving
   window.onbeforeunload = function(){
@@ -706,10 +754,4 @@ document.onload = (function(d3, saveAs, Blob, undefined){
 
   document.getElementById("root").style.maxWidth = "100%";
   graph.updateGraph();
-  console.log("Operation:")
-  console.log("1-drag/scroll to translate/zoom the graph")
-  console.log("2-shift-click on graph to create a node")
-  console.log("3-shift-click on a node and then drag to another node to connect them with a directed edge")
-  console.log("4-shift-click on a node to change its title")
-  console.log("5-click on node or edge and press backspace/delete to delete")
 })(window.d3, window.saveAs, window.Blob);
