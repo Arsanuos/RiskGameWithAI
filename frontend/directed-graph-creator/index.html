@@ -25,6 +25,7 @@
                   <li>shift-click on a node and then drag to another node to connect them with a directed edge</li>
                   <li>shift-click on a node to change its title.</li>
                   <li>click on node or edge and press backspace/delete to delete.</li>
+                  <li>Bonus node will be marked yellow and its number will be written on the configuration panel.</li>
                 </ol>
               </div>
               <div class="modal-footer">
@@ -92,18 +93,19 @@
                       </div>
                     </div>
                     
-                    <div>
+                    <div class="human">
                       <button id="addBonus" class="btn btn-success directiveButton"><img src="{% static 'bonus.svg'  %}"></button>
                       <button class="btn btn-danger directiveButton"><img src="{% static 'attack.svg'  %}"></button>
                       <button class="btn btn-primary directiveButton"><img src="{% static 'move.svg'  %}"></button>
-                      <p class="text-left">Available bonus is <span id="bonusVal" class="badge badge-secondary"></span> given to node 
-                        <span id="bonusNode" class="badge badge-secondary"></span> </p>
                       
-                      <p class="text-left">Attack detected from node <span id="attackerNode" class="badge badge-secondary"></span> 
-                        to <span id="attackedNode" class="badge badge-secondary"></span> .</p>
+                      <p class="text-left">Available bonus is <span id="bonusVal" class="badge badge-secondary hoverSpans"></span> given to node 
+                        <span id="bonusNode" class="badge badge-secondary hoverSpans"></span> </p>
                       
-                        <p class="text-left">Move detected from node <span id="moveFromNode" class="badge badge-secondary"></span> 
-                        to <span id="moveToNode" class="badge badge-secondary"></span>  with armies <input type="text" class="form-control armiesInput"/></p>
+                      <p class="text-left">Attack detected from node <span id="attackerNode" class="badge badge-secondary hoverSpans"></span> 
+                        to <span id="attackedNode" class="badge badge-secondary hoverSpans"></span> .</p>
+                      
+                        <p class="text-left">Move detected from node <span id="moveFromNode" class="badge badge-secondary hoverSpans"></span> 
+                        to <span id="moveToNode" class="badge badge-secondary hoverSpans"></span>  with armies <input type="text" class="form-control armiesInput"/></p>
                     </div>
                     
                     <div class="human" hidden>

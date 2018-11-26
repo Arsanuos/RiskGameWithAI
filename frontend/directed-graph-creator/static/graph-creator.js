@@ -3,7 +3,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   
   // TODO add user settings
   var consts = {
-    defaultTitle: "0"
+    defaultTitle: "0",
+    defaultUnkown: "-1",
   };
   var settings = {
     appendElSpec: "#graph"
@@ -12,6 +13,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   var GraphCreator = function(svg, nodes, edges, partitions){
     var thisGraph = this;
         thisGraph.idct = 0;
+    
+        var players = ["Player 1", "Player 2"];
 
     thisGraph.nodes = nodes || [];
     thisGraph.edges = edges || [];
@@ -30,6 +33,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       currentPlayer: 0,
       bonusVal: 10,
       bonusNode: null,
+      prevNode: null,
     };
 
 
@@ -216,6 +220,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         alert("failed to send data.");
       }).done(function(response){
         //TODO:: see the response here.
+        //TODO:: add values to spans in UI.
         console.log(response);
       });
     }
@@ -268,9 +273,95 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       return Number(node.title);
     }
 
+    function getOldColor(node){
+      if(node.player == "Player 1"){
+        return "green";
+      }else if(node.player == "Player 2"){
+        return "red";
+      }else{
+        //default color.
+        //return nothing to not over write parent color behaviour.
+        return "";
+      }
+    }
+
+    function colorNode(node, color){
+      thisGraph.circles[0].parentNode.childNodes.forEach(function(g, i){
+        //if nodes exists.
+        if(g !== undefined){
+          //color node with color.
+          if(node !== undefined && node.id == thisGraph.nodes[i].id){
+            $(g.childNodes[0]).css("fill", color);
+          }else if(node !== undefined && node.id != thisGraph.nodes[i].id){
+            //remove color if exists.
+            $(g.childNodes[0]).css("fill", getOldColor(thisGraph.nodes[i]));
+          }
+        }
+      });
+    }
+
+    GraphCreator.prototype.getCurrentPlayer = function(){
+      return players[thisGraph.state.currentPlayer];
+    }  
+
+    GraphCreator.prototype.getNextPlayer = function(){
+      return players[(thisGraph.state.currentPlayer + 1) % 2];
+    }
+
+    GraphCreator.prototype.updateSelectedAndPrevNode = function() {
+      //TODO:: check for humans only.
+      if(thisGraph.state.prevNode.player != undefined){
+        $("#attackerNode").text(thisGraph.state.prevNode.player == thisGraph.getCurrentPlayer() ? 
+          thisGraph.state.prevNode.id : "-1");
+      }
+      if(thisGraph.state.selectedNode.player != undefined){
+        $("#attackedNode").text(thisGraph.state.selectedNode.player == thisGraph.getNextPlayer() ? 
+          thisGraph.state.selectedNode.id : "-1");
+      }
+
+
+      if(thisGraph.state.prevNode.player != undefined){
+        $("#moveFromNode").text(thisGraph.state.prevNode.player == thisGraph.getCurrentPlayer() ? 
+          thisGraph.state.prevNode.id : "-1");
+      }
+      if(thisGraph.state.selectedNode.player != undefined){
+        $("#moveToNode").text(thisGraph.state.selectedNode.player == thisGraph.getCurrentPlayer() ? 
+          thisGraph.state.selectedNode.id : "-1");
+      }
+
+    }
+
+    $(".hoverSpans").on('mouseover', function(){
+      let nodeId = $(this).text();
+      thisGraph.nodes.forEach(function(node, i){
+        if(node.id == nodeId){
+          colorNode(node, "pink");
+        }
+      });
+    });
+
+    $(".hoverSpans").on('mouseleave', function(){
+      let nodeId = $(this).text();
+      thisGraph.nodes.forEach(function(node, i){
+        if(node.id == nodeId){
+          colorNode(node, getOldColor(node));
+        }
+      });
+    });
+
+    function updateBonusUi(){
+      $("#bonusVal").text(thisGraph.state.bonusVal);
+      $("#bonusNode").text(thisGraph.state.bonusNode.id);
+      //color bonus node with yellow.
+      colorNode(thisGraph.state.bonusNode, "yellow");
+    }
+
     //some events to handle human agent inputs.
     $("#addBonus").click(function(){
-      if(thisGraph.state.bonusNode != null ){
+      if(thisGraph.state.selectedNode == null){
+        return;
+      }
+      if(thisGraph.state.bonusNode != null){
         if(thisGraph.state.selectedNode.id == thisGraph.state.bonusNode.id){
           return;
         }
@@ -287,6 +378,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       });
       thisGraph.state.bonusNode = thisGraph.state.selectedNode;
       thisGraph.updateGraph();
+      updateBonusUi();
     });
 
   
@@ -385,11 +477,19 @@ document.onload = (function(d3, saveAs, Blob, undefined){
 
   GraphCreator.prototype.replaceSelectNode = function(d3Node, nodeData){
     var thisGraph = this;
+    
     d3Node.classed(this.consts.selectedClass, true);
     if (thisGraph.state.selectedNode){
+      thisGraph.state.prevNode = thisGraph.state.selectedNode
       thisGraph.removeSelectFromNode();
+      thisGraph.state.selectedNode = nodeData;
+    }else{
+      //if no selected so far then prev = cur.
+      thisGraph.state.selectedNode = nodeData;
+      thisGraph.state.prevNode = thisGraph.state.selectedNode
     }
-    thisGraph.state.selectedNode = nodeData;
+    //update UI with new nodes.
+    thisGraph.updateSelectedAndPrevNode();
   };
 
   GraphCreator.prototype.removeSelectFromNode = function(){
@@ -711,6 +811,16 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     svg.attr("width", "100%").attr("height", y);
   };
 
+  function intitializeUi(){
+    $("#bonusVal").text(consts.defaultUnkown);
+    $("#bonusNode").text(consts.defaultUnkown);
+    $("#attackerNode").text(consts.defaultUnkown);
+    $("#attackedNode").text(consts.defaultUnkown);
+    $("#moveFromNode").text(consts.defaultUnkown);
+    $("#moveToNode").text(consts.defaultUnkown);
+    $("#attackedNode").text(consts.defaultUnkown);
+  }
+
   /**** MAIN ****/
   var closed = true;
   document.addEventListener('keydown', function(e){
@@ -754,4 +864,5 @@ document.onload = (function(d3, saveAs, Blob, undefined){
 
   document.getElementById("root").style.maxWidth = "100%";
   graph.updateGraph();
+  intitializeUi();
 })(window.d3, window.saveAs, window.Blob);

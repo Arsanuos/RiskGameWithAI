@@ -8,13 +8,14 @@
 }
 
 .armiesInput { 
-    width: 20% !important;
+    width: 18% !important;
     display: inline !important;
 }
 
 .directiveButton {
     width: 32% !important;
     height: 130px !important;
+    margin-bottom:10px;
 }
 
 imgs{
