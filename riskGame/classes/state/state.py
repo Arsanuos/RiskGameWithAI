@@ -11,6 +11,10 @@ class State:
         self.__partitions = partitions
         self.__players = players
         self.__player_turn_number = player_turn_number
+        self.__turn_number = 0
+        # TODO check -1 is invalid value for hash string
+        self.__hashed_value = -1
+        self.__parent_state = None
 
     @property
     def set_players(self, players):
@@ -29,6 +33,14 @@ class State:
         self.__player_turn_number = player_turn_number
 
     @property
+    def set_turn_number(self, turn_number):
+        self.__turn_number = turn_number
+
+    @property
+    def set_parent_state(self, parent_state):
+        self.__parent_state = parent_state
+
+    @property
     def get_players(self):
         return self.__players
 
@@ -44,11 +56,28 @@ class State:
     def get_player_turn_number(self):
         return self.__player_turn_number
 
+    @property
+    def get_turn_number(self):
+        return self.__turn_number
+
+    def get_parent_state(self):
+        return self.__parent_state
+
+    def increase_turn(self):
+        self.__turn_number += 1
+
+    def calculate_gn(self, initial_state):
+        return self.__turn_number - initial_state.get_turn_number()
+
     def get_current_player(self):
         return self.__players[self.__player_turn_number]
 
     def get_next_player(self):
         return self.__players[(self.__player_turn_number + 1) % len(self.__players)]
+
+    def increase_player_turn(self):
+        self.__player_turn_number += 1
+        self.__player_turn_number %= len(self.__players)
 
     def get_winner(self):
         for player in self.__players:
@@ -160,7 +189,6 @@ class State:
                         possible_armies_movies.append(min_army_needed_in_attacked_node)
 
                 # tuple (priority, my object)
-                obj = ()
                 attack_move = list()
                 attack_move.append(attacker_node.get_node_name())
                 attack_move.append(attacked_node.get_node_name())
@@ -223,20 +251,20 @@ class State:
         return new_state
 
     def expand(self):
-        bonus_moves = self.expand_bonus(limit=4);
+        bonus_nodes = self.expand_bonus(limit=4);
         move_moves = self.expand_move();
         attack_moves = self.expand_attack(limit=4, divide_armies=False)
         next_states = []
-        for move1 in bonus_moves:
+        for node in bonus_nodes:
             for move2 in move_moves:
                 for move3 in attack_moves:
                     copied_state = deepcopy(self)
-                    bonus_node = copied_state.get_current_player().get_node_by_name(move1.get_bonus_hold_node())
-                    move_from_node = copied_state.get_current_player().get_node_by_name(move2.get_move_from_node())
-                    move_to_node = copied_state.get_current_player().get_node_by_name(move2.get_move_to_node())
+                    bonus_node = copied_state.get_current_player().get_node_by_name(node.get_node_name())
+                    move_from_node = copied_state.get_current_player().get_node_by_name(move2.get_move_from_node().get_node_name())
+                    move_to_node = copied_state.get_current_player().get_node_by_name(move2.get_move_to_node().get_node_name())
                     moved_armies = move2.get_moved_armies()
-                    attacker_node = copied_state.get_current_player().get_node_by_name(move3.get_attacker_node())
-                    attacked_node = copied_state.get_next_player().get_node_by_name(move3.get_attacked_node())
+                    attacker_node = copied_state.get_current_player().get_node_by_name(move3.get_attacker_node().get_node_name())
+                    attacked_node = copied_state.get_next_player().get_node_by_name(move3.get_attacked_node().get_node_name())
                     attacked_armies = move3.get_attacked_node_armies()
                     move = Move()
                     move.set_bonus_hold_node(bonus_node)
@@ -247,6 +275,10 @@ class State:
                     move.set_attacked_node(attacked_node)
                     move.set_attacked_node_armies(attacked_armies)
                     move.apply_move()
+                    copied_state.increase_turn()
+                    copied_state.increase_player_turn()
+                    copied_state.reset_hash()
+                    copied_state.set_parent_state(self)
                     next_states.append(copied_state)
         return next_states
 
@@ -281,3 +313,33 @@ class State:
                         q.append((child, node))
         # can be reached if all nodes is either border or has army less than or equal 1.
         return (None, None)
+
+    def get_steps_to_root(self):
+        temp_state = self
+        all_states = []
+        while temp_state:
+            all_states.append(temp_state)
+            temp_state = temp_state.get_parent_state()
+        return all_states[:-1]
+
+    def to_array(self):
+        arr = []
+        for player in self.__players:
+            arr.append(player.get_bonus())
+        for player in self.__players:
+            for node in player.get_hold_nodes():
+                arr.append((player.get_name(), node.get_army()))
+        return arr
+
+    def __eq__(self, other):
+        if not isinstance(other, type(self)): return NotImplemented
+        return self.__hash__() == other.__hash__()
+
+    def __hash__(self):
+        if self.__hashed_value == -1:
+            self.__hashed_value = hash(str(self.to_array()))
+        return self.__hashed_value
+
+    def reset_hash(self):
+        self.__hashed_value == -1
+

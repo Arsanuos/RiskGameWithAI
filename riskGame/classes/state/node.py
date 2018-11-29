@@ -3,12 +3,13 @@ from sys import maxsize
 
 class Node:
 
-    def __int__(self, node_name, hold_player, army, neighbours, partition):
+    def __int__(self, node_name, hold_player, army, neighbours, partition, position):
         self.__node_name = node_name
         self.__hold_player = hold_player
         self.__army = army
         self.__neighbours = neighbours
         self.__partition = partition
+        self.__position = position
 
     @property
     def set_army(self, army):
@@ -50,6 +51,10 @@ class Node:
     def get_node_name(self):
         return self.__node_name
 
+    @property
+    def get_position(self):
+        return self.__position
+
     def can_attack(self):
         for node in self.__neighbours:
             if self.can_attack(node):
@@ -80,9 +85,10 @@ class Node:
 
 
     # check if we can attach the node from current node
-    def can_attack(self, node):
+    def can_attack(self, node, moved_army=1):
         if (node in self.__neighbours) and (self.__hold_player != node.get_hold_player()) \
-                and (self.__army - node.get_army() > 1):
+                and (self.__army - node.get_army() > 1) and (moved_army >= 1)\
+                    and (self.__army - node.get_army() - moved_army >= 1):
             return True
         return False
 
@@ -101,14 +107,18 @@ class Node:
         else:
             return False
 
-    # return status of moving arimes to another node [success of failure]
-    # neighbour_condition to make constraint on moving armies to neighbouring nodes only
-    # armies represent number of armies we want to move from the current node to node
-    def move_army_to_another_node(self, armies, node, neighbour_condition=True):
-        cond = True
-        if neighbour_condition:
-            cond = cond and (node in self.__neighbours)
+
+    def can_move_to_another_node(self, armies, node):
+        cond = (node in self.__neighbours)
         if cond and (self.__hold_player == node.get_hold_player()) and (self.get_army() > armies):
+            return True
+        else:
+            return False
+
+    # return status of moving arimes to another node [success of failure]
+    # armies represent number of armies we want to move from the current node to node
+    def move_army_to_another_node(self, armies, node):
+        if self.can_move_to_another_node(armies, node):
             self.set_army(self.get_army() - armies)
             node.set_army(node.get_army() + armies)
             return True

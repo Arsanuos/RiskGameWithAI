@@ -11,7 +11,6 @@ class SigmoidEval:
     def __init__(self, state):
         self.__state = state
 
-
     def score(self):
         """
         weight are manually tuned.
