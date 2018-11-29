@@ -13,6 +13,7 @@ class Player:
     @property
     def set_hold_nodes(self, hold_nodes):
         self.__hold_nodes = hold_nodes
+        self.__nodes_dic = {node.get_node_name() : node for node in self.__hold_nodes}
 
     @property
     def set_last_attack_bonus(self, last_attack_bonus):
@@ -70,6 +71,8 @@ class Player:
                 return node
         """
         # faster way using dictionary
+        if node_number not in self.__nodes_dic:
+            return None
         return self.__nodes_dic[node_number]
 
     def get_border_nodes(self):

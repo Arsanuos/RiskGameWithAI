@@ -250,6 +250,10 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       thisGraph.state.currentPlayer = (thisGraph.state.currentPlayer + 1) % 2;
     }
 
+    $("#initialize").click(function(){
+      intialState();
+    });
+
     //handle doing actions.
     var firstReq = true;
     
