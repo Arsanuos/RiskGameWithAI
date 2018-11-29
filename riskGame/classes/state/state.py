@@ -178,7 +178,8 @@ class State:
                         heappush(pq, obj)
 
         next_states = []
-        for i in range(0, limit):
+        sz = len(pq)
+        for i in range(0, min(limit, sz)):
             # get the best ith attack move
             attack_move = heappop(pq)[1]
             curr_state_copy = deepcopy(self)
@@ -190,8 +191,8 @@ class State:
             move.set_attacker_node(attacker_node)
             move.set_attacked_node(attacked_node)
             move.set_attacked_node_armies(moved_armies)
-            move.apply_move()
-            next_states.append(curr_state_copy)
+            #move.apply_move()
+            next_states.append(move)
         return next_states
 
     def expand_move(self):
@@ -216,9 +217,38 @@ class State:
                 move = Move()
                 move.set_move_from_node(new_nearest_node)
                 move.set_move_to_node(new_parent)
-                move.apply_move()
-                next_states.append(new_state)
+                #move.apply_move()
+                #next_states.append(new_state)
+                next_states.append(move)
         return new_state
+
+    def expand(self):
+        bonus_moves = self.expand_bonus(limit=4);
+        move_moves = self.expand_move();
+        attack_moves = self.expand_attack(limit=4, divide_armies=False)
+        next_states = []
+        for move1 in bonus_moves:
+            for move2 in move_moves:
+                for move3 in attack_moves:
+                    copied_state = deepcopy(self)
+                    bonus_node = copied_state.get_current_player().get_node_by_name(move1.get_bonus_hold_node())
+                    move_from_node = copied_state.get_current_player().get_node_by_name(move2.get_move_from_node())
+                    move_to_node = copied_state.get_current_player().get_node_by_name(move2.get_move_to_node())
+                    moved_armies = move2.get_moved_armies()
+                    attacker_node = copied_state.get_current_player().get_node_by_name(move3.get_attacker_node())
+                    attacked_node = copied_state.get_next_player().get_node_by_name(move3.get_attacked_node())
+                    attacked_armies = move3.get_attacked_node_armies()
+                    move = Move()
+                    move.set_bonus_hold_node(bonus_node)
+                    move.set_move_from_node(move_from_node)
+                    move.set_move_to_node(move_to_node)
+                    move.set_moved_armies(moved_armies)
+                    move.set_attacker_node(attacker_node)
+                    move.set_attacked_node(attacked_node)
+                    move.set_attacked_node_armies(attacked_armies)
+                    move.apply_move()
+                    next_states.append(copied_state)
+        return next_states
 
     ## UTILS ##
     def BFS(self, start_node, all_nodes, border_nodes, max_depth):
