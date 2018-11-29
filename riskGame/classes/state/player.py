@@ -4,6 +4,7 @@ class Player:
         self.__name = name
         self.__hold_nodes = hold_nodes
         self.__last_attack_bonus = 0
+        self.__nodes_dic = {node.get_node_name() : node for node in self.__hold_nodes}
 
     @property
     def set_name(self, name):
@@ -63,10 +64,13 @@ class Player:
         return self.calculate_partition_bonus() + self.__last_attack_bonus
 
     def get_node_by_name(self, node_number):
+        """
         for node in self.__hold_nodes:
             if node.get_node_name() == node_number:
                 return node
-        return None
+        """
+        # faster way using dictionary
+        return self.__nodes_dic[node_number]
 
     def get_border_nodes(self):
         border_nodes = []
