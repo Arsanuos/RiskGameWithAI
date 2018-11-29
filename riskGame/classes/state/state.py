@@ -11,7 +11,6 @@ class State:
         self.__partitions = partitions
         self.__players = players
         self.__player_turn_number = player_turn_number
-        self.__curr_bonus_node = None
 
     @property
     def set_bonus_node(self, node):
@@ -80,49 +79,35 @@ class State:
         case2 = None
         case1_diff = maxsize
         case2_diff = -maxsize
-
         for node in border_nodes:
-
-            if node.can_attack():
+            copied_state = deepcopy(self)
+            copied_node = copied_state.get_current_player().get_node_by_name(node.get_node_name())
+            if copied_node.can_attack():
                 # already has more troops
-                min_loss = node.min_loss_attack()
+                min_loss = copied_node.min_loss_attack()
                 if min_loss < case1_diff:
                     case1_diff = min_loss
-                    case1 = node
+                    case1 = (copied_node, copied_state)
             else:
-                # TODO not use move_bonus unless you really move the bonus not just try to move bonus
-                # as move_bonus function reset last_attack_bonus in player
-                # ana b3mel move we ba3deha undo move k2ny m3mltesh 7aga, ana mesh fahem el TODO l2en el try
-                # zay in 2mel el action we 2raga3oh tany, we maynfa3sh 23mel try l2ni 3ayez 23raf el shakl el gedid
-                # 3shan 22dar 27kom 3leh fe el heuristic evaluator.
-                node.move_bonus_to_mine()
-                self.__curr_bonus_node = node
-
-                if node.can_attack():
+                copied_node.move_bonus_to_mine()
+                if copied_node.can_attack():
                     if limit > 0:
-                        curr_copy = deepcopy(self)
-                        ret_states.append(curr_copy)
+                        ret_states.append(copied_state)
                         limit -= 1
                 else:
                     # can't attack although we added bonus
-                    max_loss = node.max_loss_attack()
+                    max_loss = copied_node.max_loss_attack()
                     if max_loss > case2_diff:
                         case2_diff = max_loss
-                        case2 = node
-                node.undo_move_bonus_to_mine()
-                self.__curr_bonus_node = None
-
+                        case2 = (copied_node, copied_state)
         # add case1
         if case1:
-            case1.move_bonus_to_mine()
-            ret_states.append(deepcopy(self))
-            case1.set_army(case1.get_army - curr_bonus)
+            case1[0].move_bonus_to_mine()
+            ret_states.append(case1[1])
 
         if case2:
             # add case2
-            case2.move_bonus_to_mine()
-            ret_states.append(deepcopy(self))
-            case2.set_army(case1.get_army - curr_bonus)
+            ret_states.append(case2[1])
 
         return ret_states
 
@@ -211,6 +196,33 @@ class State:
             next_states.append(curr_state_copy)
         return next_states
 
+    def expand_move(self):
+        """
+        expand all possible moves (the most important ones). the most important nodes are defindes as follows:
+            - from the borders to the nearest non-border node that have an army > 1 consider that node to be source of
+                and the target will be the current bordering node.
+            - the case when target node (non-border) is the same for two or more border node then consider each cases.
+            - use BFS to get the nearest
+        :return: all possible moves to be bundled after that with attack and bonus moves.
+        """
+        next_states = []
+        cur_player = self.get_current_player()
+        border_nodes = cur_player.get_border_nodes()
+        all_nodes = cur_player.get_hold_nodes()
+        for node in border_nodes:
+            nearest_node, parent = self.BFS(node, all_nodes, border_nodes, len(all_nodes) + 1)
+            if nearest_node is not None and parent is not None:
+                new_state = deepcopy(self)
+                new_nearest_node = new_state.get_current_player().get_node_by_name(nearest_node.get_node_name())
+                new_parent = new_state.get_current_player().get_node_by_name(parent.get_node_name())
+                move = Move()
+                move.set_move_from_node(new_nearest_node)
+                move.set_move_to_node(new_parent)
+                move.apply_move()
+                next_states.append(new_state)
+        return new_state
+
+    ## UTILS ##
     def BFS(self, start_node, all_nodes, border_nodes, max_depth):
         """
             get start node, all nodes and border_nodes as the target
@@ -241,28 +253,3 @@ class State:
                         q.append((child, node))
         # can be reached if all nodes is either border or has army less than or equal 1.
         return (None, None)
-    def expand_move(self):
-        """
-        expand all possible moves (the most important ones). the most important nodes are defindes as follows:
-            - from the borders to the nearest non-border node that have an army > 1 consider that node to be source of
-                and the target will be the current bordering node.
-            - the case when target node (non-border) is the same for two or more border node then consider each cases.
-            - use BFS to get the nearest
-        :return: all possible moves to be bundled after that with attack and bonus moves.
-        """
-        next_states = []
-        cur_player = self.get_current_player()
-        border_nodes = cur_player.get_border_nodes()
-        all_nodes = cur_player.get_hold_nodes()
-        for node in border_nodes:
-            nearest_node, parent = self.BFS(node, all_nodes, border_nodes, len(all_nodes) + 1)
-            if nearest_node is not None and parent is not None:
-                new_state = deepcopy(self)
-                new_nearest_node = new_state.get_current_player().get_node_by_name(nearest_node.get_node_name())
-                new_parent = new_state.get_current_player().get_node_by_name(parent.get_node_name())
-                move = Move()
-                move.set_move_from_node(new_nearest_node)
-                move.set_move_to_node(new_parent)
-                move.apply_move()
-                next_states.append(new_state)
-        return new_state
