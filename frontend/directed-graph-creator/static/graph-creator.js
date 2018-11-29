@@ -220,8 +220,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     function sendPost(data, type){
       $.ajax({
         type: "POST",
-        url: 'http://localhost:8000/'+type,
-        data: {json:JSON.stringify(data)},
+        url: 'http://localhost:8000/',
+        data: {json:JSON.stringify(data), type:type},
       }).fail(function(){
         //failure();
       }).done(function(response){
