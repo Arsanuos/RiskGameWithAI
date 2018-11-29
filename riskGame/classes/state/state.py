@@ -13,14 +13,6 @@ class State:
         self.__player_turn_number = player_turn_number
 
     @property
-    def set_bonus_node(self, node):
-        self.__curr_bonus_node = node
-
-    @property
-    def get_bonus_node(self):
-        return self.__curr_bonus_node
-
-    @property
     def set_players(self, players):
         self.__players = players
 
@@ -67,49 +59,55 @@ class State:
     def expand_bonus(self, limit=maxsize):
         curr_player = self.get_current_player()
 
-        #get bonus
-        curr_bonus = curr_player.get_bonus()
-
-        #get border nodes
+        # get border nodes
         border_nodes = curr_player.get_border_nodes()
 
-        ret_states = []
+        no_need_bonus = []
+        need_more_bonus = []
+        need_bonus = []
 
-        case1 = None
-        case2 = None
-        case1_diff = maxsize
-        case2_diff = -maxsize
         for node in border_nodes:
+            # copy my now state
             copied_state = deepcopy(self)
+            # get the node that look like my current holding node.
             copied_node = copied_state.get_current_player().get_node_by_name(node.get_node_name())
+
+            # node can attack without even use bonus
             if copied_node.can_attack():
                 # already has more troops
-                min_loss = copied_node.min_loss_attack()
-                if min_loss < case1_diff:
-                    case1_diff = min_loss
-                    case1 = (copied_node, copied_state)
+                no_need_bonus.append(copied_node)
+
             else:
-                copied_node.move_bonus_to_mine()
+                copied_node.set_army(copied_node.get_army + copied_state.get_current_player().get_bonus())
                 if copied_node.can_attack():
-                    if limit > 0:
-                        ret_states.append(copied_state)
-                        limit -= 1
+                    need_bonus.append(copied_node)
+
                 else:
                     # can't attack although we added bonus
-                    max_loss = copied_node.max_loss_attack()
-                    if max_loss > case2_diff:
-                        case2_diff = max_loss
-                        case2 = (copied_node, copied_state)
-        # add case1
-        if case1:
-            case1[0].move_bonus_to_mine()
-            ret_states.append(case1[1])
+                    need_more_bonus.append(copied_node)
+                copied_node.set_army(copied_node.get_army - copied_state.get_current_player().get_bonus())
 
-        if case2:
-            # add case2
-            ret_states.append(case2[1])
+        # priority for no_need_bonus
+        sorted_no_need_bonus = []
+        for node in no_need_bonus:
+            # score = loss if node attacked weakest node.
+            val = node.min_loss_attack()
+            sorted_no_need_bonus.append((node, val))
 
-        return ret_states
+        sorted_no_need_bonus = sorted(sorted_no_need_bonus, key=lambda x: x[1])
+
+        # priority for need_more_bonus
+        sorted_need_more_bonus = []
+        for node in need_more_bonus:
+            # score = loss if node attacked weakest node
+            val = node.min_loss_attack()
+            sorted_need_more_bonus.append((node, -val))
+
+            sorted_need_more_bonus = sorted(sorted_need_more_bonus, key=lambda x: x[1])
+
+        ret_nodes = need_bonus + sorted_need_more_bonus + sorted_no_need_bonus
+
+        return ret_nodes[:limit]
 
     """
         limit the branching factor y using limit argument.

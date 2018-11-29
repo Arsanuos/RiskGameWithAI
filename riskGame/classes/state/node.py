@@ -56,14 +56,22 @@ class Node:
                 return True
         return False
 
-    def max_loss_attack(self):
+    def min_loss_attack(self):
+        '''
+            get the score of minimum harm can be done to me.
+        :return minimum harm score:
+        '''
         max_loss = -1 * maxsize
         for node in self.__neighbours:
             if self.__hold_player != node.get_hold_player():
                 max_loss = max(max_loss, self.__army - node.get_army)
         return max_loss
 
-    def min_loss_attack(self):
+    def max_loss_attack(self):
+        '''
+            get the score of maximum harm can be done to me.
+        :return: maximum harm score
+        '''
         min_loss = maxsize
         for node in self.__neighbours:
             if self.__hold_player != node.get_hold_player():
