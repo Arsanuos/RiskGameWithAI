@@ -34,6 +34,12 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       bonusVal: 10,
       bonusNode: null,
       prevNode: null,
+      moveFromNode: null,
+      moveToNode: null,
+      movedArmies: null,
+      attackerNode: null,
+      attackedNode: null,
+      attackedNodeArmies: -1,
     };
 
 
@@ -205,7 +211,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         }
       }).forEach(function(g){
         if(g[0] !== undefined){
-          $(g[0].childNodes[0]).css("fill", $('#selectPlayer :selected').text() == "Player 1" ? "green" : "red");
+          $(g[0].childNodes[0]).css("fill", $('#selectPlayer :selected').text() == "Player 1" ? "#d39e00" : "#299a43");
         }
         $("#selectPlayer").val("selectOption1");
       });
@@ -217,67 +223,78 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         url: 'http://localhost:8000/'+type,
         data: {json:JSON.stringify(data)},
       }).fail(function(){
-        alert("failed to send data.");
+        //failure();
       }).done(function(response){
         //TODO:: see the response here.
         //TODO:: add values to spans in UI.
-        console.log(response);
+        //success();
+        if(response.status == "valid"){
+          thisGraph.nodes = response.nodes;
+          thisGraph.state.currentPlayer = response.player;
+          thisGraph.state.bonusVal = response.bonus;
+          thisGraph.updateGraph();
+          updateBonusUi();
+        } else {
+          let error = "";
+          response.messages.forEach(function(message){
+            error +=  "\n" + message;
+          });
+          $("#alerts").text(error);
+          $("#alerts").fadeIn(700);
+          $("#alerts").fadeOut(700);
+        }
       });
     }
 
     function nextPlayer(){
-      thisGraph.state.currentPlayer = (currentPlayer + 1) % 2;
+      thisGraph.state.currentPlayer = (thisGraph.state.currentPlayer + 1) % 2;
     }
 
     //handle doing actions.
-    var first_req = true;
-    $("#doAction").click(function(){
-      let selected = $("#selectAction :selected").text();
-      let source = $("#source").val();
-      let target = $("#target").val();
-      let armies = $("#armies").val();
-      let p1Algo = $("#p1Algo").val();
-      let p2Algo = $("#p2Algo").val();
-      var algo = [p1Algo, p2Algo];
-      if(first_req){
+    var firstReq = true;
+    
+    function intialState(){
+      if(firstReq){
         //send all data.
         //turn exists only for humans.
         //response:
         //human -> next turn of AI
         //else all computation must be done in back-end as further request has nothing.
         //TODO:: human vs human.
-        if(source != "" && target != ""){
-          var nodes = [];
-          thisGraph.nodes.forEach(function(curr){
-            nodes.push({id:curr.id, title:curr.title, player:curr.player});
-          });
-          let data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges};
-          sendPost(data, "state")
-        }
-        first_req = true;
-      }else if(algo[currentPlayer] == "human"){
-        //turn only.
-        let turn = {bonusNode:thisGraph.bonusNode, 
-          attackerNode:thisGraph.attackerNode, attackedNode:thisGraph.attackedNode,
-           moveFromNode:thisGraph.attackedNode, moveToNode:thisGraph.moveToNode, movedArmies:thisGraph.movedArmies};
-           sendPost(turn, "turn");
-           nextPlayer();
-      }else {
-        //no humans all AI.
-        let data = {};
-        sendPost(data, "next");
+        var nodes = [];
+        thisGraph.nodes.forEach(function(curr){
+          nodes.push({id:curr.id, title:curr.title, player:curr.player});
+        });
+        let data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges, p1:p1Algo, p2:p2Algo};
+        sendPost(data, "state")
+        firstReq = false;
       }
-    });
+    }
+
+    function handleTurn(){
+      let turn = {bonusNode:thisGraph.bonusNode, 
+        attackerNode:thisGraph.state.attackerNode, attackedNode:thisGraph.attackedNode,
+         moveFromNode:thisGraph.moveFromNode, moveToNode:thisGraph.moveToNode,
+         movedArmies:thisGraph.movedArmies, 
+         attackedNodeArmies:thisGraph.state.attackedNodeArmies};
+         sendPost(turn, "turn");
+    }
 
     function getArmy(node){
       return Number(node.title);
     }
 
     function getOldColor(node){
-      if(node.player == "Player 1"){
-        return "green";
-      }else if(node.player == "Player 2"){
+      if((thisGraph.state.attackedNode != null && node.id == thisGraph.state.attackedNode.id) 
+        || (thisGraph.state.attackerNode != null && node.id == thisGraph.state.attackerNode.id)){
         return "red";
+      } else if((thisGraph.state.moveToNode != null && node.id == thisGraph.state.moveToNode.id)
+        || (thisGraph.state.moveFromNode != null && node.id == thisGraph.state.moveFromNode.id)){
+        return "blue";
+      }else if(node.player == "Player 1"){
+        return "#d39e00";
+      }else if(node.player == "Player 2"){
+        return "#299a43";
       }else{
         //default color.
         //return nothing to not over write parent color behaviour.
@@ -292,11 +309,31 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           //color node with color.
           if(node !== undefined && node.id == thisGraph.nodes[i].id){
             $(g.childNodes[0]).css("fill", color);
-          }else if(node !== undefined && node.id != thisGraph.nodes[i].id){
-            //remove color if exists.
-            $(g.childNodes[0]).css("fill", getOldColor(thisGraph.nodes[i]));
           }
         }
+      });
+    }
+
+    function removeColorExcpetFrom(exceptNodes){
+      //console.log(exceptNodes);
+      let nodes = [];
+      for(var i = 0 ;i < thisGraph.nodes.length; i++){
+        let node = thisGraph.nodes[i];
+        let found = false;
+        for(var j = 0 ;j < exceptNodes.length; j++){
+          if(node.id == exceptNodes[j].id){
+            found = true;
+            break;
+          }
+        }
+        if(!found){
+          nodes.push(node);
+        }
+        found = true;
+      }
+      console.log(nodes);
+      nodes.forEach(function(node){
+        colorNode(node, getOldColor(node));
       });
     }
 
@@ -310,21 +347,21 @@ document.onload = (function(d3, saveAs, Blob, undefined){
 
     GraphCreator.prototype.updateSelectedAndPrevNode = function() {
       //TODO:: check for humans only.
-      if(thisGraph.state.prevNode.player != undefined){
+      if(thisGraph.state.prevNode != null && thisGraph.state.prevNode.player != undefined){
         $("#attackerNode").text(thisGraph.state.prevNode.player == thisGraph.getCurrentPlayer() ? 
           thisGraph.state.prevNode.id : "-1");
       }
-      if(thisGraph.state.selectedNode.player != undefined){
+      if(thisGraph.state.selectedNode != null && thisGraph.state.selectedNode.player != undefined){
         $("#attackedNode").text(thisGraph.state.selectedNode.player == thisGraph.getNextPlayer() ? 
           thisGraph.state.selectedNode.id : "-1");
       }
 
 
-      if(thisGraph.state.prevNode.player != undefined){
+      if(thisGraph.state.prevNode != null && thisGraph.state.prevNode.player != undefined){
         $("#moveFromNode").text(thisGraph.state.prevNode.player == thisGraph.getCurrentPlayer() ? 
           thisGraph.state.prevNode.id : "-1");
       }
-      if(thisGraph.state.selectedNode.player != undefined){
+      if(thisGraph.state.selectedNode != null && thisGraph.state.selectedNode.player != undefined){
         $("#moveToNode").text(thisGraph.state.selectedNode.player == thisGraph.getCurrentPlayer() ? 
           thisGraph.state.selectedNode.id : "-1");
       }
@@ -351,14 +388,34 @@ document.onload = (function(d3, saveAs, Blob, undefined){
 
     function updateBonusUi(){
       $("#bonusVal").text(thisGraph.state.bonusVal);
-      $("#bonusNode").text(thisGraph.state.bonusNode.id);
+      $("#bonusNode").text(thisGraph.state.bonusNode != undefined ? thisGraph.state.bonusNode.id : -1);
       //color bonus node with yellow.
       colorNode(thisGraph.state.bonusNode, "yellow");
+      removeColorExcpetFrom([thisGraph.state.bonusNode]);
+    }
+
+    function updateMoveUi(){
+      $("#movedToNode").text(thisGraph.state.moveToNode.id);
+      $("#movedFromNode").text(thisGraph.state.moveFromNode.id);
+      colorNode(thisGraph.state.moveToNode, "blue");
+      colorNode(thisGraph.state.moveFromNode, "blue");
+      removeColorExcpetFrom([thisGraph.state.moveToNode, thisGraph.state.moveFromNode]);
+    }
+
+    function updateAttackUi(){
+      $("#attackedNode").text(thisGraph.state.attackedNode.id);
+      $("#attackerNode").text(thisGraph.state.attackerNode.id);
+      colorNode(thisGraph.state.attackedNode, "red");
+      colorNode(thisGraph.state.attackerNode, "red");
+      removeColorExcpetFrom([thisGraph.state.attackedNode, thisGraph.state.attackerNode]);
     }
 
     //some events to handle human agent inputs.
     $("#addBonus").click(function(){
-      if(thisGraph.state.selectedNode == null){
+      thisGraph.state.bonusNode = thisGraph.state.selectedNode;
+      updateBonusUi();
+
+      /*if(thisGraph.state.selectedNode == null){
         return;
       }
       if(thisGraph.state.bonusNode != null){
@@ -371,14 +428,87 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         if(node.id == thisGraph.state.selectedNode.id){
           node.title = thisGraph.state.selectedNode.title;
         }
-        //remove bonus if wrongly given to a prev node.
+        //remove bonus if wrongly given to a prev node.(user changed his mind.)
         if(thisGraph.state.bonusNode != null && node.id == thisGraph.state.bonusNode.id){
           node.title = (getArmy(node) - thisGraph.state.bonusVal).toString();
         }
       });
       thisGraph.state.bonusNode = thisGraph.state.selectedNode;
       thisGraph.updateGraph();
-      updateBonusUi();
+      updateBonusUi();*/
+    });
+
+    function moveSuccess(){
+      thisGraph.state.selectedNode.title = (army + getArmy(thisGraph.state.selectedNode)).toString();
+      thisGraph.state.prevNode.title = (getArmy(thisGraph.state.prevNode) - army).toString();
+      thisGraph.nodes.forEach(function(node){
+        if(node.id == thisGraph.state.selectedNode.id) {
+          node.title = thisGraph.state.selectedNode.title;
+        }
+      });
+      thisGraph.nodes.forEach(function(node){
+        if(node.id == thisGraph.state.prevNode.id) {
+          node.title = thisGraph.state.prevNode.title;
+        }
+      });
+      updateMoveUi();
+      thisGraph.updateGraph();
+    }
+
+    function moveFailure(){
+      thisGraph.state.moveToNode = null;
+      thisGraph.state.moveFromNode = null;
+      thisGraph.state.movedArmies = -1;  
+      $("#movedToNode").text(-1);
+      $("#movedFromNode").text(-1); 
+    }
+
+    $("#addMove").click(function() {
+      let army = Number($("#armyVal").val());
+      thisGraph.state.moveToNode = thisGraph.state.selectedNode;
+      thisGraph.state.moveFromNode = thisGraph.state.prevNode;
+      thisGraph.state.movedArmies = army;
+      updateMoveUi();
+      //handleTurn(moveSuccess, moveFailure);
+    });
+
+    function attackSuccess(){
+      thisGraph.state.selectedNode.title = (army + getArmy(thisGraph.state.selectedNode)).toString();
+      thisGraph.state.prevNode.title = (getArmy(thisGraph.state.prevNode) - army).toString();
+      thisGraph.nodes.forEach(function(node) {
+        if(node.id == thisGraph.state.selectedNode.id) {
+          node.title = thisGraph.state.selectedNode.title;
+        }
+      });
+      thisGraph.nodes.forEach(function(node){
+        if(node.id == thisGraph.state.prevNode.id){
+          node.title = thisGraph.state.prevNode.title;
+        }
+      });
+      thisGraph.updateGraph();
+      updateMoveUi();
+    }
+
+    function attackFailure(){
+      thisGraph.state.attackedNode = null;
+      thisGraph.state.attackerNode = null;
+      thisGraph.state.attackedNodeArmies = -1;
+      $("#attackedFromNode").text(-1);
+      $("#attackedToNode").text(-1);
+
+    }
+
+    $("#addAttack").click(function() {
+      let army = Number($("#attackedArmyVal").val());
+      thisGraph.state.attackedNode = thisGraph.state.selectedNode;
+      thisGraph.state.attackerNode = thisGraph.state.prevNode;
+      thisGraph.state.attackedNodeArmies = army;
+      updateAttackUi();
+      //handleTurn(attackSuccess, attackFailure);
+    });
+
+    $("#doAction").click(function() {
+      handleTurn();
     });
 
   
@@ -478,16 +608,17 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   GraphCreator.prototype.replaceSelectNode = function(d3Node, nodeData){
     var thisGraph = this;
     
-    d3Node.classed(this.consts.selectedClass, true);
-    if (thisGraph.state.selectedNode){
-      thisGraph.state.prevNode = thisGraph.state.selectedNode
-      thisGraph.removeSelectFromNode();
+    let selectedNode = thisGraph.state.selectedNode;
+    if(selectedNode){
+      thisGraph.state.prevNode = thisGraph.state.selectedNode;
       thisGraph.state.selectedNode = nodeData;
-    }else{
+    } else if(selectedNode == null){
       //if no selected so far then prev = cur.
       thisGraph.state.selectedNode = nodeData;
-      thisGraph.state.prevNode = thisGraph.state.selectedNode
+      thisGraph.state.prevNode = nodeData;
     }
+    thisGraph.removeSelectFromNode();
+    d3Node.classed(this.consts.selectedClass, true);
     //update UI with new nodes.
     thisGraph.updateSelectedAndPrevNode();
   };
@@ -495,9 +626,9 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   GraphCreator.prototype.removeSelectFromNode = function(){
     var thisGraph = this;
     thisGraph.circles.filter(function(cd){
-      return cd.id === thisGraph.state.selectedNode.id;
+      return cd.id !== thisGraph.state.selectedNode.id;
     }).classed(thisGraph.consts.selectedClass, false);
-    thisGraph.state.selectedNode = null;
+    //thisGraph.state.selectedNode = null;
   };
 
   GraphCreator.prototype.removeSelectFromEdge = function(){
@@ -627,10 +758,9 @@ document.onload = (function(d3, saveAs, Blob, undefined){
             thisGraph.removeSelectFromEdge();
           }
           var prevNode = state.selectedNode;
-
           if (!prevNode || prevNode.id !== d.id){
             thisGraph.replaceSelectNode(d3node, d);
-          } else{
+          } else {
             thisGraph.removeSelectFromNode();
           }
         }
@@ -788,7 +918,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         //has color.
         let node = thisGraph.nodes[i];
         if(thisGraph.nodes[i].player !== undefined){
-          $(g.childNodes[0]).css("fill", node.player == "Player 1" ? "green" : "red");
+          $(g.childNodes[0]).css("fill", node.player == "Player 1" ? "#d39e00" : "#299a43");
         }
         $(g.childNodes[1]).text(node.title);
         
@@ -865,4 +995,5 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   document.getElementById("root").style.maxWidth = "100%";
   graph.updateGraph();
   intitializeUi();
+  $(".alert").alert()
 })(window.d3, window.saveAs, window.Blob);

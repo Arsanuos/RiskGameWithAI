@@ -35,6 +35,9 @@
           </div>
         </div>
         <!-- end of modal-->
+        <div id="alerts" class="alert alert-danger" style="margin-bottom:0px; display:none">
+          <strong>Danger!</strong> Can't perfom this move. try again.
+        </div>
     <div class="container" id="root">
       <div class="row">
           <div id="graph" style="width:75%;height:100%">
@@ -51,8 +54,8 @@
                       <label for="player">Player</label>
                       <select class="form-control" id="selectPlayer">
                         <option disabled selected value="selectOption1">Select Player</option>
-                        <option style="background-color: green" value="null">Player 1</option>
-                        <option style="background-color: red" value="null">Player 2</option>
+                        <option style="background-color: #d39e00" value="null">Player 1</option>
+                        <option style="background-color: #299a43" value="null">Player 2</option>
                       </select>
                     </div>
                     <div class="form-group">
@@ -94,18 +97,20 @@
                     </div>
                     
                     <div class="human">
-                      <button id="addBonus" class="btn btn-success directiveButton"><img src="{% static 'bonus.svg'  %}"></button>
-                      <button class="btn btn-danger directiveButton"><img src="{% static 'attack.svg'  %}"></button>
-                      <button class="btn btn-primary directiveButton"><img src="{% static 'move.svg'  %}"></button>
+                      <button id="addBonus" class="btn btn-success directiveButton" style="background-color:yellow"><img src="{% static 'bonus.svg'  %}"></button>
+                      <button id="addAttack" class="btn btn-danger directiveButton"><img src="{% static 'attack.svg'  %}"></button>
+                      <button id="addMove" class="btn btn-primary directiveButton"><img src="{% static 'move.svg'  %}"></button>
                       
                       <p class="text-left">Available bonus is <span id="bonusVal" class="badge badge-secondary hoverSpans"></span> given to node 
                         <span id="bonusNode" class="badge badge-secondary hoverSpans"></span> </p>
                       
                       <p class="text-left">Attack detected from node <span id="attackerNode" class="badge badge-secondary hoverSpans"></span> 
-                        to <span id="attackedNode" class="badge badge-secondary hoverSpans"></span> .</p>
+                        to <span id="attackedNode" class="badge badge-secondary hoverSpans"></span> with armies 
+                        <input type="text" id="attackedArmyVal" class="form-control armiesInput"/></p>
                       
                         <p class="text-left">Move detected from node <span id="moveFromNode" class="badge badge-secondary hoverSpans"></span> 
-                        to <span id="moveToNode" class="badge badge-secondary hoverSpans"></span>  with armies <input type="text" class="form-control armiesInput"/></p>
+                        to <span id="moveToNode" class="badge badge-secondary hoverSpans"></span>  with armies 
+                        <input type="text" id="armyVal" class="form-control armiesInput"/></p>
                     </div>
                     
                     <div class="human" hidden>
