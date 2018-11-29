@@ -9,6 +9,9 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   var settings = {
     appendElSpec: "#graph"
   };
+
+  var firstReq = true;
+
   // define graphcreator object
   var GraphCreator = function(svg, nodes, edges, partitions){
     var thisGraph = this;
@@ -218,6 +221,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     });
 
     function sendPost(data, type){
+      console.log(data)
       $.ajax({
         type: "POST",
         url: 'http://localhost:8000/'+type,
@@ -250,9 +254,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       thisGraph.state.currentPlayer = (thisGraph.state.currentPlayer + 1) % 2;
     }
 
-    //handle doing actions.
-    var firstReq = true;
-    
     function intialState(){
       if(firstReq){
         //send all data.
@@ -821,12 +822,12 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     case consts.BACKSPACE_KEY:
     case consts.DELETE_KEY:
       d3.event.preventDefault();
-      if (selectedNode){
+      if (selectedNode && firstReq){
         thisGraph.nodes.splice(thisGraph.nodes.indexOf(selectedNode), 1);
         thisGraph.spliceLinksForNode(selectedNode);
         state.selectedNode = null;
         thisGraph.updateGraph();
-      } else if (selectedEdge){
+      } else if (selectedEdge && firstReq){
         thisGraph.edges.splice(thisGraph.edges.indexOf(selectedEdge), 1);
         state.selectedEdge = null;
         thisGraph.updateGraph();
