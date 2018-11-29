@@ -8,9 +8,36 @@
   </head>
 
   <body>
+    <!-- start of modal-->
+      <div id="helpModal" class="modal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Instructions for playing Game.</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <ol>
+                  <li>drag/scroll to translate/zoom the graph.</li>
+                  <li>shift-click on graph to create a node.</li>
+                  <li>shift-click on a node and then drag to another node to connect them with a directed edge</li>
+                  <li>shift-click on a node to change its title.</li>
+                  <li>click on node or edge and press backspace/delete to delete.</li>
+                  <li>Bonus node will be marked yellow and its number will be written on the configuration panel.</li>
+                </ol>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- end of modal-->
     <div class="container" id="root">
       <div class="row">
-          <div id="graph" style="width:80%;height:100%">
+          <div id="graph" style="width:75%;height:100%">
               <div id="toolbox">
                 <input type="file" id="hidden-file-upload">
                 <input id="upload-input" type="image" title="upload graph" src="{% static 'upload-icon.png' %} " alt="upload graph">
@@ -67,6 +94,21 @@
                     </div>
                     
                     <div class="human">
+                      <button id="addBonus" class="btn btn-success directiveButton"><img src="{% static 'bonus.svg'  %}"></button>
+                      <button class="btn btn-danger directiveButton"><img src="{% static 'attack.svg'  %}"></button>
+                      <button class="btn btn-primary directiveButton"><img src="{% static 'move.svg'  %}"></button>
+                      
+                      <p class="text-left">Available bonus is <span id="bonusVal" class="badge badge-secondary hoverSpans"></span> given to node 
+                        <span id="bonusNode" class="badge badge-secondary hoverSpans"></span> </p>
+                      
+                      <p class="text-left">Attack detected from node <span id="attackerNode" class="badge badge-secondary hoverSpans"></span> 
+                        to <span id="attackedNode" class="badge badge-secondary hoverSpans"></span> .</p>
+                      
+                        <p class="text-left">Move detected from node <span id="moveFromNode" class="badge badge-secondary hoverSpans"></span> 
+                        to <span id="moveToNode" class="badge badge-secondary hoverSpans"></span>  with armies <input type="text" class="form-control armiesInput"/></p>
+                    </div>
+                    
+                    <div class="human" hidden>
                         <div class="form-group">
                             <label for="action">Human Action</label>
                             <select class="form-control" id="selectAction">
