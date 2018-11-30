@@ -1,6 +1,6 @@
 document.onload = (function(d3, saveAs, Blob, undefined){
   "use strict";
-  
+
   // TODO add user settings
   var consts = {
     defaultTitle: "0",
@@ -10,12 +10,12 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     appendElSpec: "#graph"
   };
 
-  
+
   // define graphcreator object
   var GraphCreator = function(svg, nodes, edges, partitions){
     var thisGraph = this;
         thisGraph.idct = 0;
-    
+
         var players = ["Player 1", "Player 2"];
 
     thisGraph.nodes = nodes || [];
@@ -148,7 +148,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       });
       // TODO:: Add algorithms.
       var blob = new Blob([window.JSON.stringify({"nodes": tmp, "edges": saveEdges, "partitions":thisGraph.partitions,
-       "algo1":thisGraph.state.algo1, "algo2":thisGraph.state.algo2})], 
+       "algo1":thisGraph.state.algo1, "algo2":thisGraph.state.algo2})],
       {type: "text/plain;charset=utf-8"});
       saveAs(blob, "mydag.json");
     });
@@ -215,7 +215,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     d3.select("#delete-graph").on("click", function(){
       thisGraph.deleteGraph(false);
     });
-    
+
     // handle submit event
     $("#submit").click(function(){
       thisGraph.partitions = [];
