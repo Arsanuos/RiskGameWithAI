@@ -1,33 +1,27 @@
 class Player:
 
-    def __int__(self, name, hold_nodes):
+    def __init__(self, name, hold_nodes):
         self.__name = name
         self.__hold_nodes = hold_nodes
         self.__last_attack_bonus = 0
         self.__nodes_dic = {node.get_node_name() : node for node in self.__hold_nodes}
 
-    @property
     def set_name(self, name):
         self.__name = name
 
-    @property
     def set_hold_nodes(self, hold_nodes):
         self.__hold_nodes = hold_nodes
         self.__nodes_dic = {node.get_node_name() : node for node in self.__hold_nodes}
 
-    @property
     def set_last_attack_bonus(self, last_attack_bonus):
         self.__last_attack_bonus = last_attack_bonus
 
-    @property
     def get_name(self):
         return self.__name
 
-    @property
     def get_hold_nodes(self):
         return self.__hold_nodes
 
-    @property
     def get_last_attack_bonus(self):
         return self.__last_attack_bonus
 
