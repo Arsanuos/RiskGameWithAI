@@ -8,7 +8,8 @@ class AttackAggressive(Heuristic):
         # attach = (attacker node, attacked node)
         attack = (None, None)
         max_armies = 0
-        for node in self.state.get_current_player().get_hold_nodes():
+        nodes = state.get_current_player().get_hold_nodes()
+        for node in nodes:
             possible_attacked_nodes = node.get_possible_attacked_nodes()
             for attacked_node in possible_attacked_nodes:
                 if attacked_node.get_army() > max_armies:
