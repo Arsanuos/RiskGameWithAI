@@ -902,6 +902,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
 
   // call to propagate changes to graph
   GraphCreator.prototype.updateGraph = function(){
+    $(".tooltip").tooltip("hide");
     var thisGraph = this,
         consts = thisGraph.consts,
         state = thisGraph.state;
