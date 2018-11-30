@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e8281e3a-bd11-4e2e-8f0f-c4d8eb5a4b77" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/directed-graph-creator/static/graph-creator.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/directed-graph-creator/static/graph-creator.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -61,8 +60,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/graph/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="702">
-              <caret line="49" column="16" selection-start-line="49" selection-start-column="12" selection-end-line="49" selection-end-column="16" />
+            <state relative-caret-position="672">
+              <caret line="47" column="40" lean-forward="true" selection-start-line="47" selection-start-column="40" selection-end-line="47" selection-end-column="40" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -504,8 +503,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/graph/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="702">
-          <caret line="49" column="16" selection-start-line="49" selection-start-column="12" selection-end-line="49" selection-end-column="16" />
+        <state relative-caret-position="672">
+          <caret line="47" column="40" lean-forward="true" selection-start-line="47" selection-start-column="40" selection-end-line="47" selection-end-column="40" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
           </folding>

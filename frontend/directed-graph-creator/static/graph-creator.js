@@ -818,6 +818,9 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   // mousedown on main svg
   GraphCreator.prototype.svgMouseDown = function(){
     this.state.graphMouseDown = true;
+    console.log("here");
+    thisGraph.removeSelectFromNode();
+    thisGraph.updateGraph();
   };
 
   // mouseup on main svg
