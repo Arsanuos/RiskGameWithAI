@@ -940,8 +940,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   GraphCreator.prototype.updateWindow = function(svg){
     var docEl = document.documentElement,
         bodyEl = document.getElementsByTagName('body')[0];
-    var x = window.innerWidth || docEl.clientWidth || bodyEl.clientWidth;
-    var y = window.innerHeight|| docEl.clientHeight|| bodyEl.clientHeight;
+        var x = docEl.clientWidth,
+        y =  docEl.clientHeight;
     svg.attr("width", "100%").attr("height", y);
   };
 
@@ -978,8 +978,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   var docEl = document.documentElement,
       bodyEl = document.getElementsByTagName('body')[0];
 
-  var width = window.innerWidth || docEl.clientWidth || bodyEl.clientWidth,
-      height =  window.innerHeight|| docEl.clientHeight|| bodyEl.clientHeight;
+  var width = docEl.clientWidth,
+      height =  docEl.clientHeight;
 
   var xLoc = width/2 - 25,
       yLoc = 100;
