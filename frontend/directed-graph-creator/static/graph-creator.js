@@ -207,7 +207,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       if (window.File && window.FileReader && window.FileList && window.Blob) {
         var uploadFile = this.files[0];
         var filereader = new window.FileReader();
-        returnAsNewGame();
         filereader.onload = function(){
           var txtRes = filereader.result;
           // TODO better error handling
@@ -219,15 +218,16 @@ document.onload = (function(d3, saveAs, Blob, undefined){
             var newEdges = jsonObj.edges;
             newEdges.forEach(function(e, i){
               newEdges[i] = {source: thisGraph.nodes.filter(function(n){return n.id == e[0];})[0],
-                          target: thisGraph.nodes.filter(function(n){return n.id == e[1];})[0]};
+              target: thisGraph.nodes.filter(function(n){return n.id == e[1];})[0]};
             });
             thisGraph.edges = newEdges;
             thisGraph.updateGraph();
-
+            
             thisGraph.partitions = jsonObj.partitions;
             thisGraph.state.algo1 = jsonObj.algo1;
             thisGraph.state.algo2 = jsonObj.algo2;
             loadUi();
+            returnAsNewGame();
           }catch(err){
             window.alert("Error parsing uploaded file\nerror message: " + err.message);
             return;
@@ -341,17 +341,22 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         });
         let data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges,
           p1:$('#p1Algo').find(":selected").text(), p2:$('#p2Algo').find(":selected").text()};
-        sendPost(data, "state")
+          if(data.p1 != "" && data.p2 != "" && data.partitions.length != 0 && data.nodes.length != 0){
+            sendPost(data, "state")
+          }else{
+            alert("there's a missing input.");
+          }
         firstReq = false;
       }
     }
 
     function handleTurn(){
-      let turn = {bonusNode:thisGraph.bonusNode,
-        attackerNode:thisGraph.state.attackerNode, attackedNode:thisGraph.attackedNode,
-         moveFromNode:thisGraph.moveFromNode, moveToNode:thisGraph.moveToNode,
-         movedArmies:thisGraph.movedArmies,
+      let turn = {bonusNode:thisGraph.state.bonusNode,
+        attackerNode:thisGraph.state.attackerNode, attackedNode:thisGraph.state.attackedNode,
+         movedFromNode:thisGraph.state.moveFromNode, movedToNode:thisGraph.state.moveToNode,
+         movedArmies:thisGraph.state.movedArmies,
          attackedNodeArmies:thisGraph.state.attackedNodeArmies};
+         console.log(turn);
          sendPost(turn, "turn");
     }
 

@@ -12,7 +12,10 @@ class Agent:
     # move is None in all agents unless in case of human it will be not None
     def play(self, current_state, move=None):
         print('Start Playing')
-        state = deepcopy(current_state)
+        if move:
+            state = current_state
+        else:
+            state = deepcopy(current_state)
         if move is None:
             move = Move()
             if self._place_bonus_heuristic is not None:
