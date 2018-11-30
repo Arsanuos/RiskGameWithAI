@@ -242,9 +242,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       });
     });
 
-    function updateNextPlayer(){
-      $("#nextPlayer").text("Player " + String(thisGraph.state.currentPlayer + " turn."));
-    }
+
     function sendPost(data, type){
       $.ajax({
         type: "POST",
@@ -260,10 +258,11 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         if(response.status == "valid"){
           thisGraph.nodes = response.nodes;
           thisGraph.state.currentPlayer = response.player;
+          $("#nextPlayer").text("Player " + String(thisGraph.state.currentPlayer + " turn."));
+          console.log(thisGraph.state.currentPlayer);
           thisGraph.state.bonusVal = response.bonus;
           thisGraph.updateGraph();
           updateBonusUi();
-          updateNextPlayer();
           
         } else {
           let error = "";
@@ -554,7 +553,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     $("#p2Algo").on("change", function(){
       thisGraph.state.algo2 = $(this).find("option:selected").text()
     });
-
   
   };
 
@@ -670,6 +668,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   GraphCreator.prototype.removeSelectFromNode = function(){
     var thisGraph = this;
     thisGraph.circles.filter(function(cd){
+
       return cd.id !== thisGraph.state.selectedNode.id;
     }).classed(thisGraph.consts.selectedClass, false);
     //thisGraph.state.selectedNode = null;
@@ -818,9 +817,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   // mousedown on main svg
   GraphCreator.prototype.svgMouseDown = function(){
     this.state.graphMouseDown = true;
-    console.log("here");
-    thisGraph.removeSelectFromNode();
-    thisGraph.updateGraph();
+    //thisGraph.removeSelectFromNode();
+    //thisGraph.updateGraph();
   };
 
   // mouseup on main svg
