@@ -44,10 +44,11 @@ class Player:
             partition_list.append(node.get_partition())
 
         bonus = 0
+        my_nodes = [x.get_node_name() for x in self.__hold_nodes]
         for partition in partition_list:
             flag = True
             for node in partition.get_nodes():
-                if node not in self.__hold_nodes:
+                if node.get_node_name() not in my_nodes:
                     flag = False
                     break
             if flag:

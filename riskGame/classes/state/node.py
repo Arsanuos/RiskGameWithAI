@@ -3,13 +3,13 @@ from sys import maxsize
 
 class Node:
 
-    def __init__(self, node_name, hold_player, army, neighbours, partition):
+    def __init__(self, node_name, hold_player, army, neighbours, partition, position):
         self.__node_name = node_name
         self.__hold_player = hold_player
         self.__army = army
         self.__neighbours = neighbours
         self.__partition = partition
-        self.__position = None
+        self.__position = position
 
     def set_army(self, army):
         self.__army = army

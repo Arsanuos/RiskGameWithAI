@@ -8,10 +8,10 @@ class SigmoidEval:
     http://www.ke.tu-darmstadt.de/lehre/arbeiten/diplom/2005/Wolf_Michael.pdf?fbclid=IwAR1-fM62HsO0DCnwST0JlZqoXwNHMOKHwlRNqdojbuyZVPNzGBBW3gYN9g4
     """
 
-    def __init__(self, state):
-        self.__state = state
+    def __init__(self):
+        self.__state = None
 
-    def score(self):
+    def score(self, state):
         """
         weight are manually tuned.
         score = w1 * armies feature + w2 * best_enemy_feature + w3 * distance_to_frontier_feature + w4 * enemy_army_bonus_feature +
@@ -19,6 +19,7 @@ class SigmoidEval:
         we can prove that sigmoid(score) * number of enemy nodes is admissible heuristic.
         :return: score
         """
+        self.__state = state
         w = [8, 7, 9, 3, 1, 10, 7]
         score = w[0] * self.armies_feature() + w[1] * self.best_enemy_feature() + w[2] * self.distance_to_frontier_feature() + \
                 w[3] * self.enemy_army_bonus_feature() + w[4] * self.hinterland_feature() + w[5] * self.occupied_nodes_feature() \

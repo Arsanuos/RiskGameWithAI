@@ -6,7 +6,8 @@ class PlaceBonusAggressive(Heuristic):
     def make_decision(self, state, move):
         largest_node = None
         max_armies = 0
-        for node in self.state.get_current_player().get_hold_nodes():
+        nodes = state.get_current_player().get_hold_nodes()
+        for node in nodes:
             if node.get_army() > max_armies:
                 largest_node = node
                 max_armies = node.get_army()

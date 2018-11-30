@@ -7,7 +7,8 @@ class PlaceBonusPassive(Heuristic):
     def make_decision(self, state, move):
         fewest_node = None
         min_armies = maxsize
-        for node in self.state.get_current_player().get_hold_nodes():
+        nodes = state.get_current_player().get_hold_nodes()
+        for node in nodes:
             if node.get_army() < min_armies:
                 fewest_node = node
                 min_armies = node.get_army()
