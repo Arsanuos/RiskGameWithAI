@@ -29,6 +29,8 @@ def index(request):
             agents.append(parser.get_agent(2))
             current_state = initial_state
             print('Finished Initialization')
+            dic = {'status':'initial'}
+            return JsonResponse(dic)
         elif type == "turn":
             player_turn = current_state.get_player_turn_number()
             if isinstance(agents[player_turn], Human):

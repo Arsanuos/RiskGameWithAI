@@ -260,10 +260,16 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           thisGraph.updateGraph();
           updateBonusUi();
         }else if(response.status == 'winner'){
-          console.log('winner')
           //TODO:: handle winner.
-          $("#winner").text("the winner is " + response.winner);
-          $("#winningModal").show();
+          winner = true;
+          thisGraph.nodes = response.nodes.sort(function(a, b){
+            return a.id - b.id;
+          });
+          thisGraph.state.bonusVal = response.bonus;
+          thisGraph.updateGraph();
+          updateBonusUi();
+          $("#winner").text("The Winner is " + response.winner);
+          $("#winningModal").modal();
           $("#refresh").click(function(){
             location.reload();
           });
@@ -1033,9 +1039,12 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     }
   });
 
+  var winner = false;
   // warn the user when leaving
   window.onbeforeunload = function(){
-    return "Make sure to save your graph locally before leaving :-)";
+    if(!winner){
+      return "Make sure to save your graph locally before leaving :-)";
+    }
   };
 
   var docEl = document.documentElement,
