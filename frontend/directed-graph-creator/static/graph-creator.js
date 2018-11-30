@@ -150,6 +150,9 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       var blob = new Blob([window.JSON.stringify({"nodes": tmp, "edges": saveEdges, "partitions":thisGraph.partitions,
        "algo1":thisGraph.state.algo1, "algo2":thisGraph.state.algo2})],
       {type: "text/plain;charset=utf-8"});
+      if(thisGraph.state.algo1 == "Human" || thisGraph.state.algo2 == "Human"){
+        $("#controls").show();
+      }
       saveAs(blob, "mydag.json");
     });
 
@@ -250,6 +253,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       }).fail(function(){
         //failure();
       }).done(function(response) {
+        console.log(response);
         if(response.status == "valid"){
           thisGraph.nodes = response.nodes.sort(function(a, b){
             return a.id - b.id;
@@ -259,7 +263,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           thisGraph.state.bonusVal = response.bonus;
           thisGraph.updateGraph();
           updateBonusUi();
-        }else if(response.winner){
+        }else if(response.status == "winner"){
           //TODO:: handle winner.
           $("#winner").text("the winner is " + response.winner);
           $("#winningModal").show();
@@ -292,6 +296,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
 
     function intialState(){
       if(firstReq){
+        $('.controller').prop('disabled', true);
         //send all data.
         //turn exists only for humans.
         //response:
@@ -558,10 +563,20 @@ document.onload = (function(d3, saveAs, Blob, undefined){
 
     $("#p1Algo").on("change", function(){
       thisGraph.state.algo1 = $(this).find("option:selected").text()
+      if(thisGraph.state.algo1 == "Human"){
+        $("#controls").show();
+      }else if(thisGraph.state.algo2 != "Human"){
+        $("#controls").hide();
+      }
     });
 
     $("#p2Algo").on("change", function(){
       thisGraph.state.algo2 = $(this).find("option:selected").text()
+      if(thisGraph.state.algo2 == "Human"){
+        $("#controls").show();
+      }else if(thisGraph.state.algo1 != "Human"){
+        $("#controls").hide();
+      }
     });
 
 
@@ -1064,4 +1079,5 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   $(".alert").alert()
   //enable tool tip everywhere.
   $('[data-toggle="tooltip"]').tooltip()
+  $("#controls").hide();
 })(window.d3, window.saveAs, window.Blob);
