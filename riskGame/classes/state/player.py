@@ -30,7 +30,10 @@ class Player:
         node.set_hold_player(self)
 
     def remove_node(self, node):
-        self.__hold_nodes.remove(node)
+        ids = [node_x.get_node_name() for node_x in self.__hold_nodes]
+        for idx, id in enumerate(ids):
+            if id == node.get_node_name():
+                self.__hold_nodes.pop(idx)
         node.set_hold_player(None)
 
     def calculate_partition_bonus(self):

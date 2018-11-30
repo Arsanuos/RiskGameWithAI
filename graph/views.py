@@ -52,6 +52,7 @@ def index(request):
             else:
                 response = {"status":"winner", "winner": "Player " + str(current_state.get_winner().get_name() + 1)}
                 return render(response, 'index.html')
+
     return render(request, 'index.html')
 
     """

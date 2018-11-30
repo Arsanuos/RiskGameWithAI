@@ -243,7 +243,9 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     });
 
     function updateNextPlayer(){
-      $("#nextPlayer").text("Player " + String(thisGraph.state.currentPlayer + " turn."));
+      console.log('saasasdasd');
+      //  + String(thisGraph.state.currentPlayer + " turn.")
+      $("#nextPlayer").text("assdaasdsadssd ");
     }
     function sendPost(data, type){
       $.ajax({
