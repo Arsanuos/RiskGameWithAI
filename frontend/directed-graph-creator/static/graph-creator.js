@@ -265,9 +265,9 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           updateBonusUi();
         }else if(response.status == "winner"){
           //TODO:: handle winner.
-          console.log("winner");
+          winner = true;
           $("#winner").text("the winner is " + response.winner);
-          $("#winningModal").show();
+          $("#winningModal").modal();
           $("#refresh").click(function(){
             location.reload();
           });
@@ -1048,9 +1048,12 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     }
   });
 
+  var winner = false;
   // warn the user when leaving
   window.onbeforeunload = function(){
-    return "Make sure to save your graph locally before leaving :-)";
+    if(!winner){
+      return "Make sure to save your graph locally before leaving :-)";
+    }
   };
 
   var docEl = document.documentElement,
