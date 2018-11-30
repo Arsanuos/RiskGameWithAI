@@ -30,29 +30,28 @@ def index(request):
             current_state = initial_state
             print('Finished Initialization')
         elif type == "turn":
-            if current_state.get_winner() is None:
-                player_turn = current_state.get_player_turn_number()
-                if isinstance(agents[player_turn], Human):
-                    # get dic from front end for the move
-                    move, errors = parser.parse_json_to_move(current_state, dic)
-                    if move:
-                        prev_state = current_state
-                        current_state = agents[player_turn].play(current_state, move)
-                    dic = parser.parse_state_to_json(current_state, errors)
-                else:
-                    # get request to represent get the next turn state
+            player_turn = current_state.get_player_turn_number()
+            if isinstance(agents[player_turn], Human):
+                # get dic from front end for the move
+                move, errors = parser.parse_json_to_move(current_state, dic)
+                if move:
                     prev_state = current_state
-                    current_state = agents[player_turn].play(current_state, None)
-                    dic = parser.parse_state_to_json(current_state, [])
-
-                print('Finished Playing,, the current state is following:')
-                print(dic)
-                return JsonResponse(dic)
-                # send dic to front end
+                    current_state = agents[player_turn].play(current_state, move)
+                dic = parser.parse_state_to_json(current_state, errors)
             else:
-                response = {"status":"winner", "winner": "Player " + str(current_state.get_winner().get_name() + 1)}
-                return render(response, 'index.html')
+                # get request to represent get the next turn state
+                prev_state = current_state
+                current_state = agents[player_turn].play(current_state, None)
+                dic = parser.parse_state_to_json(current_state, [])
 
+            if current_state.get_winner():
+                dic["status"] = "winner"
+                dic["winner"] = str(current_state.get_winner().get_name())
+            print('Finished Playing,, the current state is following:')
+            print(dic)
+            return JsonResponse(dic)
+        else:
+            NotImplemented
     return render(request, 'index.html')
 
     """
