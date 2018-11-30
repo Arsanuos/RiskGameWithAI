@@ -256,8 +256,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         //TODO:: see the response here.
         //TODO:: add values to spans in UI.
         //success();
+        console.log(response);
         if(response.status == "valid"){
-          console.log(response);
           thisGraph.nodes = response.nodes;
           thisGraph.state.currentPlayer = response.player;
           thisGraph.state.bonusVal = response.bonus;
