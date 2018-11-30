@@ -3,55 +3,44 @@ from sys import maxsize
 
 class Node:
 
-    def __int__(self, node_name, hold_player, army, neighbours, partition, position):
+    def __init__(self, node_name, hold_player, army, neighbours, partition):
         self.__node_name = node_name
         self.__hold_player = hold_player
         self.__army = army
         self.__neighbours = neighbours
         self.__partition = partition
-        self.__position = position
+        self.__position = None
 
-    @property
     def set_army(self, army):
         self.__army = army
 
-    @property
     def set_neighbours(self, neighbours):
         self.__neighbours = neighbours
 
-    @property
     def set_hold_player(self, hold_player):
         self.__hold_player = hold_player
 
-    @property
     def set_partition(self, partition):
         self.__partition = partition
 
-    @property
     def set_node_name(self, node_name):
         self.__node_name = node_name
 
-    @property
     def get_army(self):
         return self.__army
 
-    @property
     def get_neighbours(self):
         return self.__neighbours
 
-    @property
     def get_hold_player(self):
         return self.__hold_player
 
-    @property
     def get_partition(self):
         return self.__partition
 
-    @property
     def get_node_name(self):
         return self.__node_name
 
-    @property
     def get_position(self):
         return self.__position
 

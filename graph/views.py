@@ -1,5 +1,7 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from riskGame.classes.parser.parser import Parser
+from riskGame.classes.agent.human import Human
+import json
 
 
 # Create your views here.
@@ -9,11 +11,8 @@ def index(request):
     if 'json' in dict:
         data = dict['json']
         type = dict['type']
-        dic = data
+        dic = json.loads(data)
         if type == "state":
-            from riskGame.classes.parser.parser import Parser
-            from riskGame.classes.agent.human import Human
-
             # dic from frontend for the initial state
             parser = Parser()
             parser.parse_json_to_state(dic)

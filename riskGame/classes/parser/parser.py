@@ -23,8 +23,9 @@ class Parser:
 
     def parse_json_to_state(self, dic):
         print(dic)
-        player1 = Ply('Player 1', [])
-        player2 = Ply('Player 2', [])
+        temp = []
+        player1 = Ply('Player 1', temp)
+        player2 = Ply('Player 2', temp)
         all_nodes = {}
         all_partitions = []
 
@@ -34,8 +35,8 @@ class Parser:
         player2_nodes = []
         for node in nodes:
             new_node = Node(node_name=int(node['id']), hold_player=None, army=int(node['title']), \
-                            neighbours=None, partitions=None, position=(node['x'], node['y']))
-            if node['Player'] == 'Player 1':
+                            neighbours=None, partition=None)
+            if node['player'] == 'Player 1':
                 new_node.set_hold_player(player1)
                 player1_nodes.append(new_node)
             else:
@@ -52,24 +53,27 @@ class Parser:
         for partition in partitions:
             new_partition = Partition(partition_id, None, int(partition[0]))
             partition_nodes = []
-            for node_id in range(1, len(partition)):
+            for idx in range(1, len(partition)):
+                node_id = partition[idx]
                 partition_nodes.append(all_nodes[int(node_id)])
                 all_nodes[int(node_id)].set_partition(new_partition)
             new_partition.set_nodes(partition_nodes)
             partitions[partition_id] = new_partition
-            partition_id+=1
+            partition_id += 1
             all_partitions.append(new_partition)
 
         # Parsing Edges
         edges = dic['edges']
         neighbours = {}
+        for node in all_nodes.values():
+            neighbours[node.get_node_name()] = []
         for edge in edges:
-            node1_id = int(edge[0])
-            node2_id = int(edge[1])
-            neighbours[node1_id].append(node2_id)
-            neighbours[node2_id].append(node1_id)
-        for node in all_nodes:
-            node.set_neighbours(neighbours[node.get_node_name])
+            node1_id = int(edge['source']['id'])
+            node2_id = int(edge['target']['id'])
+            neighbours[node1_id].append(all_nodes[node2_id])
+            neighbours[node2_id].append(all_nodes[node1_id])
+        for node in all_nodes.values():
+            node.set_neighbours(neighbours[node.get_node_name()])
 
         state = State(len(all_nodes), all_partitions, [player1, player2], 0)
 

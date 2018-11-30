@@ -5,28 +5,20 @@ class Partition:
         self.__nodes = nodes
         self.__partition_bonus = partition_bonus
 
-    @property
     def set_nodes(self, nodes):
         self.__nodes = nodes
 
-    @property
     def set_partition_bonus(self, partition_bonus):
         self.__partition_bonus = partition_bonus
 
-    @property
     def set_partition_number(self, partition_number):
         self.__partition_number = partition_number
 
-    @property
     def get_nodes(self):
         return self.__nodes
 
-    @property
     def get_partition_bonus(self):
         return self.__partition_bonus
 
-    @property
     def get_partition_number(self):
         return self.__partition_number
-
-
