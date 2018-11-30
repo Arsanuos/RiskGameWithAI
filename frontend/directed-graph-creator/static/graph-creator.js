@@ -10,6 +10,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     appendElSpec: "#graph"
   };
 
+  //handle doing actions.
+  var firstReq = true;
 
   // define graphcreator object
   var GraphCreator = function(svg, nodes, edges, partitions){
@@ -33,7 +35,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       shiftNodeDrag: false,
       selectedText: null,
       currentPlayer: 0,
-      bonusVal: 10,
+      bonusVal: -1,
       bonusNode: null,
       prevNode: null,
       moveFromNode: null,
@@ -150,9 +152,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       var blob = new Blob([window.JSON.stringify({"nodes": tmp, "edges": saveEdges, "partitions":thisGraph.partitions,
        "algo1":thisGraph.state.algo1, "algo2":thisGraph.state.algo2})],
       {type: "text/plain;charset=utf-8"});
-      if(thisGraph.state.algo1 == "Human" || thisGraph.state.algo2 == "Human"){
-        $("#controls").show();
-      }
       saveAs(blob, "mydag.json");
     });
 
@@ -172,11 +171,43 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       $("#p2Algo").val(thisGraph.state.algo2);
     }
 
+    function returnAsNewGame(){
+      console.log("here");
+      if(thisGraph.state.algo1 == "Human" || thisGraph.state.algo2 == "Human"){
+        $("#controls").show();
+      }
+      firstReq = true;
+      $(".controller").prop("disabled", false);
+      thisGraph.state = {
+        selectedNode: null,
+        selectedEdge: null,
+        mouseDownNode: null,
+        mouseDownLink: null,
+        justDragged: false,
+        justScaleTransGraph: false,
+        lastKeyDown: -1,
+        shiftNodeDrag: false,
+        selectedText: null,
+        currentPlayer: 0,
+        bonusVal: -1,
+        bonusNode: null,
+        prevNode: null,
+        moveFromNode: null,
+        moveToNode: null,
+        movedArmies: null,
+        attackerNode: null,
+        attackedNode: null,
+        attackedNodeArmies: -1,
+        algo1: null,
+        algo2: null,
+      };
+    }
+
     d3.select("#hidden-file-upload").on("change", function(){
       if (window.File && window.FileReader && window.FileList && window.Blob) {
         var uploadFile = this.files[0];
         var filereader = new window.FileReader();
-
+        returnAsNewGame();
         filereader.onload = function(){
           var txtRes = filereader.result;
           // TODO better error handling
@@ -184,11 +215,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
             var jsonObj = JSON.parse(txtRes);
             thisGraph.deleteGraph(true);
             thisGraph.nodes = jsonObj.nodes;
-            /*thisGraph.nodes.forEach(function(node){
-              node.title = node.title;
-              return node;
-            });*/
-            thisGraph.setIdCt(jsonObj.nodes.length + 1);
+            thisGraph.setIdCt(jsonObj.nodes[jsonObj.nodes.length - 1].id + 1);
             var newEdges = jsonObj.edges;
             newEdges.forEach(function(e, i){
               newEdges[i] = {source: thisGraph.nodes.filter(function(n){return n.id == e[0];})[0],
@@ -207,7 +234,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           }
         };
         filereader.readAsText(uploadFile);
-
+        $("#hidden-file-upload").val("");
       } else {
         alert("Your browser won't let you save this graph -- try upgrading your browser to IE 10+ or Chrome or Firefox.");
       }
@@ -253,7 +280,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       }).fail(function(){
         //failure();
       }).done(function(response) {
-        console.log(response);
         if(response.status == "valid"){
           thisGraph.nodes = response.nodes.sort(function(a, b){
             return a.id - b.id;
@@ -271,7 +297,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           $("#refresh").click(function(){
             location.reload();
           });
-        } else {
+        } else if (response.error) {
           let error = "";
           response.error.forEach(function (message) {
               error += "\n" + message;
@@ -279,6 +305,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           $("#alerts").text(error);
           $("#alerts").fadeIn(700);
           $("#alerts").fadeOut(700);
+        }else if (response.intialState){
+          console.log("here.");
         }
       });
     }
@@ -291,9 +319,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       intialState();
 
     });
-
-    //handle doing actions.
-    var firstReq = true;
 
     function intialState(){
       if(firstReq){
@@ -354,7 +379,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         //if nodes exists.
         if(g !== undefined){
           //color node with color.
-          console.log(node);
           if(node !== undefined && node.id == thisGraph.nodes[i].id){
             $(g.childNodes[0]).css("fill", color);
           }
@@ -370,7 +394,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       let nodes = [];
       for(var i = 0 ;i < thisGraph.nodes.length; i++){
         let node = thisGraph.nodes[i];
-        console.log(exceptNodes);
         let found = false;
         for(var j = 0 ;j < exceptNodes.length; j++){
           if(node.id == exceptNodes[j].id){
