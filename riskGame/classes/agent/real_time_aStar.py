@@ -5,7 +5,7 @@ from riskGame.classes.agent.passive_agent import Passive
 
 class RTAStar:
 
-    def __init__(self, evaluation_heuristic=SigmoidEval):
+    def __init__(self, evaluation_heuristic=SigmoidEval()):
         self.__hash_table = {}
         self.__evaluate = evaluation_heuristic
         self.__passive_agent = Passive()
@@ -13,7 +13,7 @@ class RTAStar:
     def dfs(self, curr_state, distance_from_root, limit):
         if limit == 0:
             # end of limit
-            return SigmoidEval(curr_state).score() + distance_from_root
+            return SigmoidEval().score(curr_state) + distance_from_root
 
         my_turn_state = self.__passive_agent.play(curr_state)
         child_states = my_turn_state.expand()
