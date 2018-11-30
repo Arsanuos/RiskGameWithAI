@@ -35,7 +35,7 @@ class Parser:
         player2_nodes = []
         for node in nodes:
             new_node = Node(node_name=int(node['id']), hold_player=None, army=int(node['title']), \
-                            neighbours=None, partition=None)
+                            neighbours=None, partition=None, position=(node['x'], node['y']))
             if node['player'] == 'Player 1':
                 new_node.set_hold_player(player1)
                 player1_nodes.append(new_node)
@@ -76,9 +76,8 @@ class Parser:
             node.set_neighbours(neighbours[node.get_node_name()])
 
         state = State(len(all_nodes), all_partitions, [player1, player2], 0)
-
-        algorithms = {'Human':Human, 'Passive':Passive, 'Aggressive':Aggressive, 'Nearly Passive':Pacifist, \
-                      'A *':AStar, 'Greedy':Greedy, 'RTA *':RTAStar}
+        algorithms = {'Human':Human(), 'Passive':Passive(), 'Aggressive':Aggressive(), 'Nearly Passive':Pacifist(), \
+                      'A *':AStar(), 'Greedy':Greedy(), 'RTA *':RTAStar()}
 
         self.__initial_state = state
         self.__agent1 = algorithms[dic['p1']]
@@ -174,7 +173,7 @@ class Parser:
 
         # Parsing State to player bonus
         dic['bonus'] = state.get_current_player().get_bonus()
-
+        dic['nodes'] = []
         for player in state.get_players():
             nodes = player.get_hold_nodes()
             for node in nodes:
@@ -183,7 +182,7 @@ class Parser:
                 node_dic['x'] = node.get_position()[0]
                 node_dic['y'] = node.get_position()[1]
                 node_dic['title'] = node.get_army()
-                node_dic['Player'] = player.get_name()
+                node_dic['player'] = player.get_name()
                 dic['nodes'].append(node_dic)
         return dic
 

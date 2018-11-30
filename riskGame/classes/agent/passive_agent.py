@@ -4,5 +4,5 @@ from riskGame.classes.heuristic.bonus.place_bonus_passive import PlaceBonusPassi
 
 class Passive(Agent):
 
-    def __init__(self, place_bonus_heuristic=PlaceBonusPassive):
+    def __init__(self, place_bonus_heuristic=PlaceBonusPassive()):
         super(Passive, self).__init__(place_bonus_heuristic, None, None)
