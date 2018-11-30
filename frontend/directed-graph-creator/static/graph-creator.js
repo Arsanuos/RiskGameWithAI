@@ -265,6 +265,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           updateBonusUi();
         }else if(response.status == "winner"){
           //TODO:: handle winner.
+          console.log("winner");
           $("#winner").text("the winner is " + response.winner);
           $("#winningModal").show();
           $("#refresh").click(function(){
@@ -272,8 +273,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           });
         } else {
           let error = "";
-          response.error.forEach(function(message){
-            error +=  "\n" + message;
+          response.error.forEach(function (message) {
+              error += "\n" + message;
           });
           $("#alerts").text(error);
           $("#alerts").fadeIn(700);

@@ -96,7 +96,6 @@ class Node:
         else:
             return False
 
-
     def can_move_to_another_node(self, armies, node):
         cond = (node in self.__neighbours)
         if cond and (self.__hold_player == node.get_hold_player()) and (self.get_army() > armies):
