@@ -242,11 +242,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       });
     });
 
-    function updateNextPlayer(){
-      console.log('saasasdasd');
-      //  + String(thisGraph.state.currentPlayer + " turn.")
-      $("#nextPlayer").text("assdaasdsadssd ");
-    }
     function sendPost(data, type){
       $.ajax({
         type: "POST",
@@ -255,7 +250,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       }).fail(function(){
         //failure();
       }).done(function(response) {
-        console.log(response.nodes);
         if(response.status == "valid"){
           thisGraph.nodes = response.nodes.sort(function(a, b){
             return a.id - b.id;
@@ -265,8 +259,13 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           thisGraph.state.bonusVal = response.bonus;
           thisGraph.updateGraph();
           updateBonusUi();
-        }else if(response.status == "winner"){
+        }else if(response.winner){
           //TODO:: handle winner.
+          $("#winner").text("the winner is " + response.winner);
+          $("#winningModal").show();
+          $("#refresh").click(function(){
+            location.reload();
+          });
         } else {
           let error = "";
           response.error.forEach(function(message){
@@ -902,6 +901,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
 
   // call to propagate changes to graph
   GraphCreator.prototype.updateGraph = function(){
+    //hide all tooltip.
+    $(".tooltip").tooltip("hide");
     var thisGraph = this,
         consts = thisGraph.consts,
         state = thisGraph.state;
