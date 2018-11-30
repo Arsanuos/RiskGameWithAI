@@ -28,7 +28,7 @@ class Player:
     def add_node(self, node):
         self.__hold_nodes.append(node)
         node.set_hold_player(self)
-        self.__nodes_dic.append((node.get_node_name(), node))
+        self.__nodes_dic[node.get_node_name()] = node
 
     def remove_node(self, node):
         ids = [node_x.get_node_name() for node_x in self.__hold_nodes]
@@ -36,7 +36,7 @@ class Player:
             if id == node.get_node_name():
                 self.__hold_nodes.pop(idx)
         node.set_hold_player(None)
-        self.__nodes_dic.remove(node.get_node_name())
+        del self.__nodes_dic[node.get_node_name()]
 
     def calculate_partition_bonus(self):
         unique_partitions = set()
