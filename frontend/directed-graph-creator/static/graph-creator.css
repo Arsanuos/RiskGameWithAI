@@ -68,7 +68,7 @@ g.conceptG:hover circle{
 }
 
 g.selected circle{
-    fill: rgb(59, 61, 201);
+    fill: rgb(59, 61, 201) !important;
 }
 g.selected:hover circle{
     fill: rgb(109, 112, 255);

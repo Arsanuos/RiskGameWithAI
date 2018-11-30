@@ -222,7 +222,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       $("#partitions").val().split("\n").forEach(function(val, index, arr){
         var ret = val.trim().split(" ");
         if(ret[0] != ""){
-          console.log(ret);
           thisGraph.partitions.push(ret);
         }
       });
@@ -243,6 +242,9 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       });
     });
 
+    function updateNextPlayer(){
+      $("#nextPlayer").text("Player " + String(thisGraph.state.currentPlayer + " turn."));
+    }
     function sendPost(data, type){
       $.ajax({
         type: "POST",
@@ -254,12 +256,15 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         //TODO:: see the response here.
         //TODO:: add values to spans in UI.
         //success();
+        console.log(response);
         if(response.status == "valid"){
           thisGraph.nodes = response.nodes;
           thisGraph.state.currentPlayer = response.player;
           thisGraph.state.bonusVal = response.bonus;
           thisGraph.updateGraph();
           updateBonusUi();
+          updateNextPlayer();
+          
         } else {
           let error = "";
           response.messages.forEach(function(message){
@@ -278,6 +283,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
 
     $("#initialize").click(function(){
       intialState();
+
     });
 
     //handle doing actions.
@@ -295,8 +301,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         thisGraph.nodes.forEach(function(curr){
           nodes.push({id:curr.id, title:curr.title, player:curr.player, x:curr.x, y:curr.y});
         });
-        console.log($('#p1Algo').find(":selected").text())
-        console.log($('#p2Algo').find(":selected").text())
         let data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges, 
           p1:$('#p1Algo').find(":selected").text(), p2:$('#p2Algo').find(":selected").text()};
         sendPost(data, "state")
@@ -364,7 +368,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         }
         found = true;
       }
-      console.log(nodes);
       nodes.forEach(function(node){
         colorNode(node, getOldColor(node));
       });
@@ -962,9 +965,13 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           $(g.childNodes[0]).css("fill", node.player == "Player 1" ? "#d39e00" : "#299a43");
         }
         $(g.childNodes[1]).text(node.title);
-        
+
+        $(g).attr('data-toggle', 'tooltip');
+        $(g).attr('data-placement', 'top');
+        $(g).attr('title', "Node id: " + node.id);
       }
     });
+    $('[data-toggle="tooltip"]').tooltip();
 
   };
 
@@ -1037,4 +1044,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   graph.updateGraph();
   intitializeUi();
   $(".alert").alert()
+  //enable tool tip everywhere.
+  $('[data-toggle="tooltip"]').tooltip()
 })(window.d3, window.saveAs, window.Blob);
