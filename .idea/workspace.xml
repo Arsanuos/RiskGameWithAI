@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e8281e3a-bd11-4e2e-8f0f-c4d8eb5a4b77" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/directed-graph-creator/static/graph-creator.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/directed-graph-creator/static/graph-creator.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/riskGame/classes/state/node.py" beforeDir="false" afterPath="$PROJECT_DIR$/riskGame/classes/state/node.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -66,7 +65,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/riskGame/classes/parser/parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2771">
+            <state relative-caret-position="-73">
               <caret line="163" column="36" lean-forward="true" selection-start-line="163" selection-start-column="36" selection-end-line="163" selection-end-column="36" />
               <folding>
                 <element signature="e#0#44#0" expanded="true" />
@@ -79,16 +78,16 @@
         <entry file="file://$PROJECT_DIR$/riskGame/classes/state/node.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="192">
-              <caret line="94" selection-start-line="94" selection-end-line="94" />
+              <caret line="94" column="23" lean-forward="true" selection-start-line="94" selection-start-column="23" selection-end-line="94" selection-end-column="23" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/graph/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+            <state relative-caret-position="281">
+              <caret line="43" selection-start-line="43" selection-end-line="43" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -96,11 +95,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/frontend/directed-graph-creator/static/graph-creator.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="904" column="34" selection-start-line="904" selection-start-column="34" selection-end-line="904" selection-end-column="34" />
+            <state relative-caret-position="204">
+              <caret line="913" column="22" lean-forward="true" selection-start-line="913" selection-start-column="22" selection-end-line="913" selection-end-column="22" />
             </state>
           </provider>
         </entry>
@@ -198,11 +197,11 @@
         <option value="$PROJECT_DIR$/riskGame/classes/evaluations/sigmoidEval.py" />
         <option value="$PROJECT_DIR$/riskGame/classes/agent/real_time_aStar.py" />
         <option value="$PROJECT_DIR$/riskGame/classes/state/player.py" />
-        <option value="$PROJECT_DIR$/riskGame/classes/state/node.py" />
         <option value="$PROJECT_DIR$/riskGame/classes/parser.py" />
         <option value="$PROJECT_DIR$/riskGame/classes/main.py" />
         <option value="$PROJECT_DIR$/graph/views.py" />
         <option value="$PROJECT_DIR$/frontend/directed-graph-creator/static/graph-creator.js" />
+        <option value="$PROJECT_DIR$/riskGame/classes/state/node.py" />
       </list>
     </option>
   </component>
@@ -364,7 +363,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.38164252" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.30917874" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.32850242" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -389,6 +388,17 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/graph/views.py</url>
+          <line>32</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/manage.py">
@@ -589,16 +599,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/frontend/directed-graph-creator/static/graph-creator.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="913" column="22" lean-forward="true" selection-start-line="913" selection-start-column="22" selection-end-line="913" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/riskGame/classes/state/node.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="192">
-          <caret line="94" selection-start-line="94" selection-end-line="94" />
+          <caret line="94" column="23" lean-forward="true" selection-start-line="94" selection-start-column="23" selection-end-line="94" selection-end-column="23" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/riskGame/classes/parser/parser.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2771">
+        <state relative-caret-position="-73">
           <caret line="163" column="36" lean-forward="true" selection-start-line="163" selection-start-column="36" selection-end-line="163" selection-end-column="36" />
           <folding>
             <element signature="e#0#44#0" expanded="true" />
@@ -608,18 +625,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/graph/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+        <state relative-caret-position="281">
+          <caret line="43" selection-start-line="43" selection-end-line="43" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/frontend/directed-graph-creator/static/graph-creator.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="904" column="34" selection-start-line="904" selection-start-column="34" selection-end-line="904" selection-end-column="34" />
         </state>
       </provider>
     </entry>
