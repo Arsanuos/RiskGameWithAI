@@ -9,6 +9,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   var settings = {
     appendElSpec: "#graph"
   };
+
+  
   // define graphcreator object
   var GraphCreator = function(svg, nodes, edges, partitions){
     var thisGraph = this;
@@ -40,6 +42,9 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       attackerNode: null,
       attackedNode: null,
       attackedNodeArmies: -1,
+      algo1: null,
+      algo2: null,
+
     };
 
 
@@ -141,7 +146,10 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       thisGraph.nodes.forEach(function(node){
         tmp.push({id:node.id, title:node.title, x:node.x, y:node.y, player:node.player});
       });
-      var blob = new Blob([window.JSON.stringify({"nodes": tmp, "edges": saveEdges, "partitions":thisGraph.partitions})], {type: "text/plain;charset=utf-8"});
+      // TODO:: Add algorithms.
+      var blob = new Blob([window.JSON.stringify({"nodes": tmp, "edges": saveEdges, "partitions":thisGraph.partitions,
+       "algo1":thisGraph.state.algo1, "algo2":thisGraph.state.algo2})], 
+      {type: "text/plain;charset=utf-8"});
       saveAs(blob, "mydag.json");
     });
 
@@ -150,6 +158,17 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     d3.select("#upload-input").on("click", function(){
       document.getElementById("hidden-file-upload").click();
     });
+
+    function loadUi(){
+      let textAreaVal = "";
+      thisGraph.partitions.forEach(function(partition){
+        textAreaVal += partition.join(" ") + "\n";
+      });
+      $("#partitions").text(textAreaVal);
+      $("#p1Algo").val(thisGraph.state.algo1);
+      $("#p2Algo").val(thisGraph.state.algo2);
+    }
+
     d3.select("#hidden-file-upload").on("change", function(){
       if (window.File && window.FileReader && window.FileList && window.Blob) {
         var uploadFile = this.files[0];
@@ -173,8 +192,12 @@ document.onload = (function(d3, saveAs, Blob, undefined){
                           target: thisGraph.nodes.filter(function(n){return n.id == e[1];})[0]};
             });
             thisGraph.edges = newEdges;
-            thisGraph.partitions = jsonObj.partitions;
             thisGraph.updateGraph();
+
+            thisGraph.partitions = jsonObj.partitions;
+            thisGraph.state.algo1 = jsonObj.algo1;
+            thisGraph.state.algo2 = jsonObj.algo2;
+            loadUi();
           }catch(err){
             window.alert("Error parsing uploaded file\nerror message: " + err.message);
             return;
@@ -197,8 +220,11 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     $("#submit").click(function(){
       thisGraph.partitions = [];
       $("#partitions").val().split("\n").forEach(function(val, index, arr){
-        var ret = val.split(" ");
-        thisGraph.partitions.push(ret);
+        var ret = val.trim().split(" ");
+        if(ret[0] != ""){
+          console.log(ret);
+          thisGraph.partitions.push(ret);
+        }
       });
     });
 
@@ -267,11 +293,12 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         //TODO:: human vs human.
         var nodes = [];
         thisGraph.nodes.forEach(function(curr){
-          nodes.push({id:curr.id, title:curr.title, player:curr.player});
+          nodes.push({id:curr.id, title:curr.title, player:curr.player, x:curr.x, y:curr.y});
         });
         console.log($('#p1Algo').find(":selected").text())
         console.log($('#p2Algo').find(":selected").text())
-        let data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges, p1:$('#p1Algo').find(":selected").text(), p2:$('#p2Algo').find(":selected").text()};
+        let data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges, 
+          p1:$('#p1Algo').find(":selected").text(), p2:$('#p2Algo').find(":selected").text()};
         sendPost(data, "state")
         firstReq = false;
       }
@@ -515,6 +542,14 @@ document.onload = (function(d3, saveAs, Blob, undefined){
 
     $("#doAction").click(function() {
       handleTurn();
+    });
+
+    $("#p1Algo").on("change", function(){
+      thisGraph.state.algo1 = $(this).find("option:selected").text()
+    });
+
+    $("#p2Algo").on("change", function(){
+      thisGraph.state.algo2 = $(this).find("option:selected").text()
     });
 
   
@@ -824,7 +859,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     var selectedNode = state.selectedNode,
         selectedEdge = state.selectedEdge;
     switch(d3.event.keyCode) {
-    case consts.BACKSPACE_KEY:
+    //case consts.BACKSPACE_KEY:
     case consts.DELETE_KEY:
       d3.event.preventDefault();
       if (selectedNode){
