@@ -2,6 +2,7 @@ from django.shortcuts import render
 from riskGame.classes.parser.parser import Parser
 from riskGame.classes.agent.human import Human
 import json
+from django.http import JsonResponse
 
 prev_state = None
 current_state = None
@@ -43,7 +44,8 @@ def index(request):
                     prev_state = current_state
                     current_state = agents[player_turn].play(current_state, None)
                     dic = parser.parse_state_to_json(current_state, [])
-                return render(dic, 'index.html')
+                    print(dic)
+                return JsonResponse(dic)
                 # send dic to front end
             else:
                 response = {"status":"winner", "winner": "Player " + str(current_state.get_winner().get_name() + 1)}
