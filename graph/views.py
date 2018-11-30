@@ -51,9 +51,9 @@ def index(request):
                 # send dic to front end
             else:
                 response = {"status":"winner", "winner": "Player " + str(current_state.get_winner().get_name() + 1)}
-                return JsonResponse(response)
-    else:
-        return render(request, 'index.html')
+                return render(response, 'index.html')
+
+    return render(request, 'index.html')
 
     """
         except Exception as e:
