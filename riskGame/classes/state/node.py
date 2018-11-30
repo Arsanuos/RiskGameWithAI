@@ -44,12 +44,6 @@ class Node:
     def get_position(self):
         return self.__position
 
-    def can_attack(self):
-        for node in self.__neighbours:
-            if self.can_attack(node):
-                return True
-        return False
-
     def min_loss_attack(self):
         '''
             get the score of minimum harm can be done to me.
@@ -58,7 +52,7 @@ class Node:
         max_loss = -1 * maxsize
         for node in self.__neighbours:
             if self.__hold_player != node.get_hold_player():
-                max_loss = max(max_loss, self.__army - node.get_army)
+                max_loss = max(max_loss, self.__army - node.get_army())
         return max_loss
 
     def max_loss_attack(self):
@@ -69,7 +63,7 @@ class Node:
         min_loss = maxsize
         for node in self.__neighbours:
             if self.__hold_player != node.get_hold_player():
-                min_loss = min(min_loss, self.__army - node.get_army)
+                min_loss = min(min_loss, self.__army - node.get_army())
         return min_loss
 
 

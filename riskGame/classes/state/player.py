@@ -78,7 +78,8 @@ class Player:
     def get_border_nodes(self):
         border_nodes = []
         for node in self.__hold_nodes:
-            for neighbor in node.get_neighbours:
+            neighbors = node.get_neighbours()
+            for neighbor in neighbors:
                 if neighbor not in self.__hold_nodes:
                     border_nodes.append(node)
                     break

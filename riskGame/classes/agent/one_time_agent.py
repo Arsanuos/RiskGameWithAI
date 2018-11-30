@@ -18,6 +18,7 @@ class OneTimeAgent:
         self.__initial_state.set_parent_state(None)
         passive_agent = Passive()
 
+        end = None
         states_heap = []
         self.__vis.add(initial_state)
         child_states = initial_state.expand()

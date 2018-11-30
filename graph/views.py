@@ -1,12 +1,15 @@
 from django.shortcuts import render
 from riskGame.classes.parser.parser import Parser
 from riskGame.classes.agent.human import Human
+from riskGame.classes.agent.one_time_agent import OneTimeAgent
+from riskGame.classes.agent.real_time_aStar import RTAStar
 import json
 from django.http import JsonResponse
 
 prev_state = None
 current_state = None
 agents = []
+all_states = []
 parser = Parser()
 
 
@@ -14,7 +17,7 @@ parser = Parser()
 def index(request):
     #this is the shape of the request add your logic here based on that.
     dict = request.POST.dict()
-    global prev_state, current_state, agents, parser
+    global prev_state, current_state, agents, parser, all_states
 
     if 'json' in dict:
         data = dict['json']
@@ -25,6 +28,7 @@ def index(request):
             parser.parse_json_to_state(dic)
             initial_state = parser.get_initial_state()
             agents = []
+            all_states = []
             agents.append(parser.get_agent(1))
             agents.append(parser.get_agent(2))
             current_state = initial_state
@@ -43,7 +47,14 @@ def index(request):
             else:
                 # get request to represent get the next turn state
                 prev_state = current_state
-                current_state = agents[player_turn].play(current_state, None)
+                if isinstance(agents[player_turn], OneTimeAgent):
+                    if len(all_states) == 0:
+                        all_states = agents[player_turn].search(current_state)
+                    current_state = all_states.pop(0)
+                elif isinstance(agents[player_turn], RTAStar):
+                    current_state = agents[player_turn].play(current_state)
+                else:
+                    current_state = agents[player_turn].play(current_state, None)
                 dic = parser.parse_state_to_json(current_state, [])
 
             if current_state.get_winner():

@@ -26,7 +26,7 @@ class RTAStar:
 
         return min_cost
 
-    def make_decision(self, state):
+    def play(self, state):
         # Plan phase
         limit = 3
         child_states = state.expand()

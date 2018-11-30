@@ -77,7 +77,7 @@ class Parser:
 
         state = State(len(all_nodes), all_partitions, [player1, player2], 0)
         algorithms = {'Human':Human(), 'Passive':Passive(), 'Aggressive':Aggressive(), 'Nearly Passive':Pacifist(), \
-                      'A *':AStar(), 'Greedy':Greedy(), 'RTA *':RTAStar()}
+                      'A*':AStar(), 'Greedy':Greedy(), 'RTA*':RTAStar()}
 
         self.__initial_state = state
         self.__agent1 = algorithms[dic['p1']]

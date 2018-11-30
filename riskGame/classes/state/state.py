@@ -91,19 +91,18 @@ class State:
             copied_node = copied_state.get_current_player().get_node_by_name(node.get_node_name())
 
             # node can attack without even use bonus
-            if copied_node.can_attack():
+            if len(copied_node.get_possible_attacked_nodes()) > 0:
                 # already has more troops
                 no_need_bonus.append(copied_node)
 
             else:
-                copied_node.set_army(copied_node.get_army + copied_state.get_current_player().get_bonus())
-                if copied_node.can_attack():
+                copied_node.set_army(copied_node.get_army() + copied_state.get_current_player().get_bonus())
+                if len(copied_node.get_possible_attacked_nodes()) > 0:
                     need_bonus.append(copied_node)
-
                 else:
                     # can't attack although we added bonus
                     need_more_bonus.append(copied_node)
-                copied_node.set_army(copied_node.get_army - copied_state.get_current_player().get_bonus())
+                copied_node.set_army(copied_node.get_army() - copied_state.get_current_player().get_bonus())
 
         # priority for no_need_bonus
         sorted_no_need_bonus = []
@@ -125,7 +124,13 @@ class State:
 
         ret_nodes = need_bonus + sorted_need_more_bonus + sorted_no_need_bonus
 
-        return ret_nodes[:limit]
+        next_moves = []
+        nodes = ret_nodes[:limit]
+        for node in nodes:
+            move = Move()
+            move.set_bonus_hold_node(node)
+            next_moves.append(move)
+        return next_moves
 
     """
         limit the branching factor y using limit argument.
@@ -135,7 +140,7 @@ class State:
                we may not be able to attack that node later as it can be stronger, so attack ot now as soos as you can.
         divide_armies to limit possible moves from ther attacker node to the attacked node
     """
-    def expand_attack(self, state, limit=maxsize, largest_remaining_heuristic=True, minimum_difference_heuristic=False, divide_armies=True):
+    def expand_attack(self, limit=maxsize, largest_remaining_heuristic=True, minimum_difference_heuristic=False, divide_armies=True):
         # to make priority of branches to support limit
         # priority queue pop the max priority
         pq = []
@@ -237,38 +242,70 @@ class State:
                 #move.apply_move()
                 #next_states.append(new_state)
                 next_states.append(move)
-        return new_state
+        return next_states
 
     def expand(self):
-        bonus_nodes = self.expand_bonus(limit=4);
+        bonus_moves = self.expand_bonus(limit=4);
         move_moves = self.expand_move();
         attack_moves = self.expand_attack(limit=4, divide_armies=False)
-        next_states = []
-        for node in bonus_nodes:
+        temp_states = []
+        for move1 in bonus_moves:
             for move2 in move_moves:
-                for move3 in attack_moves:
-                    copied_state = deepcopy(self)
-                    bonus_node = copied_state.get_current_player().get_node_by_name(node.get_node_name())
-                    move_from_node = copied_state.get_current_player().get_node_by_name(move2.get_move_from_node().get_node_name())
-                    move_to_node = copied_state.get_current_player().get_node_by_name(move2.get_move_to_node().get_node_name())
-                    moved_armies = move2.get_moved_armies()
-                    attacker_node = copied_state.get_current_player().get_node_by_name(move3.get_attacker_node().get_node_name())
-                    attacked_node = copied_state.get_next_player().get_node_by_name(move3.get_attacked_node().get_node_name())
-                    attacked_armies = move3.get_attacked_node_armies()
-                    move = Move()
-                    move.set_bonus_hold_node(bonus_node)
-                    move.set_move_from_node(move_from_node)
-                    move.set_move_to_node(move_to_node)
-                    move.set_moved_armies(moved_armies)
+                copied_state = deepcopy(self)
+                bonus_node = copied_state.get_current_player().get_node_by_name(move1.get_bonus_hold_node().get_node_name())
+                move_from_node = copied_state.get_current_player().get_node_by_name(move2.get_move_from_node().get_node_name())
+                move_to_node = copied_state.get_current_player().get_node_by_name(move2.get_move_to_node().get_node_name())
+                moved_armies = move2.get_moved_armies()
+                move = Move()
+                move.set_bonus_hold_node(bonus_node)
+                move.set_move_from_node(move_from_node)
+                move.set_move_to_node(move_to_node)
+                move.set_moved_armies(moved_armies)
+                move.apply_move()
+                temp_states.append(copied_state)
+
+
+                #move.set_attacker_node(attacker_node)
+                #move.set_attacked_node(attacked_node)
+                #move.set_attacked_node_armies(attacked_armies)
+                #move.apply_move()
+                #copied_state.increase_turn()
+                #copied_state.increase_player_turn()
+                #copied_state.reset_hash()
+                #copied_state.set_parent_state(self)
+                #next_states.append(copied_state)
+
+        if len(temp_moves) == 0:
+            if len(bonus_moves) > 0:
+                temp_moves = bonus_moves
+            elif len(move_moves) > 0:
+                temp_moves = move_moves
+
+        if len(temp_moves) == 0:
+            temp_moves = attack_moves
+        elif len(attack_moves) > 0:
+            temp_moves_copy = deepcopy(temp_moves)
+            temp_moves = []
+            for move1 in temp_moves_copy:
+                for move2 in attack_moves:
+                    move = deepcopy(move1)
+                    attacker_node = copied_state.get_current_player().get_node_by_name(move2.get_attacker_node().get_node_name())
+                    attacked_node = copied_state.get_next_player().get_node_by_name(move2.get_attacked_node().get_node_name())
+                    attacked_armies = move2.get_attacked_node_armies()
                     move.set_attacker_node(attacker_node)
                     move.set_attacked_node(attacked_node)
                     move.set_attacked_node_armies(attacked_armies)
-                    move.apply_move()
-                    copied_state.increase_turn()
-                    copied_state.increase_player_turn()
-                    copied_state.reset_hash()
-                    copied_state.set_parent_state(self)
-                    next_states.append(copied_state)
+                    temp_moves.append(move)
+
+        for move in temp_moves:
+            move.apply_move()
+            copied_state.increase_turn()
+            copied_state.increase_player_turn()
+            copied_state.reset_hash()
+            copied_state.set_parent_state(self)
+            next_states.append(copied_state)
+
+
         return next_states
 
     ## UTILS ##
