@@ -269,7 +269,9 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         thisGraph.nodes.forEach(function(curr){
           nodes.push({id:curr.id, title:curr.title, player:curr.player});
         });
-        let data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges, p1:p1Algo, p2:p2Algo};
+        console.log($('#p1Algo').find(":selected").text())
+        console.log($('#p2Algo').find(":selected").text())
+        let data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges, p1:$('#p1Algo').find(":selected").text(), p2:$('#p2Algo').find(":selected").text()};
         sendPost(data, "state")
         firstReq = false;
       }
