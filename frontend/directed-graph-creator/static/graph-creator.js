@@ -253,15 +253,19 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       }).done(function(response) {
         console.log(response.nodes);
         if(response.status == "valid"){
-          thisGraph.nodes = response.nodes;
+          thisGraph.nodes = response.nodes.sort(function(a, b){
+            return a.id - b.id;
+          });
           thisGraph.state.currentPlayer = response.player - 1;
           $("#nextPlayer").text("Player " + String(response.player + " turn."));
           thisGraph.state.bonusVal = response.bonus;
           thisGraph.updateGraph();
           updateBonusUi();
+        }else if(response.status == "winner"){
+          //TODO:: handle winner.
         } else {
           let error = "";
-          response.messages.forEach(function(message){
+          response.error.forEach(function(message){
             error +=  "\n" + message;
           });
           $("#alerts").text(error);
