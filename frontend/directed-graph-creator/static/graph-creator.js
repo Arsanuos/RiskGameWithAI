@@ -254,22 +254,22 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         data: {json:JSON.stringify(data), type:type},
       }).fail(function(){
         //failure();
-      }).done(function(response){
-        //TODO:: see the response here.
-        //TODO:: add values to spans in UI.
-        //success();
-        console.log(response);
+      }).done(function(response) {
+        console.log(response.nodes);
         if(response.status == "valid"){
-          thisGraph.nodes = response.nodes;
-          thisGraph.state.currentPlayer = response.player;
+          thisGraph.nodes = response.nodes.sort(function(a, b){
+            return a.id - b.id;
+          });
+          thisGraph.state.currentPlayer = response.player - 1;
+          $("#nextPlayer").text("Player " + String(response.player + " turn."));
           thisGraph.state.bonusVal = response.bonus;
           thisGraph.updateGraph();
           updateBonusUi();
-          updateNextPlayer();
-
+        }else if(response.status == "winner"){
+          //TODO:: handle winner.
         } else {
           let error = "";
-          response.messages.forEach(function(message){
+          response.error.forEach(function(message){
             error +=  "\n" + message;
           });
           $("#alerts").text(error);
@@ -342,10 +342,14 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     }
 
     function colorNode(node, color){
+      if(node == null){
+        return;
+      }
       thisGraph.circles[0].parentNode.childNodes.forEach(function(g, i){
         //if nodes exists.
         if(g !== undefined){
           //color node with color.
+          console.log(node);
           if(node !== undefined && node.id == thisGraph.nodes[i].id){
             $(g.childNodes[0]).css("fill", color);
           }
@@ -354,10 +358,14 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     }
 
     function removeColorExcpetFrom(exceptNodes){
+      if(exceptNodes.length == 1 && exceptNodes[0] == null){
+        return;
+      }
       //console.log(exceptNodes);
       let nodes = [];
       for(var i = 0 ;i < thisGraph.nodes.length; i++){
         let node = thisGraph.nodes[i];
+        console.log(exceptNodes);
         let found = false;
         for(var j = 0 ;j < exceptNodes.length; j++){
           if(node.id == exceptNodes[j].id){
@@ -672,6 +680,9 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   GraphCreator.prototype.removeSelectFromNode = function(){
     var thisGraph = this;
     thisGraph.circles.filter(function(cd){
+      if(thisGraph.state.selectedNode == null){
+        return true;
+      }
       return cd.id !== thisGraph.state.selectedNode.id;
     }).classed(thisGraph.consts.selectedClass, false);
     //thisGraph.state.selectedNode = null;
@@ -820,6 +831,10 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   // mousedown on main svg
   GraphCreator.prototype.svgMouseDown = function(){
     this.state.graphMouseDown = true;
+    this.state.selectedNode = null;
+    this.removeSelectFromNode()
+    //thisGraph.removeSelectFromNode();
+    //thisGraph.updateGraph();
   };
 
   // mouseup on main svg
