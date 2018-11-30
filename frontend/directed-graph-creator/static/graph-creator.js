@@ -259,7 +259,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           thisGraph.state.bonusVal = response.bonus;
           thisGraph.updateGraph();
           updateBonusUi();
-        }else if(response.winner){
+        }else if(response.status == 'winner'){
+          console.log('winner')
           //TODO:: handle winner.
           $("#winner").text("the winner is " + response.winner);
           $("#winningModal").show();
@@ -268,8 +269,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           });
         } else {
           let error = "";
-          response.error.forEach(function(message){
-            error +=  "\n" + message;
+          response.error.forEach(function (message) {
+              error += "\n" + message;
           });
           $("#alerts").text(error);
           $("#alerts").fadeIn(700);
