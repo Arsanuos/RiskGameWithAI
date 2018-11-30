@@ -44,7 +44,9 @@ def index(request):
                     prev_state = current_state
                     current_state = agents[player_turn].play(current_state, None)
                     dic = parser.parse_state_to_json(current_state, [])
-                    print(dic)
+
+                print('Finished Playing,, the current state is following:')
+                print(dic)
                 return JsonResponse(dic)
                 # send dic to front end
             else:
