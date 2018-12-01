@@ -60,12 +60,12 @@ class SigmoidEval:
                     v = max(v, node.get_army())
         return -1 * v
 
-    def get_min_distance_from_border(self, border_nodes, all_nodes):
+    def get_min_distance_from_border(self, border_nodes, all_nodes, nodes_len):
         q = []
         for node in border_nodes:
             q.append(node)
         vis = set()
-        l = [0] * len(all_nodes)
+        l = [0] * nodes_len
         d = 0
         while len(q):
             s = len(q)
@@ -89,7 +89,11 @@ class SigmoidEval:
         border territories.
         :return:
         """
-        distances = self.get_min_distance_from_border(self.__state.get_current_player().get_border_nodes(), self.__state.get_current_player().get_hold_nodes())
+        number_nodes = max([int(n.get_node_name()) for p in self.__state.get_players() for n in p.get_hold_nodes()]) + 1
+
+        distances = self.get_min_distance_from_border(self.__state.get_current_player().get_border_nodes(), \
+                                                      self.__state.get_current_player().get_hold_nodes(),\
+                                                      number_nodes)
         current_armies = self.get_armies_of(self.__state.get_current_player())
         t = 0
         for node in self.__state.get_current_player().get_hold_nodes():
@@ -104,7 +108,7 @@ class SigmoidEval:
         :return:
         """
         b = 0
-        for i, player in self.__state.get_players():
+        for i, player in enumerate(self.__state.get_players()):
             if i != self.__state.get_player_turn_number():
                 b += player.get_bonus()
         return -1 * b
@@ -115,7 +119,7 @@ class SigmoidEval:
         (AP) which are hinterland territories
         :return:
         """
-        return len(self.__state.get_current_player().get_hold_nodes()) - (self.__state.get_current_player().get_border_nodes())/self.__state.get_number_nodes()
+        return len(self.__state.get_current_player().get_hold_nodes()) - len(self.__state.get_current_player().get_border_nodes()) /self.__state.get_number_nodes()
 
     def occupied_nodes_feature(self):
         """
