@@ -20,6 +20,10 @@ class SigmoidEval:
         :return: score
         """
         self.__state = state
+        self.__armies = {}
+        for player in self.__state.get_players():
+            self.__armies[player.get_name()] = sum([node.get_army() for node in player.get_hold_nodes()])
+
         w = [8, 7, 9, 3, 1, 10, 7]
         score = w[0] * self.armies_feature() + w[1] * self.best_enemy_feature() + w[2] * self.distance_to_frontier_feature() + \
                 w[3] * self.enemy_army_bonus_feature() + w[4] * self.hinterland_feature() + w[5] * self.occupied_nodes_feature() \
@@ -28,15 +32,11 @@ class SigmoidEval:
         sigmoid = 1/(1+math.exp(-1 * score))
         return sigmoid * (self.__state.get_number_nodes() - len(self.__state.get_current_player().get_hold_nodes()))
 
-
     def get_total_armies(self):
-        total_armies = 0
-        for player in self.__state.get_players():
-            total_armies += sum([t for t in player.get_hold_nodes().get_army()])
-        return total_armies
+        return sum(self.__armies.values())
 
     def get_armies_of(self, player):
-        return sum([t for t in player.get_hold_nodes().get_army()])
+        return self.__armies[player.get_name()]
 
     def armies_feature(self):
         """
@@ -45,29 +45,26 @@ class SigmoidEval:
         :return:
         """
         total_armies = self.get_total_armies()
-        cur_player_army = sum([t for t in self.__state.get_current_player().get_hold_nodes().get_army()])
+        cur_player_army = self.__armies[self.__state.get_current_player().get_name()]
         return cur_player_army/total_armies
-
 
     def best_enemy_feature(self):
         """
         get the best army of the other players.
         :return:
         """
-        total_armies = self.get_total_armies()
         v = -100
-        for i, player in enumerate(self.__state.get_players()):
-            if i != self.__state.get_player_turn_number():
-                for t in player.get_hold_nodes().get_army():
-                    v = max(v, t)
+        for player in self.__state.get_players():
+            if player.get_name() != self.__state.get_current_player().get_name():
+               for node in player.get_hold_nodes():
+                    v = max(v, node.get_army())
         return -1 * v
-
 
     def get_min_distance_from_border(self, border_nodes, all_nodes):
         q = []
         for node in border_nodes:
             q.append(node)
-        vis = [False] * len(all_nodes)
+        vis = set()
         l = [0] * len(all_nodes)
         d = 0
         while len(q):
@@ -76,13 +73,12 @@ class SigmoidEval:
             d += 1
             while s:
                 s -= 1
-                if not vis[int(node.get_node_name())]:
-                    vis[int(node.get_node_name())] = True
+                if int(node.get_node_name()) not in vis:
+                    vis.add(int(node.get_node_name()))
                     l[int(node.get_node_name())] = d + 1
                     for child in node.get_neighbours():
                         if child in all_nodes:
                             q.append(child)
-
         return l
 
     def distance_to_frontier_feature(self):
@@ -113,7 +109,6 @@ class SigmoidEval:
                 b += player.get_bonus()
         return -1 * b
 
-
     def hinterland_feature(self):
         """
         The Hinterland Feature returns the percentage of the territories of the actual player
@@ -121,7 +116,6 @@ class SigmoidEval:
         :return:
         """
         return len(self.__state.get_current_player().get_hold_nodes()) - (self.__state.get_current_player().get_border_nodes())/self.__state.get_number_nodes()
-
 
     def occupied_nodes_feature(self):
         """
@@ -131,7 +125,6 @@ class SigmoidEval:
         """
         return len(self.__state.get_current_player().get_hold_nodes())/self.__state.get_number_nodes()
 
-
     def bonus_feature(self):
         """
         The Own Estimated Reinforcement Feature returns the expectation of the total number
@@ -139,7 +132,6 @@ class SigmoidEval:
         :return:
         """
         return self.__state.get_current_player().get_bonus()
-
 
 
 
