@@ -6,10 +6,10 @@ class AStar(OneTimeAgent):
 
     def __init__(self, evaluation_heuristic=SigmoidEval()):
         self.__evaluation_heuristic = evaluation_heuristic
-        super(AStar, self).__init__(self.calculate_fn)
+        super(AStar, self).__init__()
 
-    def calculate_fn(self, state):
-        gn = state.calculate_gn(self.__initial_state)
+    def calculate_fn(self, state, initial_state):
+        gn = state.calculate_gn(initial_state)
         hn = self.__evaluation_heuristic.score(state)
         return gn + hn
 

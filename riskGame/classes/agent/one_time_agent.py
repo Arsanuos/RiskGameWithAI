@@ -1,11 +1,11 @@
 from riskGame.classes.agent.passive_agent import Passive
 from heapq import *
+from abc import ABC, abstractmethod
 
 
-class OneTimeAgent:
+class OneTimeAgent(ABC):
 
-    def __init__(self, evaluate_state):
-        self.__evaluate_state = evaluate_state
+    def __init__(self):
         self.__initial_state = None
         self.__vis = set()
 
@@ -20,10 +20,10 @@ class OneTimeAgent:
 
         end = None
         states_heap = []
-        self.__vis.add(initial_state)
-        child_states = initial_state.expand()
+        self.__vis.add(self.__initial_state)
+        child_states = self.__initial_state.expand()
         for child in child_states:
-            heappush(states_heap, (self.__evaluate_state(child), child))
+            heappush(states_heap, (self.calculate_fn(child, self.__initial_state), child))
 
         while len(states_heap):
             # break tie by FIFO criteria
@@ -41,6 +41,11 @@ class OneTimeAgent:
 
             child_states = astar_turn_state.expand()
             for child in child_states:
-                heappush(states_heap, (self.__evaluate_state(child), child))
+                heappush(states_heap, (self.calculate_fn(child, self.__initial_state), child))
 
         return end.get_steps_to_root()
+
+    @abstractmethod
+    def calculate_fn(self, state, inital_state):
+        pass
+

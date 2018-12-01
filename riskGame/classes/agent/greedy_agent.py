@@ -6,9 +6,9 @@ class Greedy(OneTimeAgent):
 
     def __init__(self, evaluation_heuristic=SigmoidEval()):
         self.__evaluation_heuristic = evaluation_heuristic
-        super(Greedy, self).__init__(self.calculate_fn)
+        super(Greedy, self).__init__()
 
-    def calculate_fn(self, state):
+    def calculate_fn(self, state, inital_state):
         hn = self.__evaluation_heuristic().score(state)
         return hn
 
