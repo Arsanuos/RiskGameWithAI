@@ -169,13 +169,12 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       $("#partitions").text(textAreaVal);
       $("#p1Algo").val(thisGraph.state.algo1);
       $("#p2Algo").val(thisGraph.state.algo2);
-    }
-
-    function returnAsNewGame(){
-      console.log("here");
       if(thisGraph.state.algo1 == "Human" || thisGraph.state.algo2 == "Human"){
         $("#controls").show();
       }
+    }
+
+    function returnAsNewGame(){
       firstReq = true;
       $(".controller").prop("disabled", false);
       thisGraph.state = {
@@ -212,6 +211,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           // TODO better error handling
           try{
             var jsonObj = JSON.parse(txtRes);
+            returnAsNewGame();
             thisGraph.deleteGraph(true);
             thisGraph.nodes = jsonObj.nodes;
             thisGraph.setIdCt(jsonObj.nodes[jsonObj.nodes.length - 1].id + 1);
@@ -227,7 +227,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
             thisGraph.state.algo1 = jsonObj.algo1;
             thisGraph.state.algo2 = jsonObj.algo2;
             loadUi();
-            returnAsNewGame();
           }catch(err){
             window.alert("Error parsing uploaded file\nerror message: " + err.message);
             return;
@@ -272,6 +271,12 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       });
     });
 
+    function showError(error){
+      $("#errorMsg").text(error);
+      $(".alert").fadeToggle(1000);
+      $(".alert").fadeToggle(5000);
+    }
+
     function sendPost(data, type){
       $.ajax({
         type: "POST",
@@ -288,7 +293,9 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           $("#nextPlayer").text("Player " + String(response.player + " turn."));
           thisGraph.state.bonusVal = response.bonus;
           thisGraph.updateGraph();
-          updateBonusUi();
+          $("#bonusVal").text(thisGraph.state.bonusVal);
+          resetAttack();
+          resetMove();
         }else if(response.status == 'winner'){
           //TODO:: handle winner.
           winner = true;
@@ -308,11 +315,9 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           response.error.forEach(function (message) {
               error += "\n" + message;
           });
-          $("#alerts").text(error);
-          $("#alerts").fadeIn(700);
-          $("#alerts").fadeOut(700);
+          showError(error);
         }else if (response.status == 'initial'){
-          console.log("here.");
+          $('.controller').prop('disabled', true);
         }
       });
     }
@@ -323,12 +328,10 @@ document.onload = (function(d3, saveAs, Blob, undefined){
 
     $("#initialize").click(function(){
       intialState();
-
     });
 
     function intialState(){
       if(firstReq){
-        $('.controller').prop('disabled', true);
         //send all data.
         //turn exists only for humans.
         //response:
@@ -356,6 +359,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
          movedFromNode:thisGraph.state.moveFromNode, movedToNode:thisGraph.state.moveToNode,
          movedArmies:thisGraph.state.movedArmies,
          attackedNodeArmies:thisGraph.state.attackedNodeArmies};
+         console.log(thisGraph.state.algo1);
+         console.log(thisGraph.state.algo2);
          console.log(turn);
          sendPost(turn, "turn");
     }
@@ -472,6 +477,10 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     });
 
     function updateBonusUi(){
+      if(thisGraph.state.bonusNode == null){
+        showError("Can't perform bonus operation make sure that you choosed a node correctly.")
+        return;
+      }
       $("#bonusVal").text(thisGraph.state.bonusVal);
       $("#bonusNode").text(thisGraph.state.bonusNode != undefined ? thisGraph.state.bonusNode.id : -1);
       //color bonus node with yellow.
@@ -480,14 +489,24 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     }
 
     function updateMoveUi(){
-      $("#movedToNode").text(thisGraph.state.moveToNode.id);
-      $("#movedFromNode").text(thisGraph.state.moveFromNode.id);
+      if(thisGraph.state.moveFromNode == null || thisGraph.state.moveToNode == null || thisGraph.state.movedArmies == ""){
+        showError("Can't perform move operation make sure that you enter moved army and the two node correctly.")
+        return;
+      }
+      $("#moveToNode").text(thisGraph.state.moveToNode.id);
+      $("#moveFromNode").text(thisGraph.state.moveFromNode.id);
+      
       colorNode(thisGraph.state.moveToNode, "blue");
       colorNode(thisGraph.state.moveFromNode, "blue");
       removeColorExcpetFrom([thisGraph.state.moveToNode, thisGraph.state.moveFromNode]);
     }
 
     function updateAttackUi(){
+      if(thisGraph.state.attackedNode == null || thisGraph.state.attackerNode == null || thisGraph.state.attackedNodeArmies == ""){
+        showError("Can't perform attack operation make sure that you enter the army you need to put in destination node"
+         +"and the two node correctly.")
+        return;
+      }
       $("#attackedNode").text(thisGraph.state.attackedNode.id);
       $("#attackerNode").text(thisGraph.state.attackerNode.id);
       colorNode(thisGraph.state.attackedNode, "red");
@@ -540,19 +559,20 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       thisGraph.updateGraph();
     }
 
-    function moveFailure(){
+    function resetMove(){
       thisGraph.state.moveToNode = null;
       thisGraph.state.moveFromNode = null;
       thisGraph.state.movedArmies = -1;
-      $("#movedToNode").text(-1);
-      $("#movedFromNode").text(-1);
+      $("#moveToNode").text(-1);
+      $("#moveFromNode").text(-1);
     }
 
     $("#addMove").click(function() {
-      let army = Number($("#armyVal").val());
+      let army = Number($("#armyVal").val() == "" ? -1 : $("#armyVal").val());
       thisGraph.state.moveToNode = thisGraph.state.selectedNode;
       thisGraph.state.moveFromNode = thisGraph.state.prevNode;
       thisGraph.state.movedArmies = army;
+      
       updateMoveUi();
       //handleTurn(moveSuccess, moveFailure);
     });
@@ -574,7 +594,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       updateMoveUi();
     }
 
-    function attackFailure(){
+    function resetAttack(){
       thisGraph.state.attackedNode = null;
       thisGraph.state.attackerNode = null;
       thisGraph.state.attackedNodeArmies = -1;
@@ -584,7 +604,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     }
 
     $("#addAttack").click(function() {
-      let army = Number($("#attackedArmyVal").val());
+      let army = Number($("#attackedArmyVal").val() == "" ? -1 : $("#attackedArmyVal").val());
+      console.log(army);
       thisGraph.state.attackedNode = thisGraph.state.selectedNode;
       thisGraph.state.attackerNode = thisGraph.state.prevNode;
       thisGraph.state.attackedNodeArmies = army;
@@ -593,7 +614,11 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     });
 
     $("#doAction").click(function() {
-      handleTurn();
+      if(thisGraph.state.algo1 == "Human" || thisGraph.state.algo2 == "Human"){
+        handleTurn();
+      }else{
+        setInterval(handleTurn, 2 * 1000);
+      }
     });
 
     $("#p1Algo").on("change", function(){
@@ -723,7 +748,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     thisGraph.removeSelectFromNode();
     d3Node.classed(this.consts.selectedClass, true);
     //update UI with new nodes.
-    thisGraph.updateSelectedAndPrevNode();
+    //thisGraph.updateSelectedAndPrevNode();
   };
 
   GraphCreator.prototype.removeSelectFromNode = function(){
@@ -1114,8 +1139,14 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   document.getElementById("root").style.maxWidth = "100%";
   graph.updateGraph();
   intitializeUi();
-  $(".alert").alert()
+  $(".alert").hide();
   //enable tool tip everywhere.
   $('[data-toggle="tooltip"]').tooltip()
   $("#controls").hide();
+
+  $("#ex6").slider();
+  $("#ex6").on("slide", function(slideEvt) {
+    $("#ex6SliderVal").text(slideEvt.value);
+  });
+
 })(window.d3, window.saveAs, window.Blob);

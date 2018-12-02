@@ -22,3 +22,12 @@ imgs{
     widows: inherit;
     height: inherit;
 }
+
+.slider{
+    margin-top: 18px;
+    margin-left: 25px;
+}
+
+#ex1Slider .slider-selection {
+	background: #BABABA;
+}
