@@ -13,6 +13,14 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   //handle doing actions.
   var firstReq = true;
 
+    var winner = false;
+  // warn the user when leaving
+  window.onbeforeunload = function(){
+    if(!winner){
+      return "Make sure to save your graph locally before leaving :-)";
+    }
+  };
+
   // define graphcreator object
   var GraphCreator = function(svg, nodes, edges, partitions){
     var thisGraph = this;
@@ -45,8 +53,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       attackedNode: null,
       attackedNodeArmies: -1,
       algo1: null,
-      algo2: null,
-
+      algo2: null
     };
 
 
@@ -278,48 +285,50 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     }
 
     function sendPost(data, type){
-      $.ajax({
-        type: "POST",
-        url: 'http://localhost:8000/',
-        data: {json:JSON.stringify(data), type:type},
-      }).fail(function(){
-        //failure();
-      }).done(function(response) {
-        if(response.status == "valid"){
-          thisGraph.nodes = response.nodes.sort(function(a, b){
-            return a.id - b.id;
-          });
-          thisGraph.state.currentPlayer = response.player - 1;
-          $("#nextPlayer").text("Player " + String(response.player + " turn."));
-          thisGraph.state.bonusVal = response.bonus;
-          thisGraph.updateGraph();
-          $("#bonusVal").text(thisGraph.state.bonusVal);
-          resetAttack();
-          resetMove();
-        }else if(response.status == 'winner'){
-          //TODO:: handle winner.
-          winner = true;
-          thisGraph.nodes = response.nodes.sort(function(a, b){
-            return a.id - b.id;
-          });
-          thisGraph.state.bonusVal = response.bonus;
-          thisGraph.updateGraph();
-          updateBonusUi();
-          $("#winner").text("The Winner is " + response.winner);
-          $("#winningModal").modal();
-          $("#refresh").click(function(){
-            location.reload();
-          });
-        } else if (response.error) {
-          let error = "";
-          response.error.forEach(function (message) {
-              error += "\n" + message;
-          });
-          showError(error);
-        }else if (response.status == 'initial'){
-          $('.controller').prop('disabled', true);
-        }
-      });
+      if(!winner){
+        $.ajax({
+          type: "POST",
+          url: 'http://localhost:8000/',
+          data: {json:JSON.stringify(data), type:type},
+        }).fail(function(){
+          //failure();
+        }).done(function(response) {
+          if(response.status == "valid"){
+            thisGraph.nodes = response.nodes.sort(function(a, b){
+              return a.id - b.id;
+            });
+            thisGraph.state.currentPlayer = response.player - 1;
+            $("#nextPlayer").text("Player " + String(response.player + " turn."));
+            thisGraph.state.bonusVal = response.bonus;
+            thisGraph.updateGraph();
+            $("#bonusVal").text(thisGraph.state.bonusVal);
+            resetAttack();
+            resetMove();
+          }else if(response.status == 'winner'){
+            //TODO:: handle winner.
+            winner = true;
+            thisGraph.nodes = response.nodes.sort(function(a, b){
+              return a.id - b.id;
+            });
+            thisGraph.state.bonusVal = response.bonus;
+            thisGraph.updateGraph();
+            updateBonusUi();
+            $("#winner").text("The Winner is " + response.winner);
+            $("#winningModal").modal();
+            $("#refresh").click(function(){
+              location.reload();
+            });
+          } else if (response.error) {
+            let error = "";
+            response.error.forEach(function (message) {
+                error += "\n" + message;
+            });
+            showError(error);
+          }else if (response.status == 'initial'){
+            $('.controller').prop('disabled', true);
+          }
+        });
+      }
     }
 
     function nextPlayer(){
@@ -1106,14 +1115,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       }
     }
   });
-
-  var winner = false;
-  // warn the user when leaving
-  window.onbeforeunload = function(){
-    if(!winner){
-      return "Make sure to save your graph locally before leaving :-)";
-    }
-  };
 
   var docEl = document.documentElement,
       bodyEl = document.getElementsByTagName('body')[0];
