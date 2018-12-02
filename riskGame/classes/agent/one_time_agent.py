@@ -32,8 +32,13 @@ class OneTimeAgent(ABC):
                 continue
 
             if current_explored_state.get_winner():
+                print('Finished Agent, Found Winner')
                 end = current_explored_state
                 break
+
+            # DEBUG
+            print('poping a state and expand more')
+            current_explored_state.print_state()
 
             self.__vis.add(current_explored_state)
             astar_turn_state = passive_agent.play(current_explored_state)

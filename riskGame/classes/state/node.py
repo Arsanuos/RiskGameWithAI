@@ -126,7 +126,6 @@ class Node:
                 return node
         return None
 
-
     def __eq__(self, node):
         if self.get_node_name() == node.get_node_name():
             return True
