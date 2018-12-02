@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e8281e3a-bd11-4e2e-8f0f-c4d8eb5a4b77" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/graph/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/graph/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/riskGame/classes/state/state.py" beforeDir="false" afterPath="$PROJECT_DIR$/riskGame/classes/state/state.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/riskGame/classes/agent/greedy_agent.py" beforeDir="false" afterPath="$PROJECT_DIR$/riskGame/classes/agent/greedy_agent.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -25,22 +24,22 @@
     <session id="1136853235">
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="py" value="9" />
+          <entry key="py" value="10" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Python" value="9" />
+          <entry key="Python" value="10" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="852" />
+          <entry key="py" value="855" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="852" />
+          <entry key="Python" value="855" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.lifecycle.project">
@@ -53,11 +52,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/graph/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="57" column="49" selection-start-line="57" selection-start-column="49" selection-end-line="57" selection-end-column="49" />
+            <state relative-caret-position="221">
+              <caret line="56" column="43" lean-forward="true" selection-start-line="56" selection-start-column="43" selection-end-line="56" selection-end-column="43" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -110,8 +109,20 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/riskGame/classes/agent/aStar_agent.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="12" column="53" selection-start-line="12" selection-start-column="53" selection-end-line="12" selection-end-column="53" />
+            <state relative-caret-position="238">
+              <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+              <folding>
+                <element signature="e#0#62#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/riskGame/classes/agent/greedy_agent.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
               <folding>
                 <element signature="e#0#62#0" expanded="true" />
               </folding>
@@ -187,7 +198,6 @@
         <option value="$PROJECT_DIR$/riskGame/classes/agent/real_time_aStar.py" />
         <option value="$PROJECT_DIR$/riskGame/classes/state/player.py" />
         <option value="$PROJECT_DIR$/riskGame/classes/agent/aStar_agent.py" />
-        <option value="$PROJECT_DIR$/riskGame/classes/agent/greedy_agent.py" />
         <option value="$PROJECT_DIR$/riskGame/classes/agent/one_time_agent.py" />
         <option value="$PROJECT_DIR$/riskGame/classes/state/node.py" />
         <option value="$PROJECT_DIR$/riskGame/classes/agent/one_time_agent.py" />
@@ -195,6 +205,7 @@
         <option value="$PROJECT_DIR$/riskGame/classes/evaluations/sigmoidEval.py" />
         <option value="$PROJECT_DIR$/riskGame/classes/state/state.py" />
         <option value="$PROJECT_DIR$/graph/views.py" />
+        <option value="$PROJECT_DIR$/riskGame/classes/agent/greedy_agent.py" />
       </list>
     </option>
   </component>
@@ -358,12 +369,12 @@
     <frame x="-8" y="-8" width="1382" height="754" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2677761" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2677761" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.09017713" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.22061191" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4363929" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -553,16 +564,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/riskGame/classes/agent/greedy_agent.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="38" lean-forward="true" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="38" />
-          <folding>
-            <element signature="e#0#62#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/frontend/directed-graph-creator/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2006">
@@ -608,16 +609,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/riskGame/classes/agent/aStar_agent.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="53" selection-start-line="12" selection-start-column="53" selection-end-line="12" selection-end-column="53" />
-          <folding>
-            <element signature="e#0#62#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/riskGame/classes/agent/one_time_agent.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="99">
@@ -640,10 +631,30 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/graph/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="57" column="49" selection-start-line="57" selection-start-column="49" selection-end-line="57" selection-end-column="49" />
+        <state relative-caret-position="221">
+          <caret line="56" column="43" lean-forward="true" selection-start-line="56" selection-start-column="43" selection-end-line="56" selection-end-column="43" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/riskGame/classes/agent/aStar_agent.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+          <folding>
+            <element signature="e#0#62#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/riskGame/classes/agent/greedy_agent.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+          <folding>
+            <element signature="e#0#62#0" expanded="true" />
           </folding>
         </state>
       </provider>
