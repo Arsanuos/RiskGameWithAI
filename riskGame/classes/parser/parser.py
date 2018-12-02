@@ -110,6 +110,7 @@ class Parser:
         bonus_node = self.validate_bonus(current_state, bonus_node)
         move_from_node, move_to_node, moved_armies = self.validate_move(current_state, move_from_node, move_to_node, moved_armies)
 
+        moved_from_armies = moved_to_armies = 0
         if move_from_node and attacker_node != 'null' and move_from_node.get_node_name() == attacker_node:
             moved_from_armies = moved_armies
         if move_to_node and attacker_node != 'null' and move_to_node.get_node_name() == attacker_node:
