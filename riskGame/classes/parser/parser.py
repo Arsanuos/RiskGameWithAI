@@ -93,12 +93,18 @@ class Parser:
 
     def parse_json_to_move(self, current_state, dic):
         print(dic)
-        bonus_node = int(dic['bonusNode']['id'])
-        attacker_node = dic['attackerNode']['id']
-        attacked_node = dic['attackedNode']['id']
+        bonus_node = attacker_node = attacked_node = move_from_node = move_to_node = 'null'
+        if dic['bonusNode']:
+            bonus_node = int(dic['bonusNode']['id'])
+        if dic['attackerNode']:
+            attacker_node = dic['attackerNode']['id']
+        if dic['attackedNode']:
+            attacked_node = dic['attackedNode']['id']
         attacked_node_armies = int(dic['attackedNodeArmies'])
-        move_from_node = dic['movedFromNode']['id']
-        move_to_node = dic['movedToNode']['id']
+        if dic['movedFromNode']:
+            move_from_node = dic['movedFromNode']['id']
+        if dic['movedToNode']:
+            move_to_node = dic['movedToNode']['id']
         moved_armies = int(dic['movedArmies'])
         self.__error_messages = []
         bonus_node = self.validate_bonus(current_state, bonus_node)
@@ -130,36 +136,37 @@ class Parser:
         if attacker_node == 'null' or attacked_node == 'null':
             if not (attacker_node == 'null' and attacked_node == 'null' and attacked_armies == -1):
                 self.__error_messages.append("Invalid attack try")
-            return None
+            return None, None, None
         attacker_node = current_state.get_current_player().get_node_by_name(int(attacker_node))
         attacked_node = current_state.get_next_player().get_node_by_name(int(attacked_node))
         if (attacker_node is None) or (attacked_node is None) or (attacked_armies <= 0):
             self.__error_messages.append("Invalid attack nodes or attacked armies")
-            return None
+            return None, None, None
         if attacker_node.can_attack(attacked_node, attacked_armies):
             return attacker_node, attacked_node, attacked_armies
         else:
             self.__error_messages.append("Can't do the attack, Invalid attack Condition")
-            return None
+            return None, None, None
 
     def validate_move(self, current_state, move_from_node, move_to_node, moved_armies):
         if move_from_node == 'null' or move_to_node == 'null':
             if not (move_from_node == 'null' and move_to_node == 'null' and moved_armies == -1):
                 self.__error_messages.append("Invalid move try")
-            return None
+            return None, None, None
         move_from_node = current_state.get_current_player().get_node_by_name(int(move_from_node))
         move_to_node = current_state.get_current_player().get_node_by_name(int(move_to_node))
         if (move_from_node is None) or (move_to_node is None) or (moved_armies <= 0):
             self.__error_messages.append("Invalid move nodes or moved armies")
-            return None
+            return None, None, None
         if move_from_node.can_move_to_another_node(moved_armies, move_to_node):
             return move_from_node, move_to_node, moved_armies
         else:
             self.__error_messages.append("Can't do the move, Invalid move Condition")
-            return None
+            return None, None, None
 
     def parse_state_to_json(self, state, error_messages):
         dic = {}
+        dic['error'] = []
         # Parsing status and errors
         if len(error_messages) == 0:
             dic['status'] = 'valid'
