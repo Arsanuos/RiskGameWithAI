@@ -109,7 +109,12 @@ class Parser:
         self.__error_messages = []
         bonus_node = self.validate_bonus(current_state, bonus_node)
         move_from_node, move_to_node, moved_armies = self.validate_move(current_state, move_from_node, move_to_node, moved_armies)
-        attacker_node, attacked_node, attacked_node_armies = self.validate_attack(current_state, attacker_node, attacked_node, attacked_node_armies)
+
+        if move_from_node and attacker_node != 'null' and move_from_node.get_node_name() == attacker_node:
+            moved_from_armies = moved_armies
+        if move_to_node and attacker_node != 'null' and move_to_node.get_node_name() == attacker_node:
+            moved_to_armies = moved_armies
+        attacker_node, attacked_node, attacked_node_armies = self.validate_attack(current_state, attacker_node, attacked_node, attacked_node_armies, moved_from_armies, moved_to_armies)
         if len(self.__error_messages) > 0:
             return None, self.__error_messages
         else:
@@ -140,7 +145,7 @@ class Parser:
         else:
             return node
 
-    def validate_attack(self, current_state, attacker_node, attacked_node, attacked_armies):
+    def validate_attack(self, current_state, attacker_node, attacked_node, attacked_armies, moved_from_armies, moved_to_armies):
         if attacker_node == 'null' or attacked_node == 'null':
             if not (attacker_node == 'null' and attacked_node == 'null' and attacked_armies == -1):
                 self.__error_messages.append("Invalid attack try, you must select the attacker, attacked node and the placed armies")
@@ -150,10 +155,10 @@ class Parser:
         if (attacker_node is None) or (attacked_node is None) or (attacked_armies <= 0):
             self.__error_messages.append("Invalid attack nodes or attacked armies")
             return None, None, None
-        if attacker_node.can_attack(attacked_node, attacked_armies):
+        if attacker_node.can_attack(attacked_node, attacked_armies, moved_from_armies, moved_to_armies):
             return attacker_node, attacked_node, attacked_armies
         else:
-            self.__error_messages.append("Can't do the attack, Invalid attack Condition")
+            self.__error_messages.append("Can't do the attack, Invalid attack Condition, Possibly Error if the Move from/to node is the same as te attacker node")
             return None, None, None
 
     def validate_move(self, current_state, move_from_node, move_to_node, moved_armies):

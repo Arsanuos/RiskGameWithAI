@@ -68,18 +68,18 @@ class Node:
 
 
     # check if we can attach the node from current node
-    def can_attack(self, node, moved_army=1):
+    def can_attack(self, node, moved_army=1, moved_from_armies=0, moved_to_armies=0):
         if (node in self.__neighbours) and (self.__hold_player != node.get_hold_player()) \
-                and (self.__army - node.get_army() > 1) and (moved_army >= 1)\
-                    and (self.__army - node.get_army() - moved_army >= 1):
+                and (self.__army + moved_to_armies - moved_from_armies - node.get_army() > 1) and (moved_army >= 1)\
+                    and (self.__army + moved_to_armies - moved_from_armies - node.get_army() - moved_army >= 1):
             return True
         return False
 
     # return true if we can attack the node, As a result update the nodes after attack
     # return false if we can't attack the node, As a result no updates will be done
     # moved_army argument is the number of armies will be moved to the attacked node, default = 1
-    def attack(self, node, moved_army=1):
-        if self.can_attack(node):
+    def attack(self, node, moved_army=1, moved_from_armies=0, moved_to_armies=0):
+        if self.can_attack(node, moved_army, moved_from_armies, moved_to_armies):
             node.get_hold_player().remove_node(node)
             self.set_army(max(self.__army - node.get_army() - moved_army, 1))
             node.set_army(moved_army)
