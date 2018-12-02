@@ -25,12 +25,14 @@ class SigmoidEval:
             self.__armies[player.get_name()] = sum([node.get_army() for node in player.get_hold_nodes()])
 
         w = [8, 7, 9, 3, 1, 10, 7]
+        #w = [8, 0, 9, 0, 1, 10, 7]
         score = w[0] * self.armies_feature() + w[1] * self.best_enemy_feature() + w[2] * self.distance_to_frontier_feature() + \
                 w[3] * self.enemy_army_bonus_feature() + w[4] * self.hinterland_feature() + w[5] * self.occupied_nodes_feature() \
                 + w[6] * self.bonus_feature()
 
         sigmoid = 1/(1+math.exp(-1 * score))
-        return sigmoid * (self.__state.get_number_nodes() - len(self.__state.get_current_player().get_hold_nodes()))
+        #print(sigmoid * self.__state.get_number_nodes() - len(self.__state.get_next_player().get_hold_nodes()))
+        return sigmoid * (self.__state.get_number_nodes() - len(self.__state.get_next_player().get_hold_nodes()))
 
     def get_total_armies(self):
         return sum(self.__armies.values())
@@ -54,11 +56,15 @@ class SigmoidEval:
         :return:
         """
         v = -100
+        p = None
         for player in self.__state.get_players():
             if player.get_name() != self.__state.get_current_player().get_name():
                for node in player.get_hold_nodes():
-                    v = max(v, node.get_army())
-        return -1 * v
+                    if v < node.get_army():
+                        v = node.get_army()
+                        p = player
+        #normalize feature.
+        return -1 * (v/self.get_armies_of(p))
 
     def get_min_distance_from_border(self, border_nodes, all_nodes, nodes_len):
         q = []
@@ -102,16 +108,18 @@ class SigmoidEval:
 
     def enemy_army_bonus_feature(self):
         """
-        The Enemy Estimated Reinforcement Feature returns the negative estimation of the
+        The Enemy Estimated Reinforcement Feature returns the negative normalized estimation of the
         total number of armies the enemy players will be able to reinforce in the course of the
         next game round
         :return:
         """
         b = 0
+        s = 0
         for i, player in enumerate(self.__state.get_players()):
             if i != self.__state.get_player_turn_number():
                 b += player.get_bonus()
-        return -1 * b
+                s += self.get_armies_of(player)
+        return -1 * (b/s)
 
     def hinterland_feature(self):
         """
@@ -135,7 +143,7 @@ class SigmoidEval:
         of armies the actual player.
         :return:
         """
-        return self.__state.get_current_player().get_bonus()
+        return self.__state.get_current_player().get_bonus()/self.get_armies_of(self.__state.get_current_player())
 
 
 
