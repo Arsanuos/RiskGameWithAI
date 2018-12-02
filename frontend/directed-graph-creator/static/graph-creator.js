@@ -645,6 +645,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       if(thisGraph.state.algo1 == "Human" || thisGraph.state.algo2 == "Human"){
         handleTurn();
       }else{
+        $("#doAction").prop('disabled',true);
         setInterval(handleTurn, 2 * 1000);
       }
     });
