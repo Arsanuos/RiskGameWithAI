@@ -4,6 +4,7 @@
   <head>
     <link rel="stylesheet" href="{% static 'graph-creator.css'%}" />
     <link rel="stylesheet" href="{% static 'panel.css'%}" />
+    <link rel="stylesheet" href="{% static 'fontawesome-free-5.5.0-web/css/all.css'%}" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
   </head>
 
@@ -122,9 +123,9 @@
                     </div>
                     
                     <div class="human" id="controls">
-                      <button id="addBonus" class="btn btn-success directiveButton" style=""><img src="{% static 'bonus.svg'  %}"></button>
+                      <button id="addBonus" class="btn btn-success directiveButton" style=""><i class="fas fa-angle-double-up fa-5x"></i></button>
                       <button id="addAttack" class="btn btn-danger directiveButton"><img src="{% static 'attack.svg'  %}"></button>
-                      <button id="addMove" class="btn btn-primary directiveButton"><img src="{% static 'move.svg'  %}"></button>
+                      <button id="addMove" class="btn btn-primary directiveButton"><i class="fas fa-walking fa-5x"></i></button>
                       
                       <p class="text-left">Available bonus is <span id="bonusVal" class="badge badge-secondary hoverSpans"></span> given to node 
                         <span id="bonusNode" class="badge badge-secondary hoverSpans"></span> </p>
@@ -168,8 +169,8 @@
                             </div>
                           </div>
                         </div>
-                        <button type="button" class="btn btn-primary controller" id="initialize">Initialized</button>
-                        <button type="button" class="btn btn-primary" id="doAction">Play</button>
+                        <button type="button" class="btn btn-primary controller" id="initialize"><i class="fas fa-check"></i> Start</button>
+                        <button type="button" class="btn btn-primary" id="doAction"><i class="fas fa-play"></i> Play</button>
                 </div>
             </div>
       </div>

@@ -303,6 +303,8 @@ class State:
         q.append((start_node, None))
         vis = []
         d = 0
+        all_nodes = set(all_nodes)
+        border_nodes = set(border_nodes)    
         while len(q):
             s = len(q)
             node, parent = q.pop(0)

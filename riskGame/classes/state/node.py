@@ -130,3 +130,6 @@ class Node:
         if self.get_node_name() == node.get_node_name():
             return True
         return False
+
+    def __hash__ (self):
+        return int(self.get_node_name())
