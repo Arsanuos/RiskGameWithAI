@@ -20,19 +20,22 @@ class SigmoidEval:
         :return: score
         """
         self.__state = state
-        self.__armies = {}
-        for player in self.__state.get_players():
-            self.__armies[player.get_name()] = sum([node.get_army() for node in player.get_hold_nodes()])
+        if state.get_winner() == None:
+            self.__armies = {}
+            for player in self.__state.get_players():
+                self.__armies[player.get_name()] = sum([node.get_army() for node in player.get_hold_nodes()])
 
-        w = [8, 7, 9, 3, 1, 10, 7]
-        #w = [8, 0, 9, 0, 1, 10, 7]
-        score = w[0] * self.armies_feature() + w[1] * self.best_enemy_feature() + w[2] * self.distance_to_frontier_feature() + \
-                w[3] * self.enemy_army_bonus_feature() + w[4] * self.hinterland_feature() + w[5] * self.occupied_nodes_feature() \
-                + w[6] * self.bonus_feature()
+            w = [8, 7, 9, 3, 1, 10, 7]
+            #w = [8, 0, 9, 0, 1, 10, 7]
+            score = w[0] * self.armies_feature() + w[1] * self.best_enemy_feature() + w[2] * self.distance_to_frontier_feature() + \
+                    w[3] * self.enemy_army_bonus_feature() + w[4] * self.hinterland_feature() + w[5] * self.occupied_nodes_feature() \
+                    + w[6] * self.bonus_feature()
 
-        sigmoid = 1/(1+math.exp(-1 * score))
-        #print(sigmoid * self.__state.get_number_nodes() - len(self.__state.get_next_player().get_hold_nodes()))
-        return sigmoid * (self.__state.get_number_nodes() - len(self.__state.get_next_player().get_hold_nodes()))
+            sigmoid = 1/(1+math.exp(-1 * score))
+            #print(sigmoid * self.__state.get_number_nodes() - len(self.__state.get_next_player().get_hold_nodes()))
+            return sigmoid * (self.__state.get_number_nodes() - len(self.__state.get_next_player().get_hold_nodes()))
+        else:
+            return 0
 
     def get_total_armies(self):
         return sum(self.__armies.values())
