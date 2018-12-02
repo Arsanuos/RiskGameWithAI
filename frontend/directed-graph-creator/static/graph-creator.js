@@ -486,7 +486,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     });
 
     function updateBonusUi(){
-      if(thisGraph.state.bonusNode == null){
+      if(thisGraph.state.bonusNode == null && !winner){
         showError("Can't perform bonus operation make sure that you choosed a node correctly.")
         return;
       }
