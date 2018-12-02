@@ -126,12 +126,12 @@ class Parser:
     def validate_bonus(self, current_state, bonus_node):
         current_bonus = current_state.get_current_player().get_bonus()
         if current_bonus == 0:
-            if bonus_node == -1:
+            if bonus_node == 'null':
                 return None
             else:
                 self.__error_messages.append("There is no bonus to be added, you shouldn't choose node {}".format(bonus_node))
                 return None
-        elif bonus_node == -1:
+        elif bonus_node == 'null':
             self.__error_messages.append("You should select a node to place the bonus = {} in".format(current_bonus))
             return None
         node = current_state.get_current_player().get_node_by_name(bonus_node)
@@ -143,7 +143,7 @@ class Parser:
     def validate_attack(self, current_state, attacker_node, attacked_node, attacked_armies):
         if attacker_node == 'null' or attacked_node == 'null':
             if not (attacker_node == 'null' and attacked_node == 'null' and attacked_armies == -1):
-                self.__error_messages.append("Invalid attack try")
+                self.__error_messages.append("Invalid attack try, you must select the attacker, attacked node and the placed armies")
             return None, None, None
         attacker_node = current_state.get_current_player().get_node_by_name(int(attacker_node))
         attacked_node = current_state.get_next_player().get_node_by_name(int(attacked_node))
