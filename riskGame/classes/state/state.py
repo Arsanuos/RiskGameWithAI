@@ -75,6 +75,8 @@ class State:
         return None
 
     def expand_bonus(self, limit=maxsize):
+        if self.get_current_player().get_bonus() == 0:
+            return []
         curr_player = self.get_current_player()
 
         # get border nodes
@@ -94,11 +96,10 @@ class State:
             if len(copied_node.get_possible_attacked_nodes()) > 0:
                 # already has more troops
                 no_need_bonus.append(copied_node)
-
             else:
                 copied_node.set_army(copied_node.get_army() + copied_state.get_current_player().get_bonus())
                 if len(copied_node.get_possible_attacked_nodes()) > 0:
-                    need_bonus.append(copied_node)
+                    need_bonus.append((copied_node, maxsize * -1))
                 else:
                     # can't attack although we added bonus
                     need_more_bonus.append(copied_node)
@@ -110,7 +111,6 @@ class State:
             # score = loss if node attacked weakest node.
             val = node.min_loss_attack()
             sorted_no_need_bonus.append((node, val))
-
         sorted_no_need_bonus = sorted(sorted_no_need_bonus, key=lambda x: x[1])
 
         # priority for need_more_bonus
@@ -119,13 +119,12 @@ class State:
             # score = loss if node attacked weakest node
             val = node.min_loss_attack()
             sorted_need_more_bonus.append((node, -val))
-
             sorted_need_more_bonus = sorted(sorted_need_more_bonus, key=lambda x: x[1])
 
         ret_nodes = need_bonus + sorted_need_more_bonus + sorted_no_need_bonus
 
         next_moves = []
-        nodes = ret_nodes[:limit]
+        nodes = ret_nodes[:min(limit, len(ret_nodes))]
         for node in nodes:
             move = Move()
             move.set_bonus_hold_node(node[0])
@@ -183,21 +182,18 @@ class State:
                         possible_armies_movies.append(min_army_needed_in_attacked_node)
 
                 # tuple (priority, my object)
-                attack_move = list()
-                attack_move.append(attacker_node.get_node_name())
-                attack_move.append(attacked_node.get_node_name())
-                attack_move.append(1)
+                sign = 1
                 if minimum_difference_heuristic:
-                    for moved_armies in possible_armies_movies:
-                        attack_move[2] = moved_armies
-                        obj = (-1 * (attacker_node.get_army() - attacked_node.get_army()), attack_move)
-                        heappush(pq, obj)
-
-                else:
-                    for moved_armies in possible_armies_movies:
-                        attack_move[2] = moved_armies
-                        obj = (attacker_node.get_army() - attacked_node.get_army(), attack_move)
-                        heappush(pq, obj)
+                    sign = -1
+                if largest_remaining_heuristic:
+                    sign = 1
+                for moved_armies in possible_armies_movies:
+                    attack_move = list()
+                    attack_move.append(attacker_node.get_node_name())
+                    attack_move.append(attacked_node.get_node_name())
+                    attack_move.append(moved_armies)
+                    obj = (sign * (attacker_node.get_army() - attacked_node.get_army()), attack_move)
+                    heappush(pq, obj)
 
         next_states = []
         sz = len(pq)
@@ -248,6 +244,7 @@ class State:
         bonus_moves = self.expand_bonus(limit=4);
         move_moves = self.expand_move();
         attack_moves = self.expand_attack(limit=4, divide_armies=False)
+        print('Expand state to {} states'.format(max(len(bonus_moves), 1) * max(len(move_moves), 1) * max(len(attack_moves), 1)))
         next_states = []
         if len(bonus_moves) == 0: bonus_moves.append(None)
         if len(move_moves) == 0: move_moves.append(None)
@@ -283,6 +280,12 @@ class State:
                     copied_state.reset_hash()
                     copied_state.set_parent_state(self)
                     next_states.append(copied_state)
+
+        # DEBUG See the different state hashes
+        #print("State hash = {}".format(self.__hash__()))
+        #for state in next_states:
+        #    print(state.__hash__())
+        
         return next_states
 
     ## UTILS ##
@@ -331,10 +334,17 @@ class State:
         arr = []
         for player in self.__players:
             arr.append(player.get_bonus())
+        all_nodes = []
         for player in self.__players:
             for node in player.get_hold_nodes():
-                arr.append((player.get_name(), node.get_army()))
+                all_nodes.append((node, node.get_node_name()))
+        all_nodes = sorted(all_nodes, key=lambda x: x[1])
+        for node in all_nodes:
+            arr.append((node[0].get_hold_player().get_name(), node[0].get_army()))
         return arr
+
+    def print_state(self):
+        print("State = " + str(self.to_array()))
 
     def __eq__(self, other):
         if not isinstance(other, type(self)): return NotImplemented
@@ -346,5 +356,7 @@ class State:
         return self.__hashed_value
 
     def reset_hash(self):
-        self.__hashed_value == -1
+        self.__hashed_value = -1
 
+    def __lt__(self, other):
+        return self.get_turn_number() < other.get_turn_number()
