@@ -284,6 +284,22 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       $(".alert").fadeToggle(5000);
     }
 
+    function showHumanControls() {
+            if(thisGraph.state.currentPlayer == 0){
+              if(thisGraph.state.algo1 == "Human"){
+                $("#controls").show();
+              }else{
+                $("#controls").hide();
+              }
+            }else if (thisGraph.state.currentPlayer == 1){
+              if(thisGraph.state.algo2 == "Human"){
+                $("#controls").show();
+              }else{
+                $("#controls").hide();
+              }
+            }
+    }
+    
     function sendPost(data, type){
       if(!winner){
         $.ajax({
@@ -299,9 +315,11 @@ document.onload = (function(d3, saveAs, Blob, undefined){
             });
             thisGraph.state.currentPlayer = response.player - 1;
             $("#nextPlayer").text("Player " + String(response.player + " turn."));
+
             thisGraph.state.bonusVal = response.bonus;
             thisGraph.updateGraph();
             $("#bonusVal").text(thisGraph.state.bonusVal);
+            showHumanControls();
             resetAttack();
             resetMove();
           }else if(response.status == 'winner'){
@@ -337,6 +355,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
 
     $("#initialize").click(function(){
       intialState();
+      showHumanControls();
     });
 
     function intialState(){
