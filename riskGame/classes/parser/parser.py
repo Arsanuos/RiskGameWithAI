@@ -106,15 +106,23 @@ class Parser:
         if dic['movedToNode']:
             move_to_node = dic['movedToNode']['id']
         moved_armies = int(dic['movedArmies'])
-        self.__error_messages = []
-        bonus_node = self.validate_bonus(current_state, bonus_node)
-        move_from_node, move_to_node, moved_armies = self.validate_move(current_state, move_from_node, move_to_node, moved_armies)
 
+        self.__error_messages = []
+        # validating bonus node
+        bonus_node = self.validate_bonus(current_state, bonus_node)
+        # validating move after bonus
+        bonus_to_node = 0
+        if bonus_node and move_from_node != 'null' and bonus_node.get_node_name() == move_from_node:
+            bonus_to_node = current_state.get_current_player().get_bonus()
+        move_from_node, move_to_node, moved_armies = self.validate_move(current_state, move_from_node, move_to_node, moved_armies, bonus_to_node)
+        # validating attack after move after bonus
         moved_from_armies = moved_to_armies = 0
+        if bonus_node and attacker_node != 'null' and bonus_node.get_node_name() == attacker_node:
+            moved_to_armies += current_state.get_current_player().get_bonus()
         if move_from_node and attacker_node != 'null' and move_from_node.get_node_name() == attacker_node:
             moved_from_armies = moved_armies
         if move_to_node and attacker_node != 'null' and move_to_node.get_node_name() == attacker_node:
-            moved_to_armies = moved_armies
+            moved_to_armies += moved_armies
         attacker_node, attacked_node, attacked_node_armies = self.validate_attack(current_state, attacker_node, attacked_node, attacked_node_armies, moved_from_armies, moved_to_armies)
         if len(self.__error_messages) > 0:
             return None, self.__error_messages
@@ -162,7 +170,7 @@ class Parser:
             self.__error_messages.append("Can't do the attack, Invalid attack Condition, Possibly Error if the Move from/to node is the same as te attacker node")
             return None, None, None
 
-    def validate_move(self, current_state, move_from_node, move_to_node, moved_armies):
+    def validate_move(self, current_state, move_from_node, move_to_node, moved_armies, bonus_to_node):
         if move_from_node == 'null' or move_to_node == 'null':
             if not (move_from_node == 'null' and move_to_node == 'null' and moved_armies == -1):
                 self.__error_messages.append("Invalid move try")
@@ -172,7 +180,7 @@ class Parser:
         if (move_from_node is None) or (move_to_node is None) or (moved_armies <= 0):
             self.__error_messages.append("Invalid move nodes or moved armies")
             return None, None, None
-        if move_from_node.can_move_to_another_node(moved_armies, move_to_node):
+        if move_from_node.can_move_to_another_node(moved_armies, move_to_node, bonus_to_node):
             return move_from_node, move_to_node, moved_armies
         else:
             self.__error_messages.append("Can't do the move, Invalid move Condition")
