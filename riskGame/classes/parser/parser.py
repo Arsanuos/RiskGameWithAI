@@ -124,7 +124,15 @@ class Parser:
             return move, self.__error_messages
 
     def validate_bonus(self, current_state, bonus_node):
-        if bonus_node == -1:
+        current_bonus = current_state.get_current_player().get_bonus()
+        if current_bonus == 0:
+            if bonus_node == -1:
+                return None
+            else:
+                self.__error_messages.append("There is no bonus to be added, you shouldn't choose node {}".format(bonus_node))
+                return None
+        elif bonus_node == -1:
+            self.__error_messages.append("You should select a node to place the bonus = {} in".format(current_bonus))
             return None
         node = current_state.get_current_player().get_node_by_name(bonus_node)
         if node is None:
