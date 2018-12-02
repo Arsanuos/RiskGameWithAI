@@ -54,7 +54,10 @@ def index(request):
                 elif isinstance(agents[player_turn], RTAStar):
                     current_state = agents[player_turn].play(current_state)
                 else:
-                    current_state = agents[player_turn].play(current_state, None)
+                    if len(all_states) > 0:
+                        current_state = all_states.pop(0)
+                    else:
+                        current_state = agents[player_turn].play(current_state, None)
                 dic = parser.parse_state_to_json(current_state, [])
 
             if current_state.get_winner():
