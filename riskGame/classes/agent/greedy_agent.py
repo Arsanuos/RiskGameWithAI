@@ -8,7 +8,6 @@ class Greedy(OneTimeAgent):
         self.__evaluation_heuristic = evaluation_heuristic
         super(Greedy, self).__init__()
 
-    def calculate_fn(self, state, inital_state):
-        hn = self.__evaluation_heuristic().score(state)
+    def calculate_fn(self, state, initial_state):
+        hn = self.__evaluation_heuristic.score(state)
         return hn
-

@@ -328,7 +328,8 @@ class State:
         while temp_state:
             all_states.append(temp_state)
             temp_state = temp_state.get_parent_state()
-        return all_states[:-1]
+        all_states = all_states[:-1]
+        return all_states[::-1]
 
     def to_array(self):
         arr = []
