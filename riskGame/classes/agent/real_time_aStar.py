@@ -46,6 +46,8 @@ class RTAStar:
 
         # Execute phase
         self.__hash_table[state] = second_min_cost
+        print('RTA* choose the best state to be: ')
+        next_state.print_state()
         return next_state
 
 
