@@ -2,6 +2,7 @@ from copy import deepcopy
 from sys import maxsize
 from heapq import *
 from riskGame.classes.state.move import Move
+import math
 
 
 class State:
@@ -215,7 +216,7 @@ class State:
 
     def expand_move(self):
         """
-        expand all possible moves (the most important ones). the most important nodes are defindes as follows:
+        expand all possible moves (the most important ones). the most important nodes are defined as follow:
             - from the borders to the nearest non-border node that have an army > 1 consider that node to be source of
                 and the target will be the current bordering node.
             - the case when target node (non-border) is the same for two or more border node then consider each cases.
@@ -235,16 +236,31 @@ class State:
                 move = Move()
                 move.set_move_from_node(new_nearest_node)
                 move.set_move_to_node(new_parent)
+                move.set_moved_armies(1)
                 #move.apply_move()
                 #next_states.append(new_state)
                 next_states.append(move)
+        for node in border_nodes:
+            childs = node.get_neighbours()
+            for child in childs:
+                if child.get_hold_player().get_name() == self.get_current_player().get_name():
+                    for armies in range(1, int(math.sqrt(node.get_army()))):
+                        if node.can_move_to_another_node(armies, child):
+                            move = Move()
+                            move.set_move_from_node(node)
+                            move.set_move_to_node(child)
+                            move.set_moved_armies(armies)
+                            next_states.append(move)
         return next_states
 
     def expand(self):
         bonus_moves = self.expand_bonus(limit=4);
         move_moves = self.expand_move();
         attack_moves = self.expand_attack(limit=4, divide_armies=False)
-        print('Expand state to {} states'.format(max(len(bonus_moves), 1) * max(len(move_moves), 1) * max(len(attack_moves), 1)))
+        total_states = max(len(bonus_moves), 1) * max(len(move_moves), 1) * max(len(attack_moves), 1)
+        if len(bonus_moves) == 0 and len(move_moves) == 0 and len(attack_moves) == 0:
+            total_states = 0
+        print('Expand state to {} states'.format(total_states))
         next_states = []
         if len(bonus_moves) == 0: bonus_moves.append(None)
         if len(move_moves) == 0: move_moves.append(None)
