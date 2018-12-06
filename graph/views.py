@@ -37,6 +37,8 @@ def index(request):
             dic = {'status':'initial'}
             return JsonResponse(dic)
         elif type == "turn":
+            if current_state is None:
+                exit(-1)
             player_turn = current_state.get_player_turn_number()
             game_end = False
             if isinstance(agents[player_turn], Human):

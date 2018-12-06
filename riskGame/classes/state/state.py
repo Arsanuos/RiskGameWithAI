@@ -240,17 +240,23 @@ class State:
                 #move.apply_move()
                 #next_states.append(new_state)
                 next_states.append(move)
+
+
+        """
         for node in border_nodes:
             childs = node.get_neighbours()
             for child in childs:
                 if child.get_hold_player().get_name() == self.get_current_player().get_name():
-                    for armies in range(1, int(math.sqrt(node.get_army()))):
+                    #try_armies = [1, node.get_army()/2, node.get_army() - 1]
+                    try_armies = [1]
+                    for armies in try_armies:
                         if node.can_move_to_another_node(armies, child):
                             move = Move()
                             move.set_move_from_node(node)
                             move.set_move_to_node(child)
                             move.set_moved_armies(armies)
                             next_states.append(move)
+        """
         return next_states
 
     def expand(self):
