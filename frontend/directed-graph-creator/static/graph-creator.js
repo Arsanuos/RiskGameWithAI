@@ -21,6 +21,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     }
   };
 
+  var intervalContoller;
+
   // define graphcreator object
   var GraphCreator = function(svg, nodes, edges, partitions){
     var thisGraph = this;
@@ -299,16 +301,9 @@ document.onload = (function(d3, saveAs, Blob, undefined){
               }
             }
     }
-    
-    function sendPost(data, type){
-      if(!gameEnded){
-        $.ajax({
-          type: "POST",
-          url: 'http://localhost:8000/',
-          data: {json:JSON.stringify(data), type:type},
-        }).fail(function(){
-          //failure();
-        }).done(function(response) {
+
+    function handleResponse(response){
+
           if(response.status == "valid"){
             thisGraph.nodes = response.nodes.sort(function(a, b){
               return a.id - b.id;
@@ -331,11 +326,13 @@ document.onload = (function(d3, saveAs, Blob, undefined){
             thisGraph.state.bonusVal = response.bonus;
             thisGraph.updateGraph();
             updateBonusUi();
+            //clearInterval(intervalContoller);
             if(response.status == 'winner'){
                 $("#winner").text("The Winner is " + response.winner);
             }else if(response.status == 'tie'){
                 $("#winner").text("Tie between both players");
             }
+
             $("#winningModal").modal();
             $("#refresh").click(function(){
               location.reload();
@@ -349,7 +346,21 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           }else if (response.status == 'initial'){
             $('.controller').prop('disabled', true);
           }
+    }
+    
+    function sendPost(data, type){
+      if(!gameEnded){
+        let jqXHR = $.ajax({
+          type: "POST",
+          url: 'http://localhost:8000/',
+            async: false,
+          data: {json:JSON.stringify(data), type:type},
         });
+        jqXHR.fail(function () {
+          alert("Disconnection from server, you have to reload the page.");
+          location.reload(true);
+        });
+        handleResponse(jqXHR.responseJSON);
       }
     }
 
@@ -357,9 +368,25 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       thisGraph.state.currentPlayer = (thisGraph.state.currentPlayer + 1) % 2;
     }
 
+    function canPlay(pl1, pl2){
+      if(pl1 == 'A*' || pl1 == 'RTA*' || pl1 == 'Greedy'){
+        return pl2 =='Passive';
+      }
+      if(pl2 == 'A*' || pl2 == 'RTA*' || pl2 == 'Greedy'){
+        return pl1 =='Passive';
+      }
+      return true;
+    }
+
     $("#initialize").click(function(){
-      intialState();
-      showHumanControls();
+      let pl1 = thisGraph.state.algo1;
+      let pl2 = thisGraph.state.algo2;
+      if(canPlay(pl1,pl2)){
+        intialState();
+        showHumanControls();
+      }else{
+        showError("AI agents should play against Passive agent only.");
+      }
     });
 
     function intialState(){
@@ -377,11 +404,11 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         let data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges,
           p1:$('#p1Algo').find(":selected").text(), p2:$('#p2Algo').find(":selected").text()};
           if(data.p1 != "" && data.p2 != "" && data.partitions.length != 0 && data.nodes.length != 0){
-            sendPost(data, "state")
+            sendPost(data, "state");
+            firstReq = false;
           }else{
-            alert("there's a missing input.");
+            showError("there's a missing input.");
           }
-        firstReq = false;
       }
     }
 
@@ -650,7 +677,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         handleTurn();
       }else{
         $("#doAction").prop('disabled',true);
-        setInterval(handleTurn, 2 * 1000);
+        intervalContoller = setInterval(handleTurn, 2 * 1000);
       }
     });
 
