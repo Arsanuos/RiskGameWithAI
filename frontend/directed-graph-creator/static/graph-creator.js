@@ -13,10 +13,10 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   //handle doing actions.
   var firstReq = true;
 
-    var winner = false;
+    var gameEnded = false;
   // warn the user when leaving
   window.onbeforeunload = function(){
-    if(!winner){
+    if(!gameEnded){
       return "Make sure to save your graph locally before leaving :-)";
     }
   };
@@ -301,7 +301,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     }
     
     function sendPost(data, type){
-      if(!winner){
+      if(!gameEnded){
         $.ajax({
           type: "POST",
           url: 'http://localhost:8000/',
@@ -322,16 +322,20 @@ document.onload = (function(d3, saveAs, Blob, undefined){
             showHumanControls();
             resetAttack();
             resetMove();
-          }else if(response.status == 'winner'){
+          }else if(response.status == 'winner' || response.status == 'tie' ){
             //TODO:: handle winner.
-            winner = true;
+            gameEnded = true;
             thisGraph.nodes = response.nodes.sort(function(a, b){
               return a.id - b.id;
             });
             thisGraph.state.bonusVal = response.bonus;
             thisGraph.updateGraph();
             updateBonusUi();
-            $("#winner").text("The Winner is " + response.winner);
+            if(response.status == 'winner'){
+                $("#winner").text("The Winner is " + response.winner);
+            }else if(response.status == 'tie'){
+                $("#winner").text("Tie between both players");
+            }
             $("#winningModal").modal();
             $("#refresh").click(function(){
               location.reload();
@@ -505,7 +509,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     });
 
     function updateBonusUi(){
-      if(thisGraph.state.bonusNode == null && !winner){
+      if(thisGraph.state.bonusNode == null && !gameEnded){
         showError("Can't perform bonus operation make sure that you choosed a node correctly.")
         return;
       }
