@@ -11,13 +11,13 @@ current_state = None
 agents = []
 all_states = []
 parser = Parser()
-
+flag = False
 
 # Create your views here.
 def index(request):
     #this is the shape of the request add your logic here based on that.
     dict = request.POST.dict()
-    global prev_state, current_state, agents, parser, all_states
+    global prev_state, current_state, agents, parser, all_states, flag
 
     if 'json' in dict:
         data = dict['json']
@@ -29,6 +29,7 @@ def index(request):
             initial_state = parser.get_initial_state()
             agents = []
             all_states = []
+            flag = False
             agents.append(parser.get_agent(1))
             agents.append(parser.get_agent(2))
             current_state = initial_state
@@ -37,6 +38,7 @@ def index(request):
             return JsonResponse(dic)
         elif type == "turn":
             player_turn = current_state.get_player_turn_number()
+            game_end = False
             if isinstance(agents[player_turn], Human):
                 # get dic from front end for the move
                 move, errors = parser.parse_json_to_move(current_state, dic)
@@ -48,9 +50,15 @@ def index(request):
                 # get request to represent get the next turn state
                 prev_state = current_state
                 if isinstance(agents[player_turn], OneTimeAgent):
-                    if len(all_states) == 0:
+                    if len(all_states) == 0 and flag == False:
                         all_states = agents[player_turn].search(current_state)
-                    current_state = all_states.pop(0)
+                        flag = True
+                    if flag and len(all_states) == 0:
+                        # no change in current state but insert tie
+                        current_state = current_state
+                        game_end = True
+                    else:
+                        current_state = all_states.pop(0)
                 elif isinstance(agents[player_turn], RTAStar):
                     current_state = agents[player_turn].play(current_state)
                 else:
@@ -63,6 +71,8 @@ def index(request):
             if current_state.get_winner():
                 dic["status"] = "winner"
                 dic["winner"] = str(current_state.get_winner().get_name())
+            if game_end:
+                dic["status"] = "tie"
             print('Finished Playing,, the current state is following:')
             print(dic)
             return JsonResponse(dic)
