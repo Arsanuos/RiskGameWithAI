@@ -21,6 +21,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     }
   };
 
+  var intervalContoller;
+
   // define graphcreator object
   var GraphCreator = function(svg, nodes, edges, partitions){
     var thisGraph = this;
@@ -299,16 +301,9 @@ document.onload = (function(d3, saveAs, Blob, undefined){
               }
             }
     }
-    
-    function sendPost(data, type){
-      if(!gameEnded){
-        $.ajax({
-          type: "POST",
-          url: 'http://localhost:8000/',
-          data: {json:JSON.stringify(data), type:type},
-        }).fail(function(){
-          //failure();
-        }).done(function(response) {
+
+    function handleResponse(response){
+
           if(response.status == "valid"){
             thisGraph.nodes = response.nodes.sort(function(a, b){
               return a.id - b.id;
@@ -331,11 +326,13 @@ document.onload = (function(d3, saveAs, Blob, undefined){
             thisGraph.state.bonusVal = response.bonus;
             thisGraph.updateGraph();
             updateBonusUi();
+            clearInterval(intervalContoller);
             if(response.status == 'winner'){
                 $("#winner").text("The Winner is " + response.winner);
             }else if(response.status == 'tie'){
                 $("#winner").text("Tie between both players");
             }
+
             $("#winningModal").modal();
             $("#refresh").click(function(){
               location.reload();
@@ -349,7 +346,17 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           }else if (response.status == 'initial'){
             $('.controller').prop('disabled', true);
           }
+    }
+    
+    function sendPost(data, type){
+      if(!gameEnded){
+        let jqXHR = $.ajax({
+          type: "POST",
+          url: 'http://localhost:8000/',
+            async: false,
+          data: {json:JSON.stringify(data), type:type},
         });
+        handleResponse(jqXHR.responseJSON);
       }
     }
 
@@ -650,7 +657,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         handleTurn();
       }else{
         $("#doAction").prop('disabled',true);
-        setInterval(handleTurn, 2 * 1000);
+        intervalContoller = setInterval(handleTurn, 2 * 1000);
       }
     });
 
