@@ -364,9 +364,25 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       thisGraph.state.currentPlayer = (thisGraph.state.currentPlayer + 1) % 2;
     }
 
+    function canPlay(pl1, pl2){
+      if(pl1 == 'A*' || pl1 == 'RTA*' || pl1 == 'Greedy'){
+        return pl2 =='Passive';
+      }
+      if(pl2 == 'A*' || pl2 == 'RTA*' || pl2 == 'Greedy'){
+        return pl1 =='Passive';
+      }
+      return true;
+    }
+
     $("#initialize").click(function(){
-      intialState();
-      showHumanControls();
+      let pl1 = thisGraph.state.algo1;
+      let pl2 = thisGraph.state.algo2;
+      if(canPlay(pl1,pl2)){
+        intialState();
+        showHumanControls();
+      }else{
+        showError("AI agents should play against Passive agent only.");
+      }
     });
 
     function intialState(){
