@@ -326,7 +326,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
             thisGraph.state.bonusVal = response.bonus;
             thisGraph.updateGraph();
             updateBonusUi();
-            clearInterval(intervalContoller);
+            //clearInterval(intervalContoller);
             if(response.status == 'winner'){
                 $("#winner").text("The Winner is " + response.winner);
             }else if(response.status == 'tie'){
@@ -355,6 +355,10 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           url: 'http://localhost:8000/',
             async: false,
           data: {json:JSON.stringify(data), type:type},
+        });
+        jqXHR.fail(function () {
+          alert("Disconnection from server, you have to reload the page.");
+          location.reload(true);
         });
         handleResponse(jqXHR.responseJSON);
       }
@@ -400,11 +404,11 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         let data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges,
           p1:$('#p1Algo').find(":selected").text(), p2:$('#p2Algo').find(":selected").text()};
           if(data.p1 != "" && data.p2 != "" && data.partitions.length != 0 && data.nodes.length != 0){
-            sendPost(data, "state")
+            sendPost(data, "state");
+            firstReq = false;
           }else{
-            alert("there's a missing input.");
+            showError("there's a missing input.");
           }
-        firstReq = false;
       }
     }
 
