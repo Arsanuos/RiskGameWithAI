@@ -80,7 +80,7 @@ class Player:
         for node in self.__hold_nodes:
             neighbors = node.get_neighbours()
             for neighbor in neighbors:
-                if neighbor not in self.__hold_nodes:
+                if neighbor.get_node_name() not in self.__nodes_dic:
                     border_nodes.append(node)
                     break
         return border_nodes
