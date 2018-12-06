@@ -326,7 +326,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
             thisGraph.state.bonusVal = response.bonus;
             thisGraph.updateGraph();
             updateBonusUi();
-            //clearInterval(intervalContoller);
+            clearInterval(intervalContoller);
             if(response.status == 'winner'){
                 $("#winner").text("The Winner is " + response.winner);
             }else if(response.status == 'tie'){
@@ -357,6 +357,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
           data: {json:JSON.stringify(data), type:type},
         });
         jqXHR.fail(function () {
+          clearInterval(intervalContoller);
           alert("Disconnection from server, you have to reload the page.");
           location.reload(true);
         });

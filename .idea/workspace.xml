@@ -82,8 +82,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/frontend/directed-graph-creator/static/graph-creator.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="362">
-              <caret line="362" column="11" selection-start-line="362" selection-start-column="11" selection-end-line="362" selection-end-column="11" />
+            <state relative-caret-position="343">
+              <caret line="355" column="25" lean-forward="true" selection-start-line="355" selection-start-column="25" selection-end-line="355" selection-end-column="25" />
             </state>
           </provider>
         </entry>
@@ -164,6 +164,7 @@
       <find>thisGraph.state.algo1</find>
       <find>modal</find>
       <find>send</find>
+      <find>Disconnection</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -348,7 +349,7 @@
       <option name="presentableId" value="Default" />
       <updated>1543110840348</updated>
       <workItem from="1543495290983" duration="16000" />
-      <workItem from="1544096678043" duration="5938000" />
+      <workItem from="1544096678043" duration="6648000" />
     </task>
     <servers />
   </component>
@@ -358,7 +359,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5954000" />
+    <option name="totallyTimeSpent" value="6664000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="64" y="-11" width="1857" height="1092" extended-state="6" />
@@ -369,7 +370,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.40856844" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.40856844" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.16425121" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -378,7 +379,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32810867" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="11" visible="true" weight="0.32810867" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.32850242" />
       <window_info anchor="bottom" id="Concurrent Activities Diagram" order="13" weight="0.32850242" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -634,8 +635,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/frontend/directed-graph-creator/static/graph-creator.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="362">
-          <caret line="362" column="11" selection-start-line="362" selection-start-column="11" selection-end-line="362" selection-end-column="11" />
+        <state relative-caret-position="343">
+          <caret line="355" column="25" lean-forward="true" selection-start-line="355" selection-start-column="25" selection-end-line="355" selection-end-column="25" />
         </state>
       </provider>
     </entry>
