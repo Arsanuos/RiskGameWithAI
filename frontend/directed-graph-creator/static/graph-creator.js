@@ -13,6 +13,16 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   //handle doing actions.
   var firstReq = true;
 
+    var gameEnded = false;
+  // warn the user when leaving
+  window.onbeforeunload = function(){
+    if(!gameEnded){
+      return "Make sure to save your graph locally before leaving :-)";
+    }
+  };
+
+  var intervalContoller;
+
   // define graphcreator object
   var GraphCreator = function(svg, nodes, edges, partitions){
     var thisGraph = this;
@@ -45,8 +55,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       attackedNode: null,
       attackedNodeArmies: -1,
       algo1: null,
-      algo2: null,
-
+      algo2: null
     };
 
 
@@ -277,57 +286,108 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       $(".alert").fadeToggle(5000);
     }
 
+    function showHumanControls() {
+            if(thisGraph.state.currentPlayer == 0){
+              if(thisGraph.state.algo1 == "Human"){
+                $("#controls").show();
+              }else{
+                $("#controls").hide();
+              }
+            }else if (thisGraph.state.currentPlayer == 1){
+              if(thisGraph.state.algo2 == "Human"){
+                $("#controls").show();
+              }else{
+                $("#controls").hide();
+              }
+            }
+    }
+
+    function handleResponse(response){
+
+          if(response.status == "valid"){
+            thisGraph.nodes = response.nodes.sort(function(a, b){
+              return a.id - b.id;
+            });
+            thisGraph.state.currentPlayer = response.player - 1;
+            $("#nextPlayer").text("Player " + String(response.player + " turn."));
+
+            thisGraph.state.bonusVal = response.bonus;
+            thisGraph.updateGraph();
+            $("#bonusVal").text(thisGraph.state.bonusVal);
+            showHumanControls();
+            resetAttack();
+            resetMove();
+          }else if(response.status == 'winner' || response.status == 'tie' ){
+            //TODO:: handle winner.
+            gameEnded = true;
+            thisGraph.nodes = response.nodes.sort(function(a, b){
+              return a.id - b.id;
+            });
+            thisGraph.state.bonusVal = response.bonus;
+            thisGraph.updateGraph();
+            updateBonusUi();
+            clearInterval(intervalContoller);
+            if(response.status == 'winner'){
+                $("#winner").text("The Winner is " + response.winner);
+            }else if(response.status == 'tie'){
+                $("#winner").text("Tie between both players");
+            }
+
+            $("#winningModal").modal();
+            $("#refresh").click(function(){
+              location.reload();
+            });
+          } else if (response.error) {
+            let error = "";
+            response.error.forEach(function (message) {
+                error += "\n" + message;
+            });
+            showError(error);
+          }else if (response.status == 'initial'){
+            $('.controller').prop('disabled', true);
+          }
+    }
+    
     function sendPost(data, type){
-      $.ajax({
-        type: "POST",
-        url: 'http://localhost:8000/',
-        data: {json:JSON.stringify(data), type:type},
-      }).fail(function(){
-        //failure();
-      }).done(function(response) {
-        if(response.status == "valid"){
-          thisGraph.nodes = response.nodes.sort(function(a, b){
-            return a.id - b.id;
-          });
-          thisGraph.state.currentPlayer = response.player - 1;
-          $("#nextPlayer").text("Player " + String(response.player + " turn."));
-          thisGraph.state.bonusVal = response.bonus;
-          thisGraph.updateGraph();
-          $("#bonusVal").text(thisGraph.state.bonusVal);
-          resetAttack();
-          resetMove();
-        }else if(response.status == 'winner'){
-          //TODO:: handle winner.
-          winner = true;
-          thisGraph.nodes = response.nodes.sort(function(a, b){
-            return a.id - b.id;
-          });
-          thisGraph.state.bonusVal = response.bonus;
-          thisGraph.updateGraph();
-          updateBonusUi();
-          $("#winner").text("The Winner is " + response.winner);
-          $("#winningModal").modal();
-          $("#refresh").click(function(){
-            location.reload();
-          });
-        } else if (response.error) {
-          let error = "";
-          response.error.forEach(function (message) {
-              error += "\n" + message;
-          });
-          showError(error);
-        }else if (response.status == 'initial'){
-          $('.controller').prop('disabled', true);
-        }
-      });
+      if(!gameEnded){
+        let jqXHR = $.ajax({
+          type: "POST",
+          url: 'http://localhost:8000/',
+            async: false,
+          data: {json:JSON.stringify(data), type:type},
+        });
+        jqXHR.fail(function () {
+          clearInterval(intervalContoller);
+          alert("Disconnection from server, you have to reload the page.");
+          location.reload(true);
+        });
+        handleResponse(jqXHR.responseJSON);
+      }
     }
 
     function nextPlayer(){
       thisGraph.state.currentPlayer = (thisGraph.state.currentPlayer + 1) % 2;
     }
 
+    function canPlay(pl1, pl2){
+      if(pl1 == 'A*' || pl1 == 'RTA*' || pl1 == 'Greedy'){
+        return pl2 =='Passive';
+      }
+      if(pl2 == 'A*' || pl2 == 'RTA*' || pl2 == 'Greedy'){
+        return pl1 =='Passive';
+      }
+      return true;
+    }
+
     $("#initialize").click(function(){
-      intialState();
+      let pl1 = thisGraph.state.algo1;
+      let pl2 = thisGraph.state.algo2;
+      if(canPlay(pl1,pl2)){
+        intialState();
+        showHumanControls();
+      }else{
+        showError("AI agents should play against Passive agent only.");
+      }
     });
 
     function intialState(){
@@ -345,11 +405,11 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         let data = {nodes:nodes, partitions:thisGraph.partitions, edges:thisGraph.edges,
           p1:$('#p1Algo').find(":selected").text(), p2:$('#p2Algo').find(":selected").text()};
           if(data.p1 != "" && data.p2 != "" && data.partitions.length != 0 && data.nodes.length != 0){
-            sendPost(data, "state")
+            sendPost(data, "state");
+            firstReq = false;
           }else{
-            alert("there's a missing input.");
+            showError("there's a missing input.");
           }
-        firstReq = false;
       }
     }
 
@@ -477,7 +537,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
     });
 
     function updateBonusUi(){
-      if(thisGraph.state.bonusNode == null){
+      if(thisGraph.state.bonusNode == null && !gameEnded){
         showError("Can't perform bonus operation make sure that you choosed a node correctly.")
         return;
       }
@@ -617,7 +677,8 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       if(thisGraph.state.algo1 == "Human" || thisGraph.state.algo2 == "Human"){
         handleTurn();
       }else{
-        setInterval(handleTurn, 2 * 1000);
+        $("#doAction").prop('disabled',true);
+        intervalContoller = setInterval(handleTurn, 2 * 1000);
       }
     });
 
@@ -1106,14 +1167,6 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       }
     }
   });
-
-  var winner = false;
-  // warn the user when leaving
-  window.onbeforeunload = function(){
-    if(!winner){
-      return "Make sure to save your graph locally before leaving :-)";
-    }
-  };
 
   var docEl = document.documentElement,
       bodyEl = document.getElementsByTagName('body')[0];

@@ -2,6 +2,7 @@ from copy import deepcopy
 from sys import maxsize
 from heapq import *
 from riskGame.classes.state.move import Move
+from riskGame.classes.evaluations.sigmoidEval import SigmoidEval
 
 
 class State:
@@ -213,15 +214,16 @@ class State:
             next_states.append(move)
         return next_states
 
-    def expand_move(self):
+    def expand_move(self, limit=maxsize):
         """
-        expand all possible moves (the most important ones). the most important nodes are defindes as follows:
+        expand all possible moves (the most important ones). the most important nodes are defined as follow:
             - from the borders to the nearest non-border node that have an army > 1 consider that node to be source of
                 and the target will be the current bordering node.
             - the case when target node (non-border) is the same for two or more border node then consider each cases.
             - use BFS to get the nearest
         :return: all possible moves to be bundled after that with attack and bonus moves.
         """
+        pq = []
         next_states = []
         cur_player = self.get_current_player()
         border_nodes = cur_player.get_border_nodes()
@@ -235,16 +237,65 @@ class State:
                 move = Move()
                 move.set_move_from_node(new_nearest_node)
                 move.set_move_to_node(new_parent)
-                #move.apply_move()
-                #next_states.append(new_state)
-                next_states.append(move)
+                move.set_moved_armies(1)
+                move_obj = list()
+                move_obj.append(new_nearest_node.get_node_name())
+                move_obj.append(new_parent.get_node_name())
+                move_obj.append(1)
+                move.apply_move()
+                obj = (SigmoidEval().score(new_state), move_obj)
+                heappush(pq, obj)
+                #next_states.append(move)
+
+
+        for node in border_nodes:
+            childs = node.get_neighbours()
+            for child in childs:
+                if child.get_hold_player().get_name() == self.get_current_player().get_name():
+                    try_armies = [1, node.get_army()/2, node.get_army() - 1]
+                    try_armies = [1]
+                    for armies in try_armies:
+                        if node.can_move_to_another_node(armies, child):
+                            new_state = deepcopy(self)
+                            new_node = new_state.get_current_player().get_node_by_name(node.get_node_name())
+                            new_child = new_state.get_current_player().get_node_by_name(child.get_node_name())
+                            move = Move()
+                            move.set_move_from_node(new_node)
+                            move.set_move_to_node(new_child)
+                            move.set_moved_armies(armies)
+                            move_obj = list()
+                            move_obj.append(new_node.get_node_name())
+                            move_obj.append(new_child.get_node_name())
+                            move_obj.append(armies)
+                            move.apply_move()
+                            obj = (SigmoidEval().score(new_state), move_obj)
+                            heappush(pq, obj)
+                            #next_states.append(move)
+        sz = len(pq)
+        for i in range(0, min(limit, sz)):
+            # get the best ith move
+            move_obj = heappop(pq)[1]
+            curr_state_copy = deepcopy(self)
+            move_from_node = curr_state_copy.get_current_player().get_node_by_name(move_obj[0])
+            move_to_node = curr_state_copy.get_current_player().get_node_by_name(move_obj[1])
+            moved_armies = move_obj[2]
+            # apply the attack move and get the next state
+            move = Move()
+            move.set_move_from_node(move_from_node)
+            move.set_move_to_node(move_to_node)
+            move.set_moved_armies(moved_armies)
+            # move.apply_move()
+            next_states.append(move)
         return next_states
 
     def expand(self):
         bonus_moves = self.expand_bonus(limit=4);
-        move_moves = self.expand_move();
+        move_moves = self.expand_move(limit=4);
         attack_moves = self.expand_attack(limit=4, divide_armies=False)
-        print('Expand state to {} states'.format(max(len(bonus_moves), 1) * max(len(move_moves), 1) * max(len(attack_moves), 1)))
+        total_states = max(len(bonus_moves), 1) * max(len(move_moves), 1) * max(len(attack_moves), 1)
+        if len(bonus_moves) == 0 and len(move_moves) == 0 and len(attack_moves) == 0:
+            total_states = 0
+        print('Expand state to {} states'.format(total_states))
         next_states = []
         if len(bonus_moves) == 0: bonus_moves.append(None)
         if len(move_moves) == 0: move_moves.append(None)

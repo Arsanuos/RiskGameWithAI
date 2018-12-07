@@ -48,6 +48,8 @@ class OneTimeAgent(ABC):
             for child in child_states:
                 heappush(states_heap, (self.calculate_fn(child, self.__initial_state), child))
 
+        if end is None:
+            return []
         return end.get_steps_to_root()
 
     @abstractmethod

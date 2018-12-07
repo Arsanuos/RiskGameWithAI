@@ -29,6 +29,7 @@ class RTAStar:
     def play(self, state):
         # Plan phase
         limit = 3
+        print("At the RTA*\n")
         child_states = state.expand()
         min_cost = maxsize
         second_min_cost = -1
@@ -45,7 +46,7 @@ class RTAStar:
                 next_state = child
 
         # Execute phase
-        self.__hash_table[state] = second_min_cost
+        self.__hash_table[state] = second_min_cost if second_min_cost != maxsize else min_cost
         print('RTA* choose the best state to be: ')
         next_state.print_state()
         return next_state
