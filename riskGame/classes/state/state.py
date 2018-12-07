@@ -242,7 +242,6 @@ class State:
                 next_states.append(move)
 
 
-        """
         for node in border_nodes:
             childs = node.get_neighbours()
             for child in childs:
@@ -256,7 +255,6 @@ class State:
                             move.set_move_to_node(child)
                             move.set_moved_armies(armies)
                             next_states.append(move)
-        """
         return next_states
 
     def expand(self):
