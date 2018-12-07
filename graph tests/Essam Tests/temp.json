@@ -1,0 +1,1 @@
+{"nodes":[{"id":0,"title":"5","x":710,"y":265,"player":"Player 1"},{"id":1,"title":"8","x":221,"y":351,"player":"Player 2"}],"edges":[[1,0]],"partitions":[["2","0","1"]],"algo1":null,"algo2":"Aggressive"}

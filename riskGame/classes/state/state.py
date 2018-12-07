@@ -288,6 +288,7 @@ class State:
             next_states.append(move)
         return next_states
 
+
     def expand(self):
         bonus_moves = self.expand_bonus(limit=4);
         move_moves = self.expand_move(limit=4);

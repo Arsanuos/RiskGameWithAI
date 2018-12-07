@@ -1,0 +1,5 @@
+all produce this error. 
+
+ File "/media/muhammed/Shared/Work/RiskGameWithAI/riskGame/classes/agent/one_time_agent.py", line 51, in search
+    return end.get_steps_to_root()
+AttributeError: 'NoneType' object has no attribute 'get_steps_to_root'
