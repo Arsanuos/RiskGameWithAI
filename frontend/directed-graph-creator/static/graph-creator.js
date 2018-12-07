@@ -678,7 +678,11 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         handleTurn();
       }else{
         $("#doAction").prop('disabled',true);
-        intervalContoller = setInterval(handleTurn, 2 * 1000);
+        let speed = Number($("#speed :selected").text());
+        if(isNaN(speed)){
+          speed = 2;
+        }
+        intervalContoller = setInterval(handleTurn, speed * 1000);
       }
     });
 

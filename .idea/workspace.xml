@@ -2,17 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e8281e3a-bd11-4e2e-8f0f-c4d8eb5a4b77" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/R_User_Library.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/R_User_Library.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/riskGame.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/riskGame.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/directed-graph-creator/static/graph-creator.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/directed-graph-creator/static/graph-creator.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/riskGame/classes/state/state.py" beforeDir="false" afterPath="$PROJECT_DIR$/riskGame/classes/state/state.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/riskGame/classes/evaluations/sigmoidEval.py" beforeDir="false" afterPath="$PROJECT_DIR$/riskGame/classes/evaluations/sigmoidEval.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -30,64 +21,12 @@
   <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
     <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)" />
   </component>
-  <component name="FUSProjectUsageTrigger">
-    <session id="1136853235">
-      <usages-collector id="statistics.file.extensions.open">
-        <counts>
-          <entry key="html" value="1" />
-          <entry key="js" value="1" />
-          <entry key="py" value="25" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.open">
-        <counts>
-          <entry key="HTML" value="1" />
-          <entry key="JavaScript" value="1" />
-          <entry key="Python" value="25" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.edit">
-        <counts>
-          <entry key="js" value="1" />
-          <entry key="py" value="3117" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.edit">
-        <counts>
-          <entry key="JavaScript" value="1" />
-          <entry key="Python" value="3117" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.lifecycle.project">
-        <counts>
-          <entry key="project.closed" value="4" />
-          <entry key="project.open.time.0" value="1" />
-          <entry key="project.open.time.1" value="2" />
-          <entry key="project.open.time.13" value="1" />
-          <entry key="project.open.time.46" value="1" />
-          <entry key="project.open.time.47" value="1" />
-          <entry key="project.open.time.75" value="1" />
-          <entry key="project.open.time.79" value="1" />
-          <entry key="project.opened" value="8" />
-        </counts>
-      </usages-collector>
-    </session>
-  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/riskGame/classes/state/node.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="67">
-              <caret line="91" lean-forward="true" selection-start-line="91" selection-end-line="91" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/riskGame/classes/agent/one_time_agent.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="271">
+            <state relative-caret-position="287">
               <caret line="23" selection-start-line="23" selection-end-line="23" />
               <folding>
                 <element signature="e#0#56#0" expanded="true" />
@@ -96,23 +35,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/riskGame/classes/state/state.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="186">
-              <caret line="278" column="21" lean-forward="true" selection-start-line="278" selection-start-column="21" selection-end-line="278" selection-end-column="21" />
-              <folding>
-                <element signature="e#0#56#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="375">
+              <caret line="29" column="45" selection-start-line="29" selection-start-column="45" selection-end-line="29" selection-end-column="45" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$USER_HOME$/Envs/djangoenv/Lib/copy.py">
+        <entry file="file://$PROJECT_DIR$/riskGame/classes/state/node.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="83">
-              <caret line="137" selection-start-line="137" selection-end-line="137" />
+            <state relative-caret-position="-193">
+              <caret line="70" column="62" selection-start-line="70" selection-start-column="45" selection-end-line="70" selection-end-column="62" />
             </state>
           </provider>
         </entry>
@@ -120,8 +56,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/riskGame/classes/evaluations/sigmoidEval.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2329">
-              <caret line="140" column="26" selection-start-line="140" selection-start-column="26" selection-end-line="140" selection-end-column="26" />
+            <state relative-caret-position="677">
+              <caret line="155" column="57" selection-start-line="155" selection-start-column="57" selection-end-line="155" selection-end-column="57" />
             </state>
           </provider>
         </entry>
@@ -129,8 +65,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/frontend/directed-graph-creator/static/graph-creator.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5423">
-              <caret line="319" column="6" selection-start-line="319" selection-start-column="6" selection-end-line="319" selection-end-column="6" />
+            <state relative-caret-position="5475">
+              <caret line="365" column="5" selection-start-line="365" selection-start-column="5" selection-end-line="365" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -138,7 +74,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/frontend/directed-graph-creator/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1938">
+            <state relative-caret-position="1710">
               <caret line="114" column="13" selection-end-line="198" />
             </state>
           </provider>
@@ -147,20 +83,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/riskGame/classes/state/player.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1394">
-              <caret line="82" column="35" selection-start-line="82" selection-start-column="35" selection-end-line="82" selection-end-column="35" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/riskGame/classes/state/state.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="28" column="45" selection-start-line="28" selection-start-column="45" selection-end-line="28" selection-end-column="45" />
-              <folding>
-                <element signature="e#0#25#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="165">
+              <caret line="11" column="22" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="22" />
             </state>
           </provider>
         </entry>
@@ -204,6 +128,8 @@
       <find>g</find>
       <find>get_winner</find>
       <find>tie</find>
+      <find>self.__state</find>
+      <find>can_attack</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -219,7 +145,6 @@
         <option value="$PROJECT_DIR$/riskGame/classes/main.py" />
         <option value="$PROJECT_DIR$/riskGame/classes/agent/aStar_agent.py" />
         <option value="$PROJECT_DIR$/riskGame/classes/agent/agent.py" />
-        <option value="$PROJECT_DIR$/riskGame/classes/evaluations/sigmoidEval.py" />
         <option value="$PROJECT_DIR$/riskGame/classes/agent/greedy_agent.py" />
         <option value="$PROJECT_DIR$/riskGame/classes/agent/real_time_aStar.py" />
         <option value="$PROJECT_DIR$/riskGame/classes/parser/parser.py" />
@@ -231,6 +156,7 @@
         <option value="$PROJECT_DIR$/graph/views.py" />
         <option value="$PROJECT_DIR$/riskGame/classes/state/node.py" />
         <option value="$PROJECT_DIR$/riskGame/classes/state/state.py" />
+        <option value="$PROJECT_DIR$/riskGame/classes/evaluations/sigmoidEval.py" />
       </list>
     </option>
   </component>
@@ -264,22 +190,11 @@
             <path>
               <item name="riskGame" type="b2602c69:ProjectViewProjectNode" />
               <item name="riskGame" type="462c0819:PsiDirectoryNode" />
-              <item name="riskGame" type="462c0819:PsiDirectoryNode" />
+              <item name="graph tests" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="riskGame" type="b2602c69:ProjectViewProjectNode" />
               <item name="riskGame" type="462c0819:PsiDirectoryNode" />
-              <item name="riskGame" type="462c0819:PsiDirectoryNode" />
-              <item name="classes" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RiskGameWithAI" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RiskGameWithAI" type="462c0819:PsiDirectoryNode" />
-              <item name="graph" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RiskGameWithAI" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RiskGameWithAI" type="462c0819:PsiDirectoryNode" />
               <item name="riskGame" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -301,21 +216,6 @@
               <item name="riskGame" type="462c0819:PsiDirectoryNode" />
               <item name="classes" type="462c0819:PsiDirectoryNode" />
               <item name="evaluations" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RiskGameWithAI" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RiskGameWithAI" type="462c0819:PsiDirectoryNode" />
-              <item name="riskGame" type="462c0819:PsiDirectoryNode" />
-              <item name="classes" type="462c0819:PsiDirectoryNode" />
-              <item name="heuristic" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="RiskGameWithAI" type="b2602c69:ProjectViewProjectNode" />
-              <item name="RiskGameWithAI" type="462c0819:PsiDirectoryNode" />
-              <item name="riskGame" type="462c0819:PsiDirectoryNode" />
-              <item name="classes" type="462c0819:PsiDirectoryNode" />
-              <item name="heuristic" type="462c0819:PsiDirectoryNode" />
-              <item name="bonus" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="riskGame" type="b2602c69:ProjectViewProjectNode" />
@@ -407,8 +307,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="64" y="-11" width="1857" height="1092" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2375189" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24046434" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -442,22 +343,22 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/riskGame/classes/parser/parser.py</url>
-          <line>121</line>
+          <line>149</line>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/riskGame/classes/state/state.py</url>
-          <line>295</line>
+          <line>346</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/riskGame/classes/state/state.py</url>
-          <line>273</line>
+          <line>324</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/riskGame/classes/state/state.py</url>
-          <line>250</line>
+          <line>301</line>
           <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
@@ -569,34 +470,14 @@
     <entry file="file://$PROJECT_DIR$/riskGame/classes/agent/human.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$USER_HOME$/Envs/djangoenv/Lib/site-packages/django/core/handlers/base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
-          <caret line="125" column="75" lean-forward="true" selection-start-line="125" selection-start-column="75" selection-end-line="125" selection-end-column="75" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/Envs/djangoenv/Lib/site-packages/django/core/handlers/base.py" />
     <entry file="file://$PROJECT_DIR$/riskGame/classes/agent/aggressive_agent.py">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/riskGame/classes/agent/aStar_agent.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="14" selection-start-line="14" selection-end-line="14" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/riskGame/classes/agent/greedy_agent.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="8" column="38" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/riskGame/classes/agent/real_time_aStar.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="61" selection-start-line="17" selection-start-column="61" selection-end-line="17" selection-end-column="61" />
         </state>
       </provider>
     </entry>
@@ -607,16 +488,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/graph/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1190">
-          <caret line="76" column="37" selection-start-line="76" selection-start-column="37" selection-end-line="76" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/riskGame/classes/parser/parser.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
@@ -624,13 +495,6 @@
           <folding>
             <element signature="e#0#44#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/frontend/directed-graph-creator/static/graph-creator.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5423">
-          <caret line="319" column="6" selection-start-line="319" selection-start-column="6" selection-end-line="319" selection-end-column="6" />
         </state>
       </provider>
     </entry>
@@ -648,16 +512,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/riskGame/classes/agent/one_time_agent.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="28" column="45" selection-start-line="28" selection-start-column="45" selection-end-line="28" selection-end-column="45" />
-          <folding>
-            <element signature="e#0#56#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/riskGame/classes/agent/aStar_agent.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="165">
@@ -668,23 +522,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/riskGame/classes/evaluations/sigmoidEval.py">
+    <entry file="file://$USER_HOME$/Envs/djangoenv/Lib/copy.py" />
+    <entry file="file://$PROJECT_DIR$/frontend/directed-graph-creator/static/graph-creator.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2329">
-          <caret line="140" column="26" selection-start-line="140" selection-start-column="26" selection-end-line="140" selection-end-column="26" />
+        <state relative-caret-position="5475">
+          <caret line="365" column="5" selection-start-line="365" selection-start-column="5" selection-end-line="365" selection-end-column="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Envs/djangoenv/Lib/copy.py">
+    <entry file="file://$PROJECT_DIR$/frontend/directed-graph-creator/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="83">
-          <caret line="137" selection-start-line="137" selection-end-line="137" />
+        <state relative-caret-position="1710">
+          <caret line="114" column="13" selection-end-line="198" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/riskGame/classes/state/move.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="960">
+          <caret line="64" selection-start-line="64" selection-end-line="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/riskGame/classes/state/player.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="22" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="22" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/riskGame/classes/agent/one_time_agent.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="271">
+        <state relative-caret-position="287">
           <caret line="23" selection-start-line="23" selection-end-line="23" />
           <folding>
             <element signature="e#0#56#0" expanded="true" />
@@ -692,20 +561,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/riskGame/classes/state/node.py">
+    <entry file="file://$PROJECT_DIR$/riskGame/classes/state/state.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="67">
-          <caret line="91" lean-forward="true" selection-start-line="91" selection-end-line="91" />
+        <state relative-caret-position="375">
+          <caret line="29" column="45" selection-start-line="29" selection-start-column="45" selection-end-line="29" selection-end-column="45" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/riskGame/classes/state/state.py">
+    <entry file="file://$PROJECT_DIR$/riskGame/classes/state/node.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="278" column="21" lean-forward="true" selection-start-line="278" selection-start-column="21" selection-end-line="278" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#25#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-193">
+          <caret line="70" column="62" selection-start-line="70" selection-start-column="45" selection-end-line="70" selection-end-column="62" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/riskGame/classes/evaluations/sigmoidEval.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="677">
+          <caret line="155" column="57" selection-start-line="155" selection-start-column="57" selection-end-line="155" selection-end-column="57" />
         </state>
       </provider>
     </entry>

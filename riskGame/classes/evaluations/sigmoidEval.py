@@ -25,11 +25,12 @@ class SigmoidEval:
             for player in self.__state.get_players():
                 self.__armies[player.get_name()] = sum([node.get_army() for node in player.get_hold_nodes()])
 
-            w = [8, 7, 9, 3, 1, 10, 7]
+            w = [8, 7, 9, 3, 1, 10, 7, 9, 9]
             #w = [8, 0, 9, 0, 1, 10, 7]
+            attacking_nodes, attacked_nodes = self.attacking_and_conquer_possiblity()
             score = w[0] * self.armies_feature() + w[1] * self.best_enemy_feature() + w[2] * self.distance_to_frontier_feature() + \
                     w[3] * self.enemy_army_bonus_feature() + w[4] * self.hinterland_feature() + w[5] * self.occupied_nodes_feature() \
-                    + w[6] * self.bonus_feature()
+                    + w[6] * self.bonus_feature() + w[7] * attacking_nodes + w[8] * attacked_nodes
 
             sigmoid = 1/(1+math.exp(-1 * score))
             #print(sigmoid * self.__state.get_number_nodes() - len(self.__state.get_next_player().get_hold_nodes()))
@@ -149,4 +150,13 @@ class SigmoidEval:
         return self.__state.get_current_player().get_bonus()/self.get_armies_of(self.__state.get_current_player())
 
 
+    def attacking_and_conquer_possiblity(self):
+        attakers = set()
+        attaked = set()
+        for node in self.__state.get_current_player().get_hold_nodes():
+            for neigh in  node.get_neighbours():
+                if node.can_attack(neigh, node.get_army() - 1):
+                    attakers.add(node)
+                    attaked.add(neigh)
+        return (len(attakers), len(attaked))
 
