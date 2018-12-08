@@ -50,7 +50,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       prevNode: null,
       moveFromNode: null,
       moveToNode: null,
-      movedArmies: null,
+      movedArmies: -1,
       attackerNode: null,
       attackedNode: null,
       attackedNodeArmies: -1,

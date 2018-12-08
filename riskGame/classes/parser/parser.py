@@ -94,6 +94,7 @@ class Parser:
     def parse_json_to_move(self, current_state, dic):
         print(dic)
         bonus_node = attacker_node = attacked_node = move_from_node = move_to_node = 'null'
+        moved_armies = -1
         if dic['bonusNode']:
             bonus_node = int(dic['bonusNode']['id'])
         if dic['attackerNode']:
@@ -105,7 +106,8 @@ class Parser:
             move_from_node = dic['movedFromNode']['id']
         if dic['movedToNode']:
             move_to_node = dic['movedToNode']['id']
-        moved_armies = int(dic['movedArmies'])
+        if dic['movedArmies']:
+            moved_armies = int(dic['movedArmies'])
 
         self.__error_messages = []
         # validating bonus node
