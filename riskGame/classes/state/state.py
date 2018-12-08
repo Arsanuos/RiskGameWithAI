@@ -240,7 +240,6 @@ class State:
                 move.set_move_to_node(new_parent)
                 move.set_moved_armies(new_nearest_node.get_army() - 1)
                 next_states.append(move)
-        #return next_states
 
         temp_states = []
         for node in all_nodes:
@@ -261,21 +260,17 @@ class State:
                             move_obj.append(new_node.get_node_name())
                             move_obj.append(new_child.get_node_name())
                             move_obj.append(armies)
-                            #move.apply_move()
-                            #obj = (SigmoidEval().score(new_state), move_obj)
-                            #heappush(pq, obj)
                             temp_states.append(move)
 
-        indx = random.sample(range(1, len(temp_states)), min(1, len(temp_states)))
-        for i in indx:
-            next_states.append(temp_states[i])
-
+        if len(next_states) == 0:
+            for i in range(0, min(3, len(temp_states))):
+                next_states.append(temp_states[i])
         return next_states
 
 
     def expand(self):
         bonus_moves = self.expand_bonus(limit=4)
-        move_moves = self.expand_move()
+        move_moves = self.expand_move(4)
         attack_moves = self.expand_attack(limit=4, divide_armies=False)
         total_states = max(len(bonus_moves), 1) * max(len(move_moves), 1) * max(len(attack_moves), 1)
         if len(bonus_moves) == 0 and len(move_moves) == 0 and len(attack_moves) == 0:
@@ -316,8 +311,6 @@ class State:
                     copied_state.reset_hash()
                     copied_state.set_parent_state(self)
                     next_states.append(copied_state)
-                    print(SigmoidEval().score(copied_state))
-        print("=========================================================")
         return next_states
 
     ## UTILS ##

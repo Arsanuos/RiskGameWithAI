@@ -11,12 +11,13 @@ class RTAStar:
         self.__passive_agent = Passive()
 
     def dfs(self, curr_state, distance_from_root, limit):
-        if limit == 0:
+        if limit == 0 or curr_state.get_winner():
             # end of limit
             return SigmoidEval().score(curr_state) + distance_from_root
 
         my_turn_state = self.__passive_agent.play(curr_state)
         child_states = my_turn_state.expand()
+        child_states = child_states[: min(5 * limit, len(child_states))]
         min_cost = maxsize
         for child in child_states:
             if child.get_winner():
@@ -28,7 +29,7 @@ class RTAStar:
 
     def play(self, state):
         # Plan phase
-        limit = 2
+        limit = 3
         print("At the RTA*\n")
         child_states = state.expand()
         min_cost = maxsize
@@ -38,7 +39,7 @@ class RTAStar:
             if child in self.__hash_table:
                 child_cost = self.__hash_table[child]
             else:
-                child_cost = self.dfs(child, 1, limit)
+                child_cost = self.dfs(child, 1, limit - 1)
 
             if child_cost < min_cost:
                 second_min_cost = min_cost
