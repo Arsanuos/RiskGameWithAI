@@ -10,6 +10,7 @@ class SigmoidEval:
 
     def __init__(self):
         self.__state = None
+        self.__armies = {}
 
     def score(self, state):
         """
@@ -20,17 +21,17 @@ class SigmoidEval:
         :return: score
         """
         self.__state = state
+        self.__armies = {}
         if state.get_winner() == None:
-            self.__armies = {}
             for player in self.__state.get_players():
                 self.__armies[player.get_name()] = sum([node.get_army() for node in player.get_hold_nodes()])
 
-            w = [8, 7, 9, 3, 1, 10, 7, 9, 9]
-            #w = [8, 0, 9, 0, 1, 10, 7]
-            attacking_nodes, attacked_nodes = self.attacking_and_conquer_possiblity()
+            # w = [8, 7, 9, 3, 1, 10, 7, 9, 2000]
+            w = [0, 0, 0, 0, 0, 0, 0, 0, 10]
             score = w[0] * self.armies_feature() + w[1] * self.best_enemy_feature() + w[2] * self.distance_to_frontier_feature() + \
                     w[3] * self.enemy_army_bonus_feature() + w[4] * self.hinterland_feature() + w[5] * self.occupied_nodes_feature() \
-                    + w[6] * self.bonus_feature() + w[7] * attacking_nodes + w[8] * attacked_nodes
+                    + w[6] * self.bonus_feature() + w[7] * self.attacking_and_conquer_possiblity() \
+                    + w[8] * self.get_border_army_ratio()
 
             sigmoid = 1/(1+math.exp(-1 * score))
             #print(sigmoid * self.__state.get_number_nodes() - len(self.__state.get_next_player().get_hold_nodes()))
@@ -51,8 +52,18 @@ class SigmoidEval:
         :return:
         """
         total_armies = self.get_total_armies()
-        cur_player_army = self.__armies[self.__state.get_current_player().get_name()]
+        cur_player_army = self.__armies[self.__state.get_next_player().get_name()]
         return cur_player_army/total_armies
+
+    def armies_feature(self):
+        """
+        The Armies Feature returns the number of armies of the actual player (AP) in relation
+        to the total number of armies on the gameboard.
+        :return:
+        """
+        total_armies = self.get_total_armies()
+        cur_player_army = self.__armies[self.__state.get_next_player().get_name()]
+        return cur_player_army / total_armies
 
     def best_enemy_feature(self):
         """
@@ -62,13 +73,13 @@ class SigmoidEval:
         v = -100
         p = None
         for player in self.__state.get_players():
-            if player.get_name() != self.__state.get_current_player().get_name():
-               for node in player.get_hold_nodes():
+            if player.get_name() != self.__state.get_next_player().get_name():
+                for node in player.get_hold_nodes():
                     if v < node.get_army():
                         v = node.get_army()
                         p = player
-        #normalize feature.
-        return -1 * (v/self.get_armies_of(p))
+        # normalize feature.
+        return -1 * (v / self.get_armies_of(p))
 
     def get_min_distance_from_border(self, border_nodes, all_nodes, nodes_len):
         q = []
@@ -101,12 +112,12 @@ class SigmoidEval:
         """
         number_nodes = max([int(n.get_node_name()) for p in self.__state.get_players() for n in p.get_hold_nodes()]) + 1
 
-        distances = self.get_min_distance_from_border(self.__state.get_current_player().get_border_nodes(), \
-                                                      self.__state.get_current_player().get_hold_nodes(),\
+        distances = self.get_min_distance_from_border(self.__state.get_next_player().get_border_nodes(), \
+                                                      self.__state.get_next_player().get_hold_nodes(), \
                                                       number_nodes)
-        current_armies = self.get_armies_of(self.__state.get_current_player())
+        current_armies = self.get_armies_of(self.__state.get_next_player())
         t = 0
-        for node in self.__state.get_current_player().get_hold_nodes():
+        for node in self.__state.get_next_player().get_hold_nodes():
             t += node.get_army() * distances[int(node.get_node_name())]
         return current_armies / t
 
@@ -120,10 +131,10 @@ class SigmoidEval:
         b = 0
         s = 0
         for i, player in enumerate(self.__state.get_players()):
-            if i != self.__state.get_player_turn_number():
+            if i != self.__state.get_next_player().get_name():
                 b += player.get_bonus()
                 s += self.get_armies_of(player)
-        return -1 * (b/s)
+        return -1 * (b / s)
 
     def hinterland_feature(self):
         """
@@ -131,7 +142,8 @@ class SigmoidEval:
         (AP) which are hinterland territories
         :return:
         """
-        return len(self.__state.get_current_player().get_hold_nodes()) - len(self.__state.get_current_player().get_border_nodes()) /self.__state.get_number_nodes()
+        return len(self.__state.get_next_player().get_hold_nodes()) - len(
+            self.__state.get_next_player().get_border_nodes()) / self.__state.get_number_nodes()
 
     def occupied_nodes_feature(self):
         """
@@ -139,7 +151,7 @@ class SigmoidEval:
         by the actual player in relation to the total number of territories on the map
         :return:
         """
-        return len(self.__state.get_current_player().get_hold_nodes())/self.__state.get_number_nodes()
+        return len(self.__state.get_next_player().get_hold_nodes()) / self.__state.get_number_nodes()
 
     def bonus_feature(self):
         """
@@ -147,16 +159,19 @@ class SigmoidEval:
         of armies the actual player.
         :return:
         """
-        return self.__state.get_current_player().get_bonus()/self.get_armies_of(self.__state.get_current_player())
-
+        return self.__state.get_next_player().get_bonus() / self.get_armies_of(self.__state.get_next_player())
 
     def attacking_and_conquer_possiblity(self):
-        attakers = set()
-        attaked = set()
-        for node in self.__state.get_current_player().get_hold_nodes():
-            for neigh in  node.get_neighbours():
+        attacks = 0
+        for node in self.__state.get_next_player().get_hold_nodes():
+            for neigh in node.get_neighbours():
                 if node.can_attack(neigh, node.get_army() - 1):
-                    attakers.add(node)
-                    attaked.add(neigh)
-        return (len(attakers), len(attaked))
+                    attacks += 1
+        return attacks
 
+    def get_border_army_ratio(self):
+        nodes = self.__state.get_next_player().get_border_nodes()
+        armies = 0
+        for node in nodes:
+            armies += node.get_army()
+        return armies / self.get_armies_of(self.__state.get_next_player())

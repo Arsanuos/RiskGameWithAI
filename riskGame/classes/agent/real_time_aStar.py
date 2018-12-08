@@ -13,13 +13,14 @@ class RTAStar:
     def dfs(self, curr_state, distance_from_root, limit):
         if limit == 0:
             # end of limit
+            print("hellllllo")
             return SigmoidEval().score(curr_state) + distance_from_root
 
         my_turn_state = self.__passive_agent.play(curr_state)
         child_states = my_turn_state.expand()
         min_cost = maxsize
         for child in child_states:
-            if child.get_winner:
+            if child.get_winner():
                 return distance_from_root
             child_cost = self.dfs(child, distance_from_root + 1, limit - 1)
             min_cost = min(min_cost, child_cost)

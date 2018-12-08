@@ -223,6 +223,7 @@ class State:
             - use BFS to get the nearest
         :return: all possible moves to be bundled after that with attack and bonus moves.
         """
+
         pq = []
         next_states = []
         cur_player = self.get_current_player()
@@ -242,18 +243,17 @@ class State:
                 move_obj.append(new_nearest_node.get_node_name())
                 move_obj.append(new_parent.get_node_name())
                 move_obj.append(1)
-                move.apply_move()
-                obj = (SigmoidEval().score(new_state), move_obj)
-                heappush(pq, obj)
-                #next_states.append(move)
+                #move.apply_move()
+                #obj = (SigmoidEval().score(new_state), move_obj)
+                #heappush(pq, obj)
+                next_states.append(move)
 
 
         for node in border_nodes:
             childs = node.get_neighbours()
             for child in childs:
                 if child.get_hold_player().get_name() == self.get_current_player().get_name():
-                    try_armies = [1, node.get_army()/2, node.get_army() - 1]
-                    try_armies = [1]
+                    try_armies = [1, node.get_army() - 1]
                     for armies in try_armies:
                         if node.can_move_to_another_node(armies, child):
                             new_state = deepcopy(self)
@@ -267,10 +267,11 @@ class State:
                             move_obj.append(new_node.get_node_name())
                             move_obj.append(new_child.get_node_name())
                             move_obj.append(armies)
-                            move.apply_move()
-                            obj = (SigmoidEval().score(new_state), move_obj)
-                            heappush(pq, obj)
-                            #next_states.append(move)
+                            #move.apply_move()
+                            #obj = (SigmoidEval().score(new_state), move_obj)
+                            #heappush(pq, obj)
+                            next_states.append(move)
+        """
         sz = len(pq)
         for i in range(0, min(limit, sz)):
             # get the best ith move
@@ -286,12 +287,13 @@ class State:
             move.set_moved_armies(moved_armies)
             # move.apply_move()
             next_states.append(move)
+        """
         return next_states
 
 
     def expand(self):
         bonus_moves = self.expand_bonus(limit=4);
-        move_moves = self.expand_move(limit=4);
+        move_moves = self.expand_move();
         attack_moves = self.expand_attack(limit=4, divide_armies=False)
         total_states = max(len(bonus_moves), 1) * max(len(move_moves), 1) * max(len(attack_moves), 1)
         if len(bonus_moves) == 0 and len(move_moves) == 0 and len(attack_moves) == 0:
