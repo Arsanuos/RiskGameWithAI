@@ -9,11 +9,15 @@ class RTAStar:
         self.__hash_table = {}
         self.__evaluate = evaluation_heuristic
         self.__passive_agent = Passive()
+        self.__memo = {}
 
     def dfs(self, curr_state, distance_from_root, limit):
         if limit == 0 or curr_state.get_winner():
             # end of limit
             return SigmoidEval().score(curr_state) + distance_from_root
+
+        if curr_state.__hash__() in self.__memo:
+            return self.__memo[curr_state.__hash__()]
 
         my_turn_state = self.__passive_agent.play(curr_state)
         child_states = my_turn_state.expand()
@@ -24,7 +28,7 @@ class RTAStar:
                 return distance_from_root
             child_cost = self.dfs(child, distance_from_root + 1, limit - 1)
             min_cost = min(min_cost, child_cost)
-
+        self.__memo[curr_state.__hash__()] = min_cost
         return min_cost
 
     def play(self, state):

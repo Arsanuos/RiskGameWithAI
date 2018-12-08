@@ -241,12 +241,15 @@ class State:
                 move.set_moved_armies(new_nearest_node.get_army() - 1)
                 next_states.append(move)
 
+        if len(next_states) > 0:
+            return next_states
+
         temp_states = []
         for node in all_nodes:
             childs = node.get_neighbours()
             for child in childs:
                 if child.get_hold_player().get_name() == self.get_current_player().get_name():
-                    try_armies = [1, node.get_army() - 1]
+                    try_armies = [node.get_army() - 1]
                     for armies in try_armies:
                         if node.can_move_to_another_node(armies, child):
                             new_state = deepcopy(self)

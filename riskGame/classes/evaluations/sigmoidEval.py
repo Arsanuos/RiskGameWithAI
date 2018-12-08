@@ -28,7 +28,7 @@ class SigmoidEval:
                 self.__armies[player.get_name()] = sum([node.get_army() for node in player.get_hold_nodes()])
 
             if self.attacking_and_conquer_possiblity() > 0:
-                return -100 * len(self.__state.get_next_player().get_hold_nodes())
+                return -1000 * len(self.__state.get_next_player().get_hold_nodes())
             else:
                 w = [8, 7, 9, 3, 1, 10, 7, 10]
                 score = w[0] * self.armies_feature() + w[1] * self.best_enemy_feature() + w[2] * self.distance_to_frontier_feature()\
@@ -38,7 +38,7 @@ class SigmoidEval:
                 sigmoid = 1 / ( 1 + math.exp(-1 * score))
                 return (1 - sigmoid) * (self.__state.get_number_nodes() - len(self.__state.get_next_player().get_hold_nodes()))
         else:
-            return -1000
+            return -1000000
 
     def get_total_armies(self):
         return sum(self.__armies.values())
