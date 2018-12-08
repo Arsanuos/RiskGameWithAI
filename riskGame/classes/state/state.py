@@ -3,7 +3,7 @@ from sys import maxsize
 from heapq import *
 from riskGame.classes.state.move import Move
 from riskGame.classes.evaluations.sigmoidEval import SigmoidEval
-
+import random
 
 class State:
 
@@ -242,7 +242,7 @@ class State:
                 next_states.append(move)
         #return next_states
 
-
+        temp_states = []
         for node in all_nodes:
             childs = node.get_neighbours()
             for child in childs:
@@ -264,7 +264,12 @@ class State:
                             #move.apply_move()
                             #obj = (SigmoidEval().score(new_state), move_obj)
                             #heappush(pq, obj)
-                            next_states.append(move)
+                            temp_states.append(move)
+
+        indx = random.sample(range(1, len(temp_states)), min(1, len(temp_states)))
+        for i in indx:
+            next_states.append(temp_states[i])
+
         return next_states
 
 

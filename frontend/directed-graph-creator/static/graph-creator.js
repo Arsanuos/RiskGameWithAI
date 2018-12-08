@@ -680,7 +680,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
         $("#doAction").prop('disabled',true);
         let speed = Number($("#speed :selected").text());
         if(isNaN(speed)){
-          speed = 2;
+          speed = 1;
         }
         intervalContoller = setInterval(handleTurn, speed * 1000);
       }

@@ -27,16 +27,18 @@ class SigmoidEval:
             for player in self.__state.get_players():
                 self.__armies[player.get_name()] = sum([node.get_army() for node in player.get_hold_nodes()])
 
-            w = [8, 7, 9, 3, 1, 10, 7, 9, 10]
-            score = w[0] * self.armies_feature() + w[1] * self.best_enemy_feature() + w[2] * self.distance_to_frontier_feature() + \
-                    w[3] * self.enemy_army_bonus_feature() + w[4] * self.hinterland_feature() + w[5] * self.occupied_nodes_feature() \
-                    + w[6] * self.bonus_feature() + w[7] * self.attacking_and_conquer_possiblity() \
-                    + w[8] * self.get_border_army_ratio()
-
-            sigmoid = 1/(1+math.exp(-1 * score))
-            return -1 * sigmoid * (self.__state.get_number_nodes() - len(self.__state.get_next_player().get_hold_nodes()))
+            if self.attacking_and_conquer_possiblity() > 0:
+                return -100 * self.attacking_and_conquer_possiblity()
+            else:
+                w = [8, 7, 9, 3, 1, 10, 7, 10]
+                score = w[0] * self.armies_feature() + w[1] * self.best_enemy_feature() + w[2] * self.distance_to_frontier_feature()\
+                        + w[3] * self.enemy_army_bonus_feature() + w[4] * self.hinterland_feature()\
+                        + w[5] * self.occupied_nodes_feature() + w[6] * self.bonus_feature() \
+                        + w[7] * self.get_border_army_ratio()
+                sigmoid = 1 / ( 1 + math.exp(-1 * score))
+                return (1 - sigmoid) * (self.__state.get_number_nodes() - len(self.__state.get_next_player().get_hold_nodes()))
         else:
-            return 0
+            return -1000
 
     def get_total_armies(self):
         return sum(self.__armies.values())
@@ -165,7 +167,7 @@ class SigmoidEval:
         for node in self.__state.get_next_player().get_hold_nodes():
             if len(node.get_possible_attacked_nodes()) > 0:
                 attacks += 1
-        return attacks / len(self.__state.get_next_player().get_hold_nodes())
+        return attacks
 
     def get_border_army_ratio(self):
         nodes = self.__state.get_next_player().get_border_nodes()

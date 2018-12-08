@@ -28,7 +28,7 @@ class RTAStar:
 
     def play(self, state):
         # Plan phase
-        limit = 0
+        limit = 2
         print("At the RTA*\n")
         child_states = state.expand()
         min_cost = maxsize
