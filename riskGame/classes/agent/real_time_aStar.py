@@ -13,7 +13,6 @@ class RTAStar:
     def dfs(self, curr_state, distance_from_root, limit):
         if limit == 0:
             # end of limit
-            print("hellllllo")
             return SigmoidEval().score(curr_state) + distance_from_root
 
         my_turn_state = self.__passive_agent.play(curr_state)
@@ -29,7 +28,7 @@ class RTAStar:
 
     def play(self, state):
         # Plan phase
-        limit = 3
+        limit = 0
         print("At the RTA*\n")
         child_states = state.expand()
         min_cost = maxsize

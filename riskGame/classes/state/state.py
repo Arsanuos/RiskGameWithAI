@@ -238,18 +238,12 @@ class State:
                 move = Move()
                 move.set_move_from_node(new_nearest_node)
                 move.set_move_to_node(new_parent)
-                move.set_moved_armies(1)
-                move_obj = list()
-                move_obj.append(new_nearest_node.get_node_name())
-                move_obj.append(new_parent.get_node_name())
-                move_obj.append(1)
-                #move.apply_move()
-                #obj = (SigmoidEval().score(new_state), move_obj)
-                #heappush(pq, obj)
+                move.set_moved_armies(new_nearest_node.get_army() - 1)
                 next_states.append(move)
+        #return next_states
 
 
-        for node in border_nodes:
+        for node in all_nodes:
             childs = node.get_neighbours()
             for child in childs:
                 if child.get_hold_player().get_name() == self.get_current_player().get_name():
@@ -271,29 +265,12 @@ class State:
                             #obj = (SigmoidEval().score(new_state), move_obj)
                             #heappush(pq, obj)
                             next_states.append(move)
-        """
-        sz = len(pq)
-        for i in range(0, min(limit, sz)):
-            # get the best ith move
-            move_obj = heappop(pq)[1]
-            curr_state_copy = deepcopy(self)
-            move_from_node = curr_state_copy.get_current_player().get_node_by_name(move_obj[0])
-            move_to_node = curr_state_copy.get_current_player().get_node_by_name(move_obj[1])
-            moved_armies = move_obj[2]
-            # apply the attack move and get the next state
-            move = Move()
-            move.set_move_from_node(move_from_node)
-            move.set_move_to_node(move_to_node)
-            move.set_moved_armies(moved_armies)
-            # move.apply_move()
-            next_states.append(move)
-        """
         return next_states
 
 
     def expand(self):
-        bonus_moves = self.expand_bonus(limit=4);
-        move_moves = self.expand_move();
+        bonus_moves = self.expand_bonus(limit=4)
+        move_moves = self.expand_move()
         attack_moves = self.expand_attack(limit=4, divide_armies=False)
         total_states = max(len(bonus_moves), 1) * max(len(move_moves), 1) * max(len(attack_moves), 1)
         if len(bonus_moves) == 0 and len(move_moves) == 0 and len(attack_moves) == 0:
@@ -334,12 +311,8 @@ class State:
                     copied_state.reset_hash()
                     copied_state.set_parent_state(self)
                     next_states.append(copied_state)
-
-        # DEBUG See the different state hashes
-        #print("State hash = {}".format(self.__hash__()))
-        #for state in next_states:
-        #    print(state.__hash__())
-        
+                    print(SigmoidEval().score(copied_state))
+        print("=========================================================")
         return next_states
 
     ## UTILS ##
@@ -355,7 +328,7 @@ class State:
         """
         q = []
         q.append((start_node, None))
-        vis = []
+        vis = set()
         d = 0
         all_nodes = set(all_nodes)
         border_nodes = set(border_nodes)
@@ -367,7 +340,7 @@ class State:
                 return (None, None)
             while s:
                 s -= 1
-                if node not in vis and node not in border_nodes:
+                if (node not in vis) and (node not in border_nodes or node.get_node_name() == start_node.get_node_name()):
                     vis.add(node)
                     if node in all_nodes and node not in border_nodes and node.get_army() > 1:
                         return (node, parent)

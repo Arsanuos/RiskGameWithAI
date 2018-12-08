@@ -22,20 +22,19 @@ class SigmoidEval:
         """
         self.__state = state
         self.__armies = {}
-        if state.get_winner() == None:
+        if state.get_winner() is None:
+            print("===> {}".format(self.__state.get_next_player().get_name()))
             for player in self.__state.get_players():
                 self.__armies[player.get_name()] = sum([node.get_army() for node in player.get_hold_nodes()])
 
-            # w = [8, 7, 9, 3, 1, 10, 7, 9, 2000]
-            w = [0, 0, 0, 0, 0, 0, 0, 0, 10]
+            w = [8, 7, 9, 3, 1, 10, 7, 9, 10]
             score = w[0] * self.armies_feature() + w[1] * self.best_enemy_feature() + w[2] * self.distance_to_frontier_feature() + \
                     w[3] * self.enemy_army_bonus_feature() + w[4] * self.hinterland_feature() + w[5] * self.occupied_nodes_feature() \
                     + w[6] * self.bonus_feature() + w[7] * self.attacking_and_conquer_possiblity() \
                     + w[8] * self.get_border_army_ratio()
 
             sigmoid = 1/(1+math.exp(-1 * score))
-            #print(sigmoid * self.__state.get_number_nodes() - len(self.__state.get_next_player().get_hold_nodes()))
-            return sigmoid * (self.__state.get_number_nodes() - len(self.__state.get_next_player().get_hold_nodes()))
+            return -1 * sigmoid * (self.__state.get_number_nodes() - len(self.__state.get_next_player().get_hold_nodes()))
         else:
             return 0
 
@@ -164,10 +163,9 @@ class SigmoidEval:
     def attacking_and_conquer_possiblity(self):
         attacks = 0
         for node in self.__state.get_next_player().get_hold_nodes():
-            for neigh in node.get_neighbours():
-                if node.can_attack(neigh, node.get_army() - 1):
-                    attacks += 1
-        return attacks
+            if len(node.get_possible_attacked_nodes()) > 0:
+                attacks += 1
+        return attacks / len(self.__state.get_next_player().get_hold_nodes())
 
     def get_border_army_ratio(self):
         nodes = self.__state.get_next_player().get_border_nodes()
