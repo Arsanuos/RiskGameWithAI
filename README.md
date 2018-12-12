@@ -93,7 +93,7 @@ We also implemented intelligent agents that plays against a completely passive a
 
 ### Run steps
 
-1. Clone the project.
+1. Clone the project `git clone https://github.com/Arsanuos/RiskGameWithAI.git`.
 
 2. Run this command `python manage.py runserver` from the terminal while you are inside the project directory, which will portal the project on port `8000`.
 
