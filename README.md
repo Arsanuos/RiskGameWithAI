@@ -104,4 +104,4 @@ We also implemented intelligent agents that plays against a completely passive a
 //TODO put the screen shot.
 
 
-Made with love &nbsp :heart: .
+Made with love &nbsp; :heart: .
