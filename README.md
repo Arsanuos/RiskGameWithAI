@@ -1,4 +1,4 @@
-# Risk Game with AI
+﻿# Risk Game with AI
 ## Introduction
 Computers playing games like humans, has been always a very hard problem, as it requires too much computations and memory to simulate the way that human use to think. Here AI field shows up, as it tries to solve the problems it faces rationally, according to some heuristics and search algorithms to reach the best solution.
 
@@ -21,22 +21,22 @@ This version of the game is more general, but not necessarily more complicated. 
 
 5. The partition is defined as: bonus value, list of indexes of each node. i.e. when defining partition like this (5 0 1 2), we mean that the player will get bonus value = 5, when it capture the nodes with indexes = 0, 1, and 2. Note that each node on the board must belong to only one partition.
 
-3. The battles are deterministic.  Denote A(v) the number of armies
+6. The battles are deterministic.  Denote A(v) the number of armies
 in node v.  node v can attack node u only if there is an edge between these vertices, and A(v)−A(u)> 1.  As a result of the battle, each opposing player loses A(u) armies, and the attacking player must move at least 1 army to u, but must leave at least 1 army in v.
 
-4. Initial placement of armies is determined as part of the defining the board environment.
+7. Initial placement of armies is determined as part of the defining the board environment.
 
-5. When getting the armies at the beginning of a turn, they must all be placed on the same node.
+8. When getting the armies at the beginning of a turn, they must all be placed on the same node.
 
-6. Initially, a turn will consist of: placing the bonus armies at the beginning of the turn, moving armies from one node to the other, and doing at most one attack (including moving armies into the captured territory). There will be no fortifying step, for simplicity.
+9. Initially, a turn will consist of: placing the bonus armies at the beginning of the turn, moving armies from one node to the other, and doing at most one attack (including moving armies into the captured territory). There will be no fortifying step, for simplicity.
 
-7. The bonus completely placed into one node, at the beginning of each turn for each player   
+10. The bonus completely placed into one node, at the beginning of each turn for each player.   
 
-8. Each player has at most one move, he can do with his troops, moving troops should be from one node to the other that belongs to the current player making the movement.
+11. Each player has at most one move, he can do with his troops, moving troops should be from one node to the other that belongs to the current player making the movement.
 
-9. Each player has at most one attack, from one of his node to another node belongs to the enemy. the attack is successful, if it satisfied the above attack rules.
+12. Each player has at most one attack, from one of his node to another node belongs to the enemy. the attack is successful, if it satisfied the above attack rules.
 
-10. Each agent would make his attack according to heuristic, except for the human agent, as it would attack as he wants according to his heuristic.
+13. Each agent would make his attack according to heuristic, except for the human agent, as it would attack as he wants according to his heuristic.
 
 ## Objective
 The goal of the game is to conquer the world in the smallest number of turns.
@@ -89,7 +89,7 @@ We also implemented intelligent agents that plays against a completely passive a
 
 1. Python 3.
 
-2. Django library compatible with Python 3.  
+2. Django package compatible with Python 3.  
 
 ### Run steps
 
