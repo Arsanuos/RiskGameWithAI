@@ -3,7 +3,7 @@
 Computers playing games like humans, has been always a very hard problem, as it requires too much computations and memory to simulate the way that human use to think. Here AI field shows up, as it tries to solve the problems it faces rationally, according to some heuristics and search algorithms to reach the best solution.
 
 ## Overview
-In this repo, we tried to solve one of the famous search problem in the field of AI, RISK game. we solved simplified and abstract version of it, you can check the ![rules](http://web.mit.edu/sp.268/www/risk.pdf) of full version of the game.
+In this repo, we tried to solve one of the famous search problem in the field of AI, RISK game. we solved simplified and abstract version of it, you can check the [rules](http://web.mit.edu/sp.268/www/risk.pdf) of full version of the game.
 
 ## Board Overview
 In this version, the board is just an undirected graph, where each country is represented by node, and the roads between each two nodes are represented as edge, we call group of nodes (countries) as partition (continent) which has to be told to the application to assign bonus troops according to it, as we will discuss later.
@@ -104,4 +104,4 @@ We also implemented intelligent agents that plays against a completely passive a
 //TODO put the screen shot.
 
 
-Made with love :heart: .
+Made with love &nbsp :heart: .
