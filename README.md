@@ -1,4 +1,9 @@
 ﻿# Risk Game with AI
+ 
+## Runs
+
+![](test1.gif)
+
 ## Introduction
 Computers playing games like humans, has been always a very hard problem, as it requires too much computations and memory to simulate the way that human use to think. Here AI field shows up, as it tries to solve the problems it faces rationally, according to some heuristics and search algorithms to reach the best solution.
 
@@ -98,11 +103,6 @@ We also implemented intelligent agents that plays against a completely passive a
 2. Run this command `python manage.py runserver` from the terminal while you are inside the project directory, which will portal the project on port `8000`.
 
 3. Enjoy the game :smile: .
-
-
-## Screen Shots
-
-//TODO put the screen shot.
 
 ## Authors
 
