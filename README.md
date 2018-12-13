@@ -101,7 +101,16 @@ We also implemented intelligent agents that plays against a completely passive a
 
 
 ## Screen Shots
+
 //TODO put the screen shot.
 
+## Contribute
 
+
+Contributions are always welcome!
+
+Please read the [contribution guidelines](contributing.md) first.
+
+
+##
 Made with love &nbsp; :heart: .
