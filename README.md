@@ -3,17 +3,17 @@
 ## Runs
 
 ### A* vs Passive (bonus, move and attack possibilities)
-![](res/test1.gif)
+![](screenshots/test1.gif)
 
 ### A* vs Passive (attack when it can)
-![](res/test2.gif)
+![](screenshots/test2.gif)
 
-### Run 3 (RTA* vs Passive)
-![](res/test3.gif)
+### RTA* vs Passive
+![](screenshots/test3.gif)
 
-### Run 5 
+### Human vs Passive 
 Only one step game to show how human can interact with the game by clicking to attack, move and add bonus.
-![](human.gif)
+![](screenshots/human.gif)
 
 ## Introduction
 Computers playing games like humans, has been always a very hard problem, as it requires too much computations and memory to simulate the way that human use to think. Here AI field shows up, as it tries to solve the problems it faces rationally, according to some heuristics and search algorithms to reach the best solution.
@@ -115,8 +115,18 @@ We also implemented intelligent agents that plays against a completely passive a
 
 3. Enjoy the game :smile: .
 
-## Authors
+### Features
 
+- [x] Simple Agents
+- [x] Intelligent Agents
+- [x] Human
+- [x] Interactive UI
+- [ ] UML Diagrram
+- [x] Screenshots
+- [x] Run Steps
+- [ ] Undo/Redo 
+
+## Authors
 
 * **Amr Hendy** [AmrHendy](https://github.com/AmrHendy)
 
@@ -124,9 +134,7 @@ We also implemented intelligent agents that plays against a completely passive a
 
 * **Muhammed Ibrahim** [MuhammedKhamis](https://github.com/MuhammedKhamis)
 
-
 ## Contribute
-
 
 Contributions are always welcome!
 
@@ -135,8 +143,7 @@ Please read the [contribution guidelines](contributing.md) first.
 
 ## License
 
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 ##
-Made with love &nbsp; :heart: .
+* Made with love &nbsp; :heart: .
