@@ -2,14 +2,18 @@
  
 ## Runs
 
-### Run 1
+### A* vs Passive (bonus, move and attack possibilities)
 ![](res/test1.gif)
 
-### Run 2
+### A* vs Passive (attack when it can)
 ![](res/test2.gif)
 
-### Run 3
+### Run 3 (RTA* vs Passive)
 ![](res/test3.gif)
+
+### Run 5 
+Only one step game to show how human can interact with the game by clicking to attack, move and add bonus.
+![](human.gif)
 
 ## Introduction
 Computers playing games like humans, has been always a very hard problem, as it requires too much computations and memory to simulate the way that human use to think. Here AI field shows up, as it tries to solve the problems it faces rationally, according to some heuristics and search algorithms to reach the best solution.
