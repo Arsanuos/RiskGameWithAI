@@ -87,9 +87,6 @@ We also implemented intelligent agents that plays against a completely passive a
 
 ## Design of the Project
 
-### UML Diagram
-//TODO add picture to that has the UML diagram.
-
 ### Project Structure
 - **Agent**: Contains the implementation of the agents.
 - **Parser**: Contains the implementation of the intermediate layer between the HTML page and the back-end.
