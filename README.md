@@ -104,6 +104,16 @@ We also implemented intelligent agents that plays against a completely passive a
 
 //TODO put the screen shot.
 
+## Authors
+
+
+* **Amr Hendy** [AmrHendy](https://github.com/AmrHendy)
+
+* **Arsanous Eissa** [Arsanous](https://github.com/Arsanuos)
+
+* **Muhammed Ibrahim** [MuhammedKhamis](https://github.com/MuhammedKhamis)
+
+
 ## Contribute
 
 
@@ -111,6 +121,11 @@ Contributions are always welcome!
 
 Please read the [contribution guidelines](contributing.md) first.
 
+
+## License
+
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
 
 ##
 Made with love &nbsp; :heart: .
