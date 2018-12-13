@@ -96,6 +96,15 @@ We also implemented intelligent agents that plays against a completely passive a
 - **frontend**: Contains the HTML, CSS, and the JS. which is the implementation of the front-end page.
 - **graph**: Contains the Django files for back-end.
 
+### Features
+- [x] Simple Agents
+- [x] Intelligent Agents
+- [x] Human Interaction
+- [x] Interactive UI
+- [x] Run Simulation
+- [ ] Undo/Redo 
+- [ ] Adding UML Diagrram
+
 ## How to run it.
 
 ### Prerequisite installed software
@@ -111,17 +120,6 @@ We also implemented intelligent agents that plays against a completely passive a
 2. Run this command `python manage.py runserver` from the terminal while you are inside the project directory, which will portal the project on port `8000`.
 
 3. Enjoy the game :smile: .
-
-### Features
-
-- [x] Simple Agents
-- [x] Intelligent Agents
-- [x] Human
-- [x] Interactive UI
-- [ ] UML Diagrram
-- [x] Screenshots
-- [x] Run Steps
-- [ ] Undo/Redo 
 
 ## Authors
 
