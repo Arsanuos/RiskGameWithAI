@@ -141,4 +141,4 @@ Please read the [contribution guidelines](contributing.md) first.
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
 ##
-* Made with love &nbsp; :heart: .
+**Made with love &nbsp; :heart: .**
