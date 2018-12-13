@@ -85,7 +85,7 @@ We also implemented intelligent agents that plays against a completely passive a
 
 ## How to run it.
 
-### Perquisites installed software
+### Rrerequisite installed software
 
 1. Python 3.
 
