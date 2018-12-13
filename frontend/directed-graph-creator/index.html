@@ -50,6 +50,7 @@
                   <li>shift-click on a node to change its title.</li>
                   <li>click on node or edge and press backspace/delete to delete.</li>
                   <li>Bonus node will be marked yellow and its number will be written on the configuration panel.</li>
+                  <li>press ESC button to hide and show the help Instructions.</li>
                 </ol>
               </div>
               <div class="modal-footer">
@@ -94,7 +95,7 @@
                     </div>
                     <button type="button" class="btn btn-primary controller" id="submit">Add Partitions</button>
                     <div class="row">
-                      <div class="col"> 
+                      <div class="col">
                         <div class="form-group" style="margin-top: 25px">
                             <label for="Algorithms">Player1 Algorithm</label>
                             <select class="form-control controller" id="p1Algo">
@@ -125,24 +126,24 @@
                           </div>
                       </div>
                     </div>
-                    
+
                     <div class="human" id="controls">
                       <button id="addBonus" class="btn btn-success directiveButton" style=""><i class="fas fa-angle-double-up fa-5x"></i></button>
                       <button id="addAttack" class="btn btn-danger directiveButton"><img src="{% static 'attack.svg'  %}"></button>
                       <button id="addMove" class="btn btn-primary directiveButton"><i class="fas fa-walking fa-5x"></i></button>
-                      
-                      <p class="text-left">Available bonus is <span id="bonusVal" class="badge badge-secondary hoverSpans"></span> given to node 
+
+                      <p class="text-left">Available bonus is <span id="bonusVal" class="badge badge-secondary hoverSpans"></span> given to node
                         <span id="bonusNode" class="badge badge-secondary hoverSpans"></span> </p>
-                      
-                      <p class="text-left">Attack detected from node <span id="attackerNode" class="badge badge-secondary hoverSpans"></span> 
-                        to <span id="attackedNode" class="badge badge-secondary hoverSpans"></span> with armies 
+
+                      <p class="text-left">Attack detected from node <span id="attackerNode" class="badge badge-secondary hoverSpans"></span>
+                        to <span id="attackedNode" class="badge badge-secondary hoverSpans"></span> with armies
                         <input type="text" id="attackedArmyVal" class="form-control armiesInput"/></p>
-                      
-                        <p class="text-left">Move detected from node <span id="moveFromNode" class="badge badge-secondary hoverSpans"></span> 
-                        to <span id="moveToNode" class="badge badge-secondary hoverSpans"></span>  with armies 
+
+                        <p class="text-left">Move detected from node <span id="moveFromNode" class="badge badge-secondary hoverSpans"></span>
+                        to <span id="moveToNode" class="badge badge-secondary hoverSpans"></span>  with armies
                         <input type="text" id="armyVal" class="form-control armiesInput"/></p>
                     </div>
-                    
+
                     <div class="human" hidden>
                         <div class="form-group">
                             <label for="action">Human Action</label>

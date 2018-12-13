@@ -231,7 +231,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
             });
             thisGraph.edges = newEdges;
             thisGraph.updateGraph();
-            
+
             thisGraph.partitions = jsonObj.partitions;
             thisGraph.state.algo1 = jsonObj.algo1;
             thisGraph.state.algo2 = jsonObj.algo2;
@@ -347,12 +347,12 @@ document.onload = (function(d3, saveAs, Blob, undefined){
             $('.controller').prop('disabled', true);
           }
     }
-    
+
     function sendPost(data, type){
       if(!gameEnded){
         let jqXHR = $.ajax({
           type: "POST",
-          url: 'http://localhost:8000/',
+          url: 'http://127.0.0.1:8000/',
             async: false,
           data: {json:JSON.stringify(data), type:type},
         });
@@ -555,7 +555,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       }
       $("#moveToNode").text(thisGraph.state.moveToNode.id);
       $("#moveFromNode").text(thisGraph.state.moveFromNode.id);
-      
+
       colorNode(thisGraph.state.moveToNode, "blue");
       colorNode(thisGraph.state.moveFromNode, "blue");
       removeColorExcpetFrom([thisGraph.state.moveToNode, thisGraph.state.moveFromNode]);
@@ -632,7 +632,7 @@ document.onload = (function(d3, saveAs, Blob, undefined){
       thisGraph.state.moveToNode = thisGraph.state.selectedNode;
       thisGraph.state.moveFromNode = thisGraph.state.prevNode;
       thisGraph.state.movedArmies = army;
-      
+
       updateMoveUi();
       //handleTurn(moveSuccess, moveFailure);
     });
@@ -1158,7 +1158,12 @@ document.onload = (function(d3, saveAs, Blob, undefined){
   }
 
   /**** MAIN ****/
-  var closed = true;
+
+var closed = true;
+$('#helpModal').modal('show');
+closed = false;
+
+
   document.addEventListener('keydown', function(e){
     //escape key on keyboard.
     if(e.keyCode == 27){
