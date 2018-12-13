@@ -3,6 +3,8 @@
 ## Runs
 
 ![](test1.gif)
+![](test2.gif)
+![](test3.gif)
 
 ## Introduction
 Computers playing games like humans, has been always a very hard problem, as it requires too much computations and memory to simulate the way that human use to think. Here AI field shows up, as it tries to solve the problems it faces rationally, according to some heuristics and search algorithms to reach the best solution.
