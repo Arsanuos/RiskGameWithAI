@@ -3,13 +3,13 @@
 ## Runs
 
 ### Run 1
-![](test1.gif)
+![](res/test1.gif)
 
 ### Run 2
-![](test2.gif)
+![](res/test2.gif)
 
 ### Run 3
-![](test3.gif)
+![](res/test3.gif)
 
 ## Introduction
 Computers playing games like humans, has been always a very hard problem, as it requires too much computations and memory to simulate the way that human use to think. Here AI field shows up, as it tries to solve the problems it faces rationally, according to some heuristics and search algorithms to reach the best solution.
@@ -132,7 +132,7 @@ Please read the [contribution guidelines](contributing.md) first.
 ## License
 
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details
 
 ##
 Made with love &nbsp; :heart: .
